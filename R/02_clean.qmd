@@ -4,27 +4,23 @@ format: html
 editor: visual
 ---
 
+## 
 
-## Yayi
-
-## Emma
-
-=======
 ```{r}
 #| label: "load-data" 
 
-metadata_load <- read_tsv(file = here("data/01_metadata_load.tsv"))
+expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv"))
+
+
 ```
 
 ## Yayi
 
 ## Emma
 
-
 ## Andrea
 
 ## Astrid
-
 
 We want to check if values in the column "disease_type" are unique. If so, we confidently remove it
 
@@ -47,11 +43,8 @@ race.demographic
 
 vital_status
 
-
-
 ```{r}
 
 
 
 ```
-
