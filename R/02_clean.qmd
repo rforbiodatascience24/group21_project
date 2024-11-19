@@ -4,18 +4,6 @@ format: html
 editor: visual
 ---
 
-```{r}
-
-protein_data <- read_tsv(file = "~/projects/group_21_project/data/_raw/TCGA-HNSC.protein.tsv.gz")
-survival_data <- read_tsv(file = "~/projects/group_21_project/data/_raw/TCGA-HNSC.survival.tsv.gz")
-clinical_data <- read_tsv(file = "~/projects/group_21_project/data/_raw/TCGA-HNSC.clinical.tsv.gz")
-```
-
-```{r}
-clinical_data |>
-  unique()
-```
-
 ## Yayi 
 
 ## Emma 
