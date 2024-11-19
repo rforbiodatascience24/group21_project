@@ -15,3 +15,13 @@ clinical_data <- read_tsv(file = "~/projects/group_21_project/data/_raw/TCGA-HNS
 clinical_data |>
   unique()
 ```
+
+## Yayi 
+
+## Emma 
+
+## Andrea 
+
+## Astrid
+
+## Asta 
