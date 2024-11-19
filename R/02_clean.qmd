@@ -16,6 +16,23 @@ expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_
 
 ## Emma
 
+```{r}
+
+test_dataframe <- meta_data |> 
+  select(sample,
+         cigarettes_per_day.exposures,
+         alcohol_history.exposures,
+         race.demographic,
+         vital_status.demographic,
+         vital_status.demographic,
+         age_at_index.demographic,
+         tissue_or_organ_of_origin.diagnoses,
+         treatment_type.treatments.diagnoses)
+  
+
+
+```
+
 ## Andrea
 
 ## Astrid
