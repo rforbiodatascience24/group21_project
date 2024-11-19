@@ -81,3 +81,29 @@ survival_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.survival.tsv.gz"))
 clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 
 ```
+
+## Combining the metadata
+
+```{r}
+
+clinical_survival_data <- full_join(clinical_data, survival_data, by = "sample")
+
+data_dir <- here("data/")
+
+write_tsv( x = clinical_survival_data,
+           file = str_c(data_dir, 
+                  "01_metadata_load.tsv"))
+
+```
+
+## Subsetting the protein expression dataset
+
+```{r}
+
+set.seed(676571)
+protein_data |> 
+  slice_sample(n = 20)
+
+
+
+```
