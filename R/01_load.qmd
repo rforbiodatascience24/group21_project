@@ -82,7 +82,7 @@ clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 
 ```
 
-## Join meta data: clinical and survival data 
+## Join meta data: clinical and survival data
 
 ```{r}
 #| label: "join-clinical-and-survival-data" 
@@ -93,7 +93,7 @@ data_dir <- here("data/")
 
 write_tsv(x = meta_data, 
           file = str_c(data_dir, 
-                       "02_meta_data_load.tsv"))
+                       "02_meta_data_load.tsv.gz"))
 
 ```
 
@@ -112,7 +112,7 @@ data_dir <- here("data/")
 
 write_tsv( x = peptide_long,
            file = str_c(data_dir, 
-                  "03_peptide_expression_load.tsv"))
+                  "03_peptide_expression_load.tsv.gz"))
 
 
 ```
@@ -132,7 +132,9 @@ data_dir <- here("data/")
 
 write_tsv( x = final_data,
            file = str_c(data_dir, 
-                  "01_expression_meta_data_load.tsv"))
+                  "01_expression_meta_data_load.tsv.gz"))
 
 
 ```
+
+The new files have been gzipped to make it easier to load into R-studio

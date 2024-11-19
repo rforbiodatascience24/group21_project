@@ -4,16 +4,10 @@ format: html
 editor: visual
 ---
 
-## Yayi
-
-## Emma
-
-## 
-
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv"))
+expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
 
 
 ```
