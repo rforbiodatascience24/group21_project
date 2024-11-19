@@ -4,6 +4,11 @@ format: html
 editor: visual
 ---
 
+## Yayi
+
+## Emma
+
+
 ## 
 
 ```{r}
@@ -42,6 +47,11 @@ alcohol_history.exposures
 race.demographic
 
 vital_status
+
+age_at_index
+
+tissue_or_organ
+
 
 ```{r}
 
