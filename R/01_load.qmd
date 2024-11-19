@@ -81,3 +81,24 @@ survival_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.survival.tsv.gz"))
 clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 
 ```
+
+```{r}
+patient_data <- full_join(clinical_data, survival_data, by = "sample")
+
+patient_data |>
+  sample_n(size = 10)
+```
+
+```{r}
+write_csv(x = patient_data,
+          file = "~/projects/group_21_project/data/patient_data.csv")
+```
+
+```{r}
+protein_data <- t(protein_data)
+```
+
+```{r}
+protein_data |>
+  sample_n(size = 10)
+```
