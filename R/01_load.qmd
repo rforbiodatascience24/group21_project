@@ -82,28 +82,48 @@ clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 
 ```
 
-## Combining the metadata
+## Combine data
 
 ```{r}
+#| label: "join-clinical-and-survival-data" 
 
-clinical_survival_data <- full_join(clinical_data, survival_data, by = "sample")
+meta_data <- inner_join(clinical_data, survival_data, by = c("sample" = "sample"))
 
 data_dir <- here("data/")
 
-write_tsv( x = clinical_survival_data,
-           file = str_c(data_dir, 
-                  "01_metadata_load.tsv"))
+write_tsv(x = meta_data, 
+          file = str_c(data_dir, 
+                       "02_meta_data_load.tsv"))
 
 ```
 
-## Subsetting the protein expression dataset
+```{r}
+#| label: "pivot-longer-protein-expression" 
+
+# Pivot the peptide expression data longer
+peptide_long <- protein_data |> 
+  pivot_longer(cols = -1, #exclude the first column of the dataset from being "pivoted"
+               names_to = "sample", 
+               values_to = "expression")
+
+data_dir <- here("data/")
+
+write_tsv(x = peptide_long, 
+          file = str_c(data_dir, 
+                       "03_protein_expression_data_load.tsv"))
+```
 
 ```{r}
+#| label: "Join-the-data-to-final"
 
-set.seed(676571)
-protein_data |> 
-  slice_sample(n = 20)
+# Join the datasets on the 'sample' column
+protein_expression_meta_data <- inner_join(meta_data, 
+                         peptide_long, 
+                         by = "sample")
 
+data_dir <- here("data/")
 
-
+write_tsv(x = protein_expression_meta_data, 
+          file = str_c(data_dir, 
+                       "01_protein_expression_meta_data_load.tsv"))
 ```
