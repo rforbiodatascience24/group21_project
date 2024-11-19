@@ -8,12 +8,15 @@ editor: visual
 
 ## Emma
 
-=======
+
+## 
 
 ```{r}
 #| label: "load-data" 
 
-metadata_load <- read_tsv(file = here("data/01_metadata_load.tsv"))
+expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv"))
+
+
 ```
 
 ## Yayi
@@ -48,6 +51,7 @@ vital_status
 age_at_index
 
 tissue_or_organ
+
 
 ```{r}
 
