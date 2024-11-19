@@ -1,0 +1,83 @@
+---
+title: "01_load"
+author: "Group 21"
+format: html
+editor: visual
+---
+
+## Load libraries
+
+```{r}
+#| label: "load-libraries" 
+#| echo: FALSE
+#| eval: TRUE 
+#| output: FALSE  
+
+library("tidyverse")
+library("table1")
+library("here")
+```
+
+## Download data
+
+```{r}
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.protein.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+```
+
+```{r}
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.survival.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+```
+
+```{r}
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.clinical.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+```
+
+## Load data
+
+```{r}
+#| label: "load-data" 
+
+protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
+survival_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.survival.tsv.gz"))
+clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
+
+```

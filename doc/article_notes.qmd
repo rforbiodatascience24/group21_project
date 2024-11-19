@@ -1,0 +1,32 @@
+---
+title: "Article notes"
+format: html
+editor: visual
+---
+
+## Comprehensive genomic characterization of head and neck squamous cell carcinomas
+
+<https://www.nature.com/articles/nature14129>
+
+## Terms
+
+| Term          | Explanation                                                                                                                                                                                                                          |
+|------------|------------------------------------------------------------|
+| Squamous cell | Thin, flat cells that make up the surface of the skin and line the mucous membranes.                                                                                                                                                 |
+| *PIK3CA*      | An oncogene encoding a subunit of **phosphoinositide 3-kinase (PI3K)**, involved in cell growth, survival, and metabolism. When mutated in cancer it leads to activation of PI3K-AKT signalling pathway.                             |
+| *TRAF3*       | Tumor necrosis factor receptor-associated factor 3. *TRAF3* regulates immune signalling and antiviral responses via the NF-𝛋B pathway. When deleted or inactivated it may impair immune responses.                                   |
+| *E2F1*        | Is a transcription factor critical for cell cycle progression and DNA replication. If over-expressed it might drive uncontrolled proliferation in cancers. It can act as an oncogene or a tumor suppressor depending on the context. |
+| *TP53*        | Encodes p53, that regulates DNA repair, apoptosis, and cell cycle arrest. When mutated it can lead to loss of tumor suppression.                                                                                                     |
+| *CDKN2A*      | Encodes p16 and p14ARF, which are both tumor suppressors. p16 inhibits CDK4/6 to regulate the cell cycle. When deleted or methylated in cancers it allows for unchekced cell division.                                               |
+| 3q26/28       | Is a chromosomal region that harbors oncogenes such as TP63 and PIK3CA. Amplification in this region are common in HNSCC, which contributes to tumorigenesis.                                                                        |
+| 11q13/22      | Chromosomal region where e.g. CCND1 (Cyclin D1) resides, which promotes unchecked cell cycle progression which enable tumor cells to grow and divide faster.                                                                         |
+| *HRAS*        | A member of the RAS family, which is involved in signaling pathways such as MAPK and PI3K. Mutation can lead to constitutive activation, dividing and proliferation. Less common but significant in HNSCC.                           |
+| *CASP8*       | Encodes caspase-8, which is crucial for initiating apoptosis. Mutations might prevent apoptosis and tumor cell survival.                                                                                                             |
+| *NOTCH1*      | Involved in cell differentiation and tissue homeostasis. Mutations can either act as activating (oncogenic) or inactivating (tumor supressive) in cancers.                                                                           |
+| *NSD1*        | Encodes a histone methyltransferase which modifies the chromatin structure. When mutated it often results in altered gene expression, including silencing of tumor suppressor genes.                                                 |
+| WNT           | Refers to a family of genes encoding proteins in the WNT (wingless/integrated) pathway that is crucial for cell fate, polarity and proliferation. When dysregulated it can promote cancer stem cell characteristics.                 |
+| *AJUBA*       | Encodes a protein involved in cell adhesion and mitotic spindle assembly. It act as tumor suppressor, but when loss of function it can lead to genomic instability.                                                                  |
+| *FAT1*        | Encode a cadherin-like protein involved in cell adhesion and signalling. Mutation in *FAT1* can lead to loss of cell polarity and increased proliferation.                                                                           |
+| *NFE2L2*      | Encodes NRF2, a transcription factor that regulates antioxidant responses.                                                                                                                                                           |
+
+## Samples and clinical data
