@@ -25,13 +25,13 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_c
 set.seed(123)
 
 # Randomly select 50 peptide targets
-random_peptides <- expression_meta_trimmed_1 |> 
+random_peptides <- expression_meta_data_aug |> 
   distinct(peptide_target) |> 
   sample_n(50) |> 
   pull(peptide_target)
 
 # Filter for selected peptides and exclude rows where age and expression is NA
-heatmap_data <- expression_meta_trimmed |> 
+heatmap_data <- expression_meta_data_aug |> 
   filter(peptide_target %in% random_peptides, 
          !is.na(age_at_index),
          !is.na(expression)) |> 
@@ -86,7 +86,7 @@ heatmap_data |>
 
 ```{r}
 # Calculate mean expression per peptide_target
-peptide_expression_summary <- expression_meta_trimmed_1 |> 
+peptide_expression_summary <- expression_meta_data_aug |> 
   filter(!is.na(age_at_index), #removing rows with NA
          !is.na(expression),
          !peptide_target %in% c("HLA-DQA1", "TTF1")) |> 
@@ -109,7 +109,7 @@ selected_peptides <- bind_rows(top_upregulated, top_downregulated)
 
 ```{r}
 # Filter the main dataset for the selected peptides and add age intervals
-heatmap_data_filtered <- expression_meta_trimmed_1 |> 
+heatmap_data_filtered <- expression_meta_data_aug |> 
   
   filter(peptide_target %in% selected_peptides$peptide_target) |> 
   
@@ -151,7 +151,7 @@ heatmap_data_filtered |>
 ### Five heat-maps for the expression pattern sorted by pathological stage
 
 ```{r}
-sorted_expression_meta <- expression_meta_trimmed_1 |> 
+sorted_expression_meta <- expression_meta_data_aug |> 
   arrange(peptide_target, expression)
 ```
 
