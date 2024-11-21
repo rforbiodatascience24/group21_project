@@ -8,7 +8,7 @@ editor: visual
 
 ```{r}
 #| label: "load-libraries" 
-#| echo: FALSE
+#| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
 
@@ -18,17 +18,15 @@ library("here")
 library("patchwork")
 ```
 
+## Load dataset
+
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
+expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
 
 
 ```
-
-## Yayi
-
-## Emma
 
 ```{r}
 
@@ -47,16 +45,18 @@ test_dataframe <- meta_data |>
 
 ```
 
-## Andrea
+-   add some of the columns from above to the cleaning below –\> then delete the above chunk
 
 ### Cleaning data
 
 First we choose the wanted columns to work with in the wanted order and rename them:
 
+-   remove the patient id (created under)
+
 ```{r}
 #| label: "choosing-columns"
 
-expression_meta_trimmed <- final_data |> 
+expression_meta_data_clean_1 <- expression_meta_data_clean |> 
   select(sample_id = sample,
          patient_id = submitter_id,
          gender = gender.demographic,
@@ -76,11 +76,15 @@ expression_meta_trimmed <- final_data |>
 
 Then we trimmed the data-columns with sample_id and patient_id, to only have the necessary:
 
+-   first remove the TCGA
+
+-   create the patient_id and code_tissue_source_site by splitting the column
+
 ```{r}
 #| label: "modify-sample-patient-id"
 
 # Modify the sample_id and patient_id columns
-expression_meta_trimmed_1 <- expression_meta_trimmed |> 
+expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
   mutate(
     
     # Keep only the last part in sample_id and leave out TCGA-XX
@@ -91,309 +95,20 @@ expression_meta_trimmed_1 <- expression_meta_trimmed |>
   )
 ```
 
-Checking what different pathologic stages there are:
+## Write the clean dataset to a tsv.gz file
 
 ```{r}
-# Count occurrences of pathologic_stages per patient_id
-expression_meta_trimmed |> 
-  group_by(pathologic_stage) |> 
-  summarize(count = n(), .groups = "drop")  # Count the occurrences and ungroup
+#| label: "write-clean-data-to-tsv.gz"
+
+data_dir <- here("data/")
+
+
+write_tsv( x = expression_meta_data_clean_2,
+           file = str_c(data_dir, 
+                  "04_expression_meta_data_clean.tsv.gz"))
+
+
 ```
-
-Checking the lowest and highest age
-
-```{r}
-expression_meta_trimmed_1 |> 
-  summarize(
-    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
-    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
-  )
-```
-
-### Heat-map of 50 random peptide-targets plotted against age
-
-```{r}
-
-# Set seed for reproducibility
-set.seed(123)
-
-# Randomly select 50 peptide targets
-random_peptides <- expression_meta_trimmed_1 |> 
-  distinct(peptide_target) |> 
-  sample_n(50) |> 
-  pull(peptide_target)
-
-# Filter for selected peptides and exclude rows where age and expression is NA
-heatmap_data <- expression_meta_trimmed |> 
-  filter(peptide_target %in% random_peptides, 
-         !is.na(age_at_index),
-         !is.na(expression)) |> 
-  mutate(
-# Bin ages into 5-year intervals
-    age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5), include.lowest = TRUE)
-  ) |> 
-  group_by(peptide_target, age_interval) |> 
-# Aggregate expression values by mean
-  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop")
-
-# Convert `age_interval` to factor for proper ordering
-heatmap_data <- heatmap_data |> 
-  mutate(age_interval = factor(age_interval, levels = unique(age_interval)))
-```
-
-Plotting the heat-map
-
-```{r}
-#| label: "heat-map-50-random-against-age"
-#| fig-width: 10
-#| fig-height: 10
-
-# Create the heatmap
-heatmap_data |> 
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = mean_expression)) +
-  
-  geom_tile(color = "white") +  # Add grid lines
-  scale_fill_gradient2(low = "blue",
-                       mid = "white",
-                       high = "red",
-                       na.value = "black") +  # Color gradient
-  
-  labs(
-    title = "Heatmap of Expression Across Age Intervals and 50 Random Peptide Targets",
-    x = "Peptide Target",
-    y = "Age Interval",
-    fill = "Mean Expression"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 60, hjust = 1),
-    axis.text.y = element_text(size = 8),
-    legend.position = "bottom"
-  )
-```
-
-### Heat-map of 30 most upregulated and 20 most downregulated peptide-targets plotted against age
-
-```{r}
-# Calculate mean expression per peptide_target
-peptide_expression_summary <- expression_meta_trimmed_1 |> 
-  filter(!is.na(age_at_index), #removing rows with NA
-         !is.na(expression),
-         !peptide_target %in% c("HLA-DQA1", "TTF1")) |> 
-  group_by(peptide_target) |> 
-    summarise(mean_expression = mean(expression, na.rm = TRUE),
-            count = n()) |>   # Add count of occurrences
-  filter(count >= 30) |>   # Filter out peptide targets with fewer than 30 occurrences
-  arrange(desc(mean_expression))  # Sort by mean expression
-
-# Select top 30 most upregulated and bottom 20 most downregulated peptide targets
-top_upregulated <- peptide_expression_summary |> 
-  slice_max(order_by = mean_expression, n = 30)
-
-top_downregulated <- peptide_expression_summary |> 
-  slice_min(order_by = mean_expression, n = 20)
-
-# Combine the two subsets
-selected_peptides <- bind_rows(top_upregulated, top_downregulated)
-```
-
-```{r}
-# Filter the main dataset for the selected peptides and add age intervals
-heatmap_data_filtered <- expression_meta_trimmed_1 |> 
-  
-  filter(peptide_target %in% selected_peptides$peptide_target) |> 
-  
-  mutate(age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5)))
-```
-
-```{r}
-#| label: "heat-map-30UP-20DOWN-against-age"
-#| fig-width: 10
-#| fig-height: 10
-
-# Create the heatmap
-heatmap_data_filtered |> 
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  
-  geom_tile(color = "white") +  # Add grid lines
-  scale_fill_gradient2(low = "blue",
-                       mid = "white",
-                       high = "red",
-                       na.value = "black") +  # Color gradient
-  
-  labs(
-    title = "Heatmap of Expression Across Age Intervals and 30 Most Upregulated and 20 Most Downregulated Peptide Targets",
-    x = "Peptide Target",
-    y = "Age Interval",
-    fill = "Mean Expression"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 60, hjust = 1),
-    axis.text.y = element_text(size = 8),
-    legend.position = "bottom"
-  )
-```
-
-### Five heat-maps for the expression pattern sorted by pathological stage
-
-```{r}
-sorted_expression_meta <- expression_meta_trimmed_1 |> 
-  arrange(peptide_target, expression)
-```
-
-```{r}
-peptide_expression_summary <- sorted_expression_meta |> 
-  filter(!is.na(age_at_index), # removing rows with NA
-         !is.na(expression),
-         !peptide_target %in% c("HLA-DQA1", "TTF1")) |> 
-  
-  group_by(peptide_target) |>  
-  
-  summarise(mean_expression = mean(expression, na.rm = TRUE),
-            count = n()) |>    # Add count of occurrences
-  
-  filter(count >= 30) |>    # Filter out peptide targets with fewer than 30 occurrences
-  arrange(desc(mean_expression))  # Sort by mean expression
-```
-
-```{r}
-top_upregulated <- peptide_expression_summary |>  
-  slice_max(order_by = mean_expression, n = 30)
-
-top_downregulated <- peptide_expression_summary |> 
-  slice_min(order_by = mean_expression, n = 20)
-
-# Combine the two subsets
-selected_peptides <- bind_rows(top_upregulated, top_downregulated)
-```
-
-```{r}
-heatmap_data_filtered <- sorted_expression_meta |> 
-  
-  filter(peptide_target %in% selected_peptides$peptide_target,
-         !is.na(pathologic_stage)) |> 
-  
-  mutate(age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5)))
-```
-
-```{r}
-# Create individual plots for each pathologic stage
-plot_stage_1 <- heatmap_data_filtered |> 
-  filter(pathologic_stage == "Stage I") |>  
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", 
-                       mid = "white", 
-                       high = "red", 
-                       na.value = "gray") +
-  labs(title = "Stage I", 
-       x = "Peptide Target", 
-       y = "Age Interval", 
-       fill = "Expression") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
-        axis.text.y = element_text(size = 8), 
-        legend.position = "bottom")
-
-
-plot_stage_2 <- heatmap_data_filtered |> 
-  filter(pathologic_stage == "Stage II") |>  
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", 
-                       mid = "white", 
-                       high = "red", 
-                       na.value = "gray") +
-  labs(title = "Stage II", 
-       x = "Peptide Target", 
-       y = "Age Interval", 
-       fill = "Expression") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
-        axis.text.y = element_text(size = 8), 
-        legend.position = "bottom")
-
-plot_stage_3 <- heatmap_data_filtered |> 
-  filter(pathologic_stage == "Stage III") |>  
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", 
-                       mid = "white", 
-                       high = "red", 
-                       na.value = "gray") +
-  labs(title = "Stage III", 
-       x = "Peptide Target", 
-       y = "Age Interval", 
-       fill = "Expression") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
-        axis.text.y = element_text(size = 8), 
-        legend.position = "bottom")
-
-
-plot_stage_4 <- heatmap_data_filtered |> 
-  filter(pathologic_stage == "Stage IV") |>  
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", 
-                       mid = "white", 
-                       high = "red", 
-                       na.value = "gray") +
-  labs(title = "Stage IV", 
-       x = "Peptide Target", 
-       y = "Age Interval", 
-       fill = "Expression") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
-        axis.text.y = element_text(size = 8), 
-        legend.position = "bottom")
-
-
-plot_stage_5 <- heatmap_data_filtered |> 
-  filter(pathologic_stage == "Stage V") |> 
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = expression)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", 
-                       mid = "white", 
-                       high = "red", 
-                       na.value = "gray") +
-  labs(title = "Stage V", 
-       x = "Peptide Target", 
-       y = "Age Interval", 
-       fill = "Expression") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
-        axis.text.y = element_text(size = 8), 
-        legend.position = "bottom")
-```
-
-```{r}
-plot_stage_1 / plot_stage_2
-```
-
-## Astrid
 
 We want to check if values in the column "disease_type" are unique. If so, we confidently remove it
 

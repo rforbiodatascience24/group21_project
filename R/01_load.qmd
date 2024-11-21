@@ -93,7 +93,7 @@ data_dir <- here("data/")
 
 write_tsv(x = meta_data, 
           file = str_c(data_dir, 
-                       "02_meta_data_load.tsv.gz"))
+                       "01_meta_data_load.tsv.gz"))
 
 ```
 
@@ -112,7 +112,7 @@ data_dir <- here("data/")
 
 write_tsv( x = peptide_long,
            file = str_c(data_dir, 
-                  "03_peptide_expression_load.tsv.gz"))
+                  "02_peptide_expression_load.tsv.gz"))
 
 
 ```
@@ -132,7 +132,7 @@ data_dir <- here("data/")
 
 write_tsv( x = final_data,
            file = str_c(data_dir, 
-                  "01_expression_meta_data_load.tsv.gz"))
+                  "03_expression_meta_data_load.tsv.gz"))
 
 
 ```
