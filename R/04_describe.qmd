@@ -1,0 +1,44 @@
+---
+title: "04_describe"
+format: html
+editor: visual
+---
+
+## Loading the data 
+
+```{r}
+#| label: "load-data" 
+
+expression_meta_data_load<- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
+
+expression_meta_data_clean <- read_tsv(file = here("data/01_expression_meta_data_clean.tsv.gz"))
+
+expression_meta_data_aug <- read_tsv(file = here("data/01_expression_meta_data_aug.tsv.gz"))
+
+
+```
+
+-   how many patients
+
+-   how many peptides
+
+-   could compare with the original data before cleaning
+
+Checking what different pathologic stages there are:
+
+```{r}
+# Count occurrences of pathologic_stages per patient_id
+expression_meta_trimmed |> 
+  group_by(pathologic_stage) |> 
+  summarize(count = n(), .groups = "drop")  # Count the occurrences and ungroup
+```
+
+Checking the lowest and highest age
+
+```{r}
+expression_meta_trimmed_1 |> 
+  summarize(
+    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
+    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
+  )
+```

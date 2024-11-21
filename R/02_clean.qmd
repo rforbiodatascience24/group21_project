@@ -4,17 +4,29 @@ format: html
 editor: visual
 ---
 
+## Load libraries
+
+```{r}
+#| label: "load-libraries" 
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+
+library("tidyverse")
+library("table1")
+library("here")
+library("patchwork")
+```
+
+## Load dataset
+
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
+expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
 
 
 ```
-
-## Yayi
-
-## Emma
 
 ```{r}
 
@@ -33,9 +45,70 @@ test_dataframe <- meta_data |>
 
 ```
 
-## Andrea
+-   add some of the columns from above to the cleaning below –\> then delete the above chunk
 
-## Astrid
+### Cleaning data
+
+First we choose the wanted columns to work with in the wanted order and rename them:
+
+-   remove the patient id (created under)
+
+```{r}
+#| label: "choosing-columns"
+
+expression_meta_data_clean_1 <- expression_meta_data_clean |> 
+  select(sample_id = sample,
+         patient_id = submitter_id,
+         gender = gender.demographic,
+         vital_status = vital_status.demographic,
+         overall_survival = OS,
+         primary_site,
+         pathologic_stage = ajcc_pathologic_stage.diagnoses,
+         age_at_index = age_at_index.demographic,
+         year_of_birth = year_of_birth.demographic,
+         year_of_death = year_of_death.demographic,
+         tissue_source_location = name.tissue_source_site,
+         cigarettes_per_day = cigarettes_per_day.exposures,
+         years_smoked = years_smoked.exposures,
+         peptide_target,
+         expression)
+```
+
+Then we trimmed the data-columns with sample_id and patient_id, to only have the necessary:
+
+-   first remove the TCGA
+
+-   create the patient_id and code_tissue_source_site by splitting the column
+
+```{r}
+#| label: "modify-sample-patient-id"
+
+# Modify the sample_id and patient_id columns
+expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
+  mutate(
+    
+    # Keep only the last part in sample_id and leave out TCGA-XX
+    sample_id = sub("^TCGA-..-(.*)", "\\1", sample_id),
+    
+    # Keep only the ID part in patient_id and leave out TCGA-XX
+    patient_id = sub("^TCGA-..-(.*)", "\\1", patient_id)
+  )
+```
+
+## Write the clean dataset to a tsv.gz file
+
+```{r}
+#| label: "write-clean-data-to-tsv.gz"
+
+data_dir <- here("data/")
+
+
+write_tsv( x = expression_meta_data_clean_2,
+           file = str_c(data_dir, 
+                  "04_expression_meta_data_clean.tsv.gz"))
+
+
+```
 
 We want to check if values in the column "disease_type" are unique. If so, we confidently remove it
 

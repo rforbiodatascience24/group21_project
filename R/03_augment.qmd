@@ -1,0 +1,40 @@
+---
+title: "03_augment"
+format: html
+editor: visual
+---
+
+## Loading the data 
+
+```{r}
+#| label: "load-data" 
+
+expression_meta_data_aug <- read_tsv(file = here("data/01_expression_meta_data_clean.tsv.gz"))
+
+
+```
+
+-   add age groups
+
+    -   5 year
+
+    -   10 year
+
+-   (change the age from days to years )
+
+-   
+
+## Write the augmentet dataset to a tsv.gz file
+
+```{r}
+#| label: "write-clean-data-to-tsv.gz"
+
+data_dir <- here("data/")
+
+
+write_tsv( x = expression_meta_data_aug,
+           file = str_c(data_dir, 
+                  "04_expression_meta_data_aug.tsv.gz"))
+
+
+```
