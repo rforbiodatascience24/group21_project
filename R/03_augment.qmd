@@ -20,7 +20,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/01_expression_meta_data_c
 
     -   10 year
 
--   (change the age from days to years )
+-   add the mean expression for each peptide target for all patients
 
 -   
 

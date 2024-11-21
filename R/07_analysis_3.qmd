@@ -4,4 +4,12 @@ format: html
 editor: visual
 ---
 
-## 
+-   make some descriptive plots eg. facet wrap
+
+-   survival vs alcohol and smoking
+
+-   vital_status vs tissue_source_location
+
+-   ethnicity
+
+-   gender overall survival
