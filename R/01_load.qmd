@@ -137,4 +137,4 @@ write_tsv( x = final_data,
 
 ```
 
-The new files have been gzipped to make it easier to load into R-studio
+The new files have been gzipped to make it easier to load into R-studio.
