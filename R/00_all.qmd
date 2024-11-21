@@ -29,3 +29,86 @@ file.rename(from = "01_load.html",
             to = "../results/01_load.html")
 
 ```
+
+## Clean data
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "02_clean.qmd",
+                      output_format = "html")
+
+file.rename(from = "02_clean.html",
+            to = "../results/02_clean.html")
+```
+
+## Augment data
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "03_augment.qmd",
+                      output_format = "html")
+
+file.rename(from = "03_augment.html",
+            to = "../results/03_augment.html")
+```
+
+## Description
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "04_describe.qmd",
+                      output_format = "html")
+
+file.rename(from = "04_describe.html",
+            to = "../results/04_describe.html")
+```
+
+## Analysis 1
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "05_analysis_1.qmd",
+                      output_format = "html")
+
+file.rename(from = "05_analysis_1.html",
+            to = "../results/05_analysis_1.html")
+```
+
+## Analysis 2
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "06_analysis_2.qmd",
+                      output_format = "html")
+
+file.rename(from = "06_analysis_2.html",
+            to = "../results/06_analysis_2.html")
+```
+
+## Analysis 3
+
+```{r}
+#| include: false
+
+quarto::quarto_render(input = "07_analysis_3.qmd",
+                      output_format = "html")
+
+file.rename(from = "07_analysis_3.html",
+            to = "../results/07_analysis_3.html")
+```
+
+## Plot
+
+## All
+
+```{r}
+#| include: false
+
+file.rename(from = "00_all.html",
+            to = "../results/00_all.html")
+```
