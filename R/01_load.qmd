@@ -1,6 +1,11 @@
 ---
 title: "01_load"
-author: "Group 21"
+author:
+- "Asta Zeuner - s203544"
+- "Astrid Ginnerup - s203523"
+- "Emma Danø - s203564"
+- "Andrea Kristensen - s193769"
+- "Yayi Wang - s243554"
 format: html
 editor: visual
 ---
