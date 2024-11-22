@@ -13,7 +13,6 @@ execute:
   warning: FALSE
 ---
 
-<<<<<<< HEAD
 ## Load libraries
 
 ```{r}
