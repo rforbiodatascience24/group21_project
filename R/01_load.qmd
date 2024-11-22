@@ -1,8 +1,16 @@
 ---
 title: "01_load"
-author: "Group 21"
-format: html
-editor: visual
+author:
+- "Asta Zeuner - s203544 - azeuner"
+- "Astrid Ginnerup - s203523 - AGinnerup"
+- "Emma Danø - s203564 - EDanoe"
+- "Andrea Kristensen - s193769 - AndreaMTK"
+- "Yayi Wang - s243554 - Yayi0117"
+  html: 
+    embed-resources: true
+execute: 
+  message: FALSE
+  warning: FALSE
 ---
 
 ## Load libraries
