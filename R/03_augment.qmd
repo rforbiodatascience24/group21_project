@@ -4,25 +4,114 @@ format: html
 editor: visual
 ---
 
-## Loading the data 
+## Load libraries
+
+```{r}
+#| label: "load-libraries" 
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+
+library("tidyverse")
+library("table1")
+library("here")
+```
+
+## Loading the data
 
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/01_expression_meta_data_clean.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
 
 
 ```
 
--   add age groups
+## Creating a new variable called patient_id from sample_id
 
-    -   5 year
+```{r}
+#| label: "Create-patient-id"
 
-    -   10 year
+# Creating the patient_id column from the sample_id column
+expression_meta_data_aug_1 <- expression_meta_data_aug |> 
+  mutate(
+    
+# Extract the last YYYY-ZZZ for patient_id
+    patient_id = sub("(.*)-..", "\\1", sample_id)
+  ) |> 
+# Moving the paient_id column to the left of sample_id
+  relocate(patient_id, .before = sample_id)
+```
 
--   add the mean expression for each peptide target for all patients
+## Creating columns with 5 and 10 years age intervals
 
--   
+```{r}
+#| label: "creating_5_and_10_year_intervals"
+
+expression_meta_data_aug_2 <- expression_meta_data_aug_1 |> 
+  mutate(
+# Use cut to divide age_at_index into intervals of 5 years specified by breaks
+    age_interval_5_year = cut(
+      age_at_index,
+      breaks = seq(0, 100, by = 5),
+# Creating labels representing each interval
+      labels = paste(seq(0, 95, by = 5), seq(5, 100, by = 5) - 1, sep = "-"), 
+# Include ages at the lower boundary
+      include.lowest = TRUE          
+    ),
+
+# Creating the 10 year interval variable
+    age_interval_10_year = cut(
+      age_at_index,
+      breaks = seq(0, 100, by = 10),
+# Creating labels representing each interval
+      labels = paste(seq(0, 90, by = 10), seq(10, 100, by = 10) - 1, sep = "-"), 
+# Include ages at the lower boundary
+      include.lowest = TRUE
+    )
+  ) |> 
+# Moving the age_interval columns to after age_at_index
+  relocate(age_interval_5_year, .after = age_at_index) |> 
+  relocate(age_interval_10_year, .after = age_interval_5_year)
+```
+
+## Creating a new variable with the mean expression of each peptide_target
+
+```{r}
+#| label: "creating_expression_mean_variable"
+
+expression_meta_data_aug_3 <- expression_meta_data_aug_2 |> 
+  group_by(peptide_target) |> 
+  mutate(
+    mean_expression = mean(expression, na.rm = TRUE)
+  ) |> 
+# Removing the grouping to ensure that the following work is not messed up
+  ungroup() 
+```
+
+## Creating mean expression of each peptide_target for each pathologic state
+
+```{r}
+#| label: "creating_expression_mean_variable_for_each_pathologic_state"
+
+# Calculate the mean for each pathologic stage
+mean_of_expression_pathologic_stages <- expression_meta_data_aug_3 |> 
+# Exclude NA values in pathologic_stage and group by peptide_target and pathologic_state
+  filter(!is.na(pathologic_stage)) |>  
+  group_by(peptide_target, pathologic_stage) |> 
+# Calculating the mean_expression of each pathologic state
+  summarise(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
+# Widening the pivot table with the new variables of calculated mean named by the pathologic_state
+  pivot_wider(
+    names_from = pathologic_stage,
+    values_from = mean_expression,
+    names_prefix = "mean_expression_"
+  )
+
+# Join the calculated means back into the original dataset with the join function
+expression_meta_data_aug_4 <- expression_meta_data_aug_3 |> 
+  right_join(mean_of_expression_pathologic_stages, by = "peptide_target")
+```
 
 ## Write the augmentet dataset to a tsv.gz file
 
@@ -32,7 +121,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/01_expression_meta_data_c
 data_dir <- here("data/")
 
 
-write_tsv( x = expression_meta_data_aug,
+write_tsv( x = expression_meta_data_aug_4,
            file = str_c(data_dir, 
                   "04_expression_meta_data_aug.tsv.gz"))
 

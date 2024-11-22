@@ -15,7 +15,6 @@ editor: visual
 library("tidyverse")
 library("table1")
 library("here")
-library("patchwork")
 ```
 
 ## Load dataset
@@ -28,38 +27,17 @@ expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data
 
 ```
 
-```{r}
-
-test_dataframe <- meta_data |> 
-  select(sample,
-         cigarettes_per_day.exposures,
-         alcohol_history.exposures,
-         race.demographic,
-         vital_status.demographic,
-         vital_status.demographic,
-         age_at_index.demographic,
-         tissue_or_organ_of_origin.diagnoses,
-         treatment_type.treatments.diagnoses)
-  
-
-
-```
-
--   add some of the columns from above to the cleaning below –\> then delete the above chunk
-
 ### Cleaning data
 
 First we choose the wanted columns to work with in the wanted order and rename them:
-
--   remove the patient id (created under)
 
 ```{r}
 #| label: "choosing-columns"
 
 expression_meta_data_clean_1 <- expression_meta_data_clean |> 
   select(sample_id = sample,
-         patient_id = submitter_id,
          gender = gender.demographic,
+         race = race.demographic,
          vital_status = vital_status.demographic,
          overall_survival = OS,
          primary_site,
@@ -70,28 +48,23 @@ expression_meta_data_clean_1 <- expression_meta_data_clean |>
          tissue_source_location = name.tissue_source_site,
          cigarettes_per_day = cigarettes_per_day.exposures,
          years_smoked = years_smoked.exposures,
+         alcohol_history = alcohol_history.exposures,
          peptide_target,
          expression)
 ```
 
-Then we trimmed the data-columns with sample_id and patient_id, to only have the necessary:
-
--   first remove the TCGA
-
--   create the patient_id and code_tissue_source_site by splitting the column
+Then we trim the sample_ID to not contain the code TCGA standing for The Cancer Genome Atlas, as all the values comes from this data and has this code in the beginning.
 
 ```{r}
-#| label: "modify-sample-patient-id"
+#| label: "modify-sample-id"
 
-# Modify the sample_id and patient_id columns
+# Modify the sample_id column
 expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
   mutate(
     
-    # Keep only the last part in sample_id and leave out TCGA-XX
-    sample_id = sub("^TCGA-..-(.*)", "\\1", sample_id),
+# Keep only the last part in sample_id and leave out TCGA-XX
+    sample_id = sub("^TCGA-(.*)", "\\1", sample_id)
     
-    # Keep only the ID part in patient_id and leave out TCGA-XX
-    patient_id = sub("^TCGA-..-(.*)", "\\1", patient_id)
   )
 ```
 
@@ -106,37 +79,6 @@ data_dir <- here("data/")
 write_tsv( x = expression_meta_data_clean_2,
            file = str_c(data_dir, 
                   "04_expression_meta_data_clean.tsv.gz"))
-
-
-```
-
-We want to check if values in the column "disease_type" are unique. If so, we confidently remove it
-
-```{r}
-
-clinical_data |> 
-  distinct(race.demographic) 
-
-```
-
-Columns to keep:
-
-Sample
-
-cigarettes_per_day.exposures
-
-alcohol_history.exposures
-
-race.demographic
-
-vital_status
-
-age_at_index
-
-tissue_or_organ
-
-```{r}
-
 
 
 ```
