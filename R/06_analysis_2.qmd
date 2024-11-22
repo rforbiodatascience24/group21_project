@@ -19,7 +19,7 @@ execute:
 #| label: "loading-libraries"
 
 library("tidyverse")
-
+library("broom")
 ```
 
 ## Loading data
@@ -42,7 +42,9 @@ Also removing all missing values (NA)
 expression_meta_data_analysis6 <- expression_meta_data_aug |> 
   select(overall_survival, 
          peptide_target,
-         expression)
+         expression) |> 
+   drop_na(expression) # er det den rigitge måde at gøre det 
+
 expression_meta_data_analysis6
 ```
 
@@ -60,9 +62,27 @@ Each peptide_target now has a dataframe containing the overall survival and the 
 ## Adding the linear model to the dataset 
 
 ```{r}
+
 expression_meta_data_analysis6_nested_model <- expression_meta_data_analysis6_nested |> 
-mutate(model_object = map(.x = data,
+  mutate(model_object = map(.x = data,
                           .f = ~lm(formula = expression ~ overall_survival,
                                    data = .x)))
  expression_meta_data_analysis6_nested_model
+```
+
+```{r}
+ expression_meta_data_analysis6_nested_model |>
+ filter(peptide_target == "1433BETA") |> # Replace "g2E09" with whatever was YOUR favourite gene!
+ pull(model_object)
+```
+
+Computing the confidence intervals and p-value using tidy()
+
+```{r}
+ expression_meta_data_analysis6_nested_model_tidy <- expression_meta_data_analysis6_nested_model |> 
+  mutate(model_object_tidy = map(.x = model_object,
+                                 .f = ~ tidy(conf.int = TRUE,
+                                             conf.level = 0.95,
+                                             x =.x)))
+ expression_meta_data_analysis6_nested_model_tid
 ```
