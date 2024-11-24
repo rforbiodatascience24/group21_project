@@ -13,7 +13,7 @@ execute:
   warning: FALSE
 ---
 
-## Loading libraries 
+## Loading libraries
 
 ```{r}
 #| label: "loading-libraries"
@@ -31,11 +31,11 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_c
 
 ```
 
-## Selecting columns for linear modeling 
+## Selecting columns for linear modeling
 
 Want to make a linear model of the peptide expression levels and the overall survival.
 
-Also removing all missing values (NA)
+Also removing all missing values (NA) as they cannot be included in a linear model.
 
 ```{r}
 
@@ -43,35 +43,38 @@ expression_meta_data_analysis6 <- expression_meta_data_aug |>
   select(overall_survival, 
          peptide_target,
          expression) |> 
-   drop_na(expression) # er det den rigitge måde at gøre det 
+   drop_na(expression)
 
 expression_meta_data_analysis6
 ```
 
-## Grouping the dataset by peptide_target and nesting. 
+## Grouping the dataset by peptide_target and nesting.
 
 ```{r}
- expression_meta_data_analysis6_nested <- expression_meta_data_analysis6 |> 
-group_by(peptide_target) |> 
-nest() 
- expression_meta_data_analysis6_nested
+expression_meta_data_analysis6_nested <- expression_meta_data_analysis6 |> 
+  group_by(peptide_target) |> 
+  nest() 
+
+expression_meta_data_analysis6_nested
 ```
 
 Each peptide_target now has a dataframe containing the overall survival and the normalized gene expression for the patients. The dataset is grouped by the peptides
 
-## Adding the linear model to the dataset 
+## Adding the linear model to the dataset
 
 ```{r}
 
 expression_meta_data_analysis6_nested_model <- expression_meta_data_analysis6_nested |> 
   mutate(model_object = map(.x = data,
-                          .f = ~lm(formula = expression ~ overall_survival,
+                            .f = ~lm(formula = expression ~ overall_survival,
                                    data = .x)))
- expression_meta_data_analysis6_nested_model
+
+expression_meta_data_analysis6_nested_model
 ```
 
 ```{r}
- expression_meta_data_analysis6_nested_model |>
+
+expression_meta_data_analysis6_nested_model |>
  filter(peptide_target == "1433BETA") |> # Replace "g2E09" with whatever was YOUR favourite gene!
  pull(model_object)
 ```
@@ -79,10 +82,23 @@ expression_meta_data_analysis6_nested_model <- expression_meta_data_analysis6_ne
 Computing the confidence intervals and p-value using tidy()
 
 ```{r}
- expression_meta_data_analysis6_nested_model_tidy <- expression_meta_data_analysis6_nested_model |> 
+
+expression_meta_data_analysis6_nested_model_tidy <- expression_meta_data_analysis6_nested_model |> 
   mutate(model_object_tidy = map(.x = model_object,
                                  .f = ~ tidy(conf.int = TRUE,
                                              conf.level = 0.95,
                                              x =.x)))
- expression_meta_data_analysis6_nested_model_tid
+
+expression_meta_data_analysis6_nested_model_tidy
+```
+
+## Wrangling the data
+
+```{r}
+
+expression_meta_data_analysis6_estimates <- expression_meta_data_analysis6_nested_model_tidy |> 
+  unnest(model_object_tidy)
+
+expression_meta_data_analysis6_estimates
+
 ```
