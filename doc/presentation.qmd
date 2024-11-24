@@ -1,16 +1,339 @@
 ---
-title: "Presentation"
+title: "Analysis of Head and Neck Squamous Cell Carcinomas Data"
+subtitle: "Group 21"
 author:
-- "Asta Zeuner - s203544 - azeuner"
-- "Astrid Ginnerup - s203523 - AGinnerup"
-- "Emma Danø - s203564 - EDanoe"
-- "Andrea Kristensen - s193769 - AndreaMTK"
-- "Yayi Wang - s243554 - Yayi0117"
-  html: 
-    embed-resources: true
+  - "Asta Zeuner s203544"
+  - "Astrid Ginnerup s203523"
+  - "Emma Danø s203564"
+  - "Andrea Kristensen s193769"
+  - "Yayi Wang s243554"
+html:
+  embed-resources: true
 execute: 
-  message: FALSE
-  warning: FALSE
+  message: false
+  warning: false
+format:
+  revealjs:
+    theme: theme.scss
+    transition: fade
+    background-transition: fade
+    highlight-style: ayu-mirage
+    code-block-height: 450px
+editor: visual
 ---
 
-# 
+## Introduction
+
+-   Background
+    -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
+    -   A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.
+-   Research Objective
+    -   TBD.
+    -   TBD.
+
+## Materials {.smaller}
+
+::: columns
+::: {.column width="30%"}
+-   download data
+
+    -   Phenotype (n=604)
+
+    -   Survival data (n=603)
+
+    -   Protein Expression Quantification (n=354)
+
+-   Join tables
+
+    -   inner_join
+
+    -   pivot_longer
+
+-   Save data
+:::
+
+::: {.column width="70%"}
+```{r}
+#| echo: true
+#| warning: false
+#| code-line-numbers: "|5-16|49-72|76-78"
+
+library("tidyverse")
+library("table1")
+library("here")
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.protein.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.survival.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+raw_dir <- here("data/_raw/")
+data_file <- "TCGA-HNSC.clinical.tsv.gz"
+data_loc <- "https://gdc-hub.s3.us-east-1.amazonaws.com/download/"
+
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+
+
+protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
+survival_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.survival.tsv.gz"))
+clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
+
+meta_data <- inner_join(clinical_data, survival_data, by = c("sample" = "sample"))
+
+data_dir <- here("data/")
+
+write_tsv(x = meta_data, 
+          file = str_c(data_dir, 
+                       "01_meta_data_load.tsv.gz"))
+
+# Pivot the peptide expression data longer
+peptide_long <- protein_data |> 
+                pivot_longer(cols = -1, 
+                             names_to = "sample", 
+                             values_to = "expression")
+
+data_dir <- here("data/")
+
+write_tsv( x = peptide_long,
+           file = str_c(data_dir, 
+                  "02_peptide_expression_load.tsv.gz"))
+
+final_data <- inner_join(meta_data, 
+                         peptide_long, 
+                         by = "sample")
+
+data_dir <- here("data/")
+
+
+write_tsv( x = final_data,
+           file = str_c(data_dir, 
+                  "03_expression_meta_data_load.tsv.gz"))
+
+```
+:::
+:::
+
+## Clean Data {.smaller}
+
+-   Choose columns to work with and rename them.
+
+-   Trim the sample_ID
+
+-   Save clean dataset to a tsv.gz file
+
+```{r}
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+#| code-line-numbers: "|4-20|22-29|31-33"
+
+
+expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
+
+
+expression_meta_data_clean_1 <- expression_meta_data_clean |> 
+  select(sample_id = sample,
+         gender = gender.demographic,
+         race = race.demographic,
+         vital_status = vital_status.demographic,
+         overall_survival = OS,
+         primary_site,
+         pathologic_stage = ajcc_pathologic_stage.diagnoses,
+         age_at_index = age_at_index.demographic,
+         year_of_birth = year_of_birth.demographic,
+         year_of_death = year_of_death.demographic,
+         tissue_source_location = name.tissue_source_site,
+         cigarettes_per_day = cigarettes_per_day.exposures,
+         years_smoked = years_smoked.exposures,
+         alcohol_history = alcohol_history.exposures,
+         peptide_target,
+         expression)
+
+# Modify the sample_id column
+expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
+  mutate(
+    
+# Keep only the last part in sample_id and leave out TCGA-XX
+    sample_id = sub("^TCGA-(.*)", "\\1", sample_id)
+    
+  )
+
+write_tsv( x = expression_meta_data_clean_2,
+           file = str_c(data_dir, 
+                  "04_expression_meta_data_clean.tsv.gz"))
+```
+
+## Argument Data {.smaller}
+
+-   Create a new variable, patient_id
+
+``` r
+expression_meta_data_aug_1 <- expression_meta_data_aug |> 
+  mutate(
+    patient_id = sub("(.*)-..", "\\1", sample_id)
+  ) |> 
+  relocate(patient_id, .before = sample_id)
+```
+
+-   Create columns with 5 and 10 years age intervals
+
+``` r
+expression_meta_data_aug_2 <- expression_meta_data_aug_1 |> 
+  mutate(
+    age_interval_5_year = cut(
+      age_at_index,
+      breaks = seq(0, 100, by = 5),
+      labels = paste(seq(0, 95, by = 5), seq(5, 100, by = 5) - 1, sep = "-"), 
+      include.lowest = TRUE          
+    ),
+
+    age_interval_10_year = cut(
+      age_at_index,
+      breaks = seq(0, 100, by = 10),
+      labels = paste(seq(0, 90, by = 10), seq(10, 100, by = 10) - 1, sep = "-"), 
+      include.lowest = TRUE
+    )
+  ) |> 
+  relocate(age_interval_5_year, .after = age_at_index) |> 
+  relocate(age_interval_10_year, .after = age_interval_5_year)
+```
+
+##  {.smaller}
+
+-   Create a new variable with the mean expression of each peptide_target
+
+``` r
+expression_meta_data_aug_3 <- expression_meta_data_aug_2 |> 
+  group_by(peptide_target) |> 
+  mutate(
+    mean_expression = mean(expression, na.rm = TRUE)
+  ) |> 
+# Removing the grouping to ensure that the following work is not messed up
+  ungroup() 
+```
+
+-   Creat mean expression of each peptide_target for each pathologic state
+
+``` r
+# Calculate the mean for each pathologic stage
+mean_of_expression_pathologic_stages <- expression_meta_data_aug_3 |> 
+# Exclude NA values in pathologic_stage and group by peptide_target and pathologic_state
+  filter(!is.na(pathologic_stage)) |>  
+  group_by(peptide_target, pathologic_stage) |> 
+# Calculating the mean_expression of each pathologic state
+  summarise(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
+# Widening the pivot table with the new variables of calculated mean named by the pathologic_state
+  pivot_wider(
+    names_from = pathologic_stage,
+    values_from = mean_expression,
+    names_prefix = "mean_expression_"
+  )
+
+# Join the calculated means back into the original dataset with the join function
+expression_meta_data_aug_4 <- expression_meta_data_aug_3 |> 
+  right_join(mean_of_expression_pathologic_stages, by = "peptide_target")
+```
+
+-   Write the augmented dataset to a tsv.gz file
+
+## Description {.smaller}
+
+```{r}
+#| echo: false
+
+expression_meta_data_load<- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
+
+expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
+
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
+```
+
+Check how many patients
+
+```{r}
+#| echo: true  # Show the code
+#| eval: true  # Execute the code
+
+expression_meta_data_aug |>
+  select(patient_id) |>
+  n_distinct()
+```
+
+Compare with the original data before cleaning
+
+```{r}
+#| echo: true  # Show the code
+#| eval: true  # Execute the code
+expression_meta_data_load |>
+  select(submitter_id) |>
+  n_distinct()
+```
+
+Check what different pathologic stages there are
+
+```{r}
+#| echo: true  # Show the code
+#| eval: true  # Execute the code
+
+expression_meta_data_aug |> 
+  group_by(pathologic_stage) |> 
+  summarize(count = n(), .groups = "drop")
+```
+
+##  {.smaller}
+
+Check the lowest and highest age
+
+```{r}
+#| echo: true  # Show the code
+#| eval: true  # Execute the code
+
+expression_meta_data_aug |> 
+  summarize(
+    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
+    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
+  )
+```
+
+Check how many peptides
+
+```{r}
+#| echo: true  # Show the code
+#| eval: true  # Execute the code
+
+expression_meta_data_aug |>
+  select(peptide_target) |>
+  n_distinct()
+```
+
+## Analysis {.smaller}
+
+## Discussion {.smaller}
