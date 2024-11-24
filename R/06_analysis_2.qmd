@@ -20,6 +20,7 @@ execute:
 
 library("tidyverse")
 library("broom")
+library("ggrepel")
 ```
 
 ## Loading data
@@ -92,15 +93,90 @@ expression_meta_data_analysis6_nested_model_tidy <- expression_meta_data_analysi
 expression_meta_data_analysis6_nested_model_tidy
 ```
 
-## Wrangling the data
+## Wrangling the expression data estimates
 
 ```{r}
 
-expression_meta_data_analysis6_estimates <- expression_meta_data_analysis6_nested_model_tidy |> 
+expression_meta_data_analysis6_estimates <- expression_meta_data_analysis6_nested_model_tidy |>
   unnest(model_object_tidy)
 
 expression_meta_data_analysis6_estimates
 
-expression_meta_data_analysis6_nested_model_tidy
+```
+
+## Clean the data and calculating q.value
+
+Term describes if the patient is dead or alive. 0 = alive and 1 = dead. Therefore the intercept is alive and the slope is dead. **Is this correct???**
+
+```{r}
+
+expression_meta_data_analysis6_estimates_clean <- expression_meta_data_analysis6_estimates |> 
+  filter(term == "overall_survival") |> 
+  select(peptide_target,
+         p.value,
+         estimate,
+         conf.low,
+         conf.high) |> 
+  ungroup(peptide_target)
+
+expression_meta_data_analysis6_estimates_clean
+```
+
+Adding the adjusted p-value in a new variable, q.value, and add extra variable that tells if the q-value is significant or not with alpha = 5%
+
+```{r}
+
+expression_meta_data_analysis6_estimates_clean <- expression_meta_data_analysis6_estimates_clean |> 
+  mutate(q.value = p.adjust(p = p.value),
+         is_significant = case_when(q.value > 0.05 ~ "no",
+                                    q.value <= 0.05 ~ "yes"))
+
+expression_meta_data_analysis6_estimates_clean
 
 ```
+
+```{r}
+
+expression_meta_data_analysis6_estimates_clean |>  filter(is_significant == "yes")
+
+
+```
+
+We have 6 peptides where the expression levels are found to be significantly different between dead and alive patients.
+
+## Volcano plot
+
+```{r}
+library("ggthemes")
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+
+expression_meta_data_analysis6_estimates_clean <- expression_meta_data_analysis6_estimates_clean |>
+  mutate(label = case_when(is_significant == "yes" ~ peptide_target,
+                           is_significant == "no" ~ ""))
+expression_meta_data_analysis6_estimates_clean
+
+expression_meta_data_analysis6_estimates_clean |>
+  ggplot(mapping = aes(x = estimate,
+                       y = -log10(p.value),
+                       color = is_significant)) +
+  geom_label_repel(aes(label = label),
+                  size = 2,
+                  max.overlaps = 25) +
+  labs(title = "Peptides associated with death of Head and Neck patients",
+       subtitle = "Peptides highlighted in XX were significant after multiple testing correction",
+       x = "Estimates",
+       y = "-log10(p)") +
+  theme_minimal(base_size =12) +
+  theme(plot.title = element_text(hjust = 0),
+        plot.subtitle = element_text(hjust = 0),
+        legend.position = "none") +
+  geom_point(alpha = 0.5) + 
+  scale_color_colorblind()
+
+```
+
+**Make more plots with the significant peptides? Eg. looking at the patient groups???**
