@@ -336,4 +336,16 @@ expression_meta_data_aug |>
 
 ## Analysis {.smaller}
 
+Heatmaps
+
+::: columns
+::: {.column width="50%"}
+![Left Image](images/heatmap_1.png){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+![Right Image](images/heatmap_2.png){width="100%" height="100%"}
+:::
+:::
+
 ## Discussion {.smaller}
