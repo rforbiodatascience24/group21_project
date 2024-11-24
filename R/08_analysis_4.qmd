@@ -13,4 +13,96 @@ execute:
   warning: FALSE
 ---
 
-## 
+## Loading libraries
+
+```{r}
+#| label: "loading-libraries"
+
+library("tidyverse")
+library("broom")
+
+```
+
+## Loading data
+
+```{r}
+#| label: "load-data" 
+
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
+
+```
+
+## Principle component coordinates
+
+Transposing the dataframe so we can to a PCA of the peptide targets instead patients
+
+```{r}
+
+protein_data_trans <- protein_data |> 
+  drop_na() |> 
+  pivot_longer(col = -1,
+               names_to = "sample",
+               values_to = "expression")  |> 
+  pivot_wider(names_from = peptide_target,
+              values_from = expression)
+ 
+```
+
+```{r}
+pca_analysis <- protein_data_trans |> 
+  select_if(is.numeric) |> 
+  drop_na() |> 
+  prcomp(center = TRUE,
+         scale = TRUE )
+  
+```
+
+```{r}
+pca_analysis |> 
+  tidy("pcs")
+```
+
+```{r}
+
+#make this plot prettier ###########################
+pca_analysis |>
+  tidy("pcs") |> 
+  mutate(percent = percent * 100) |> 
+  ggplot(aes(x = PC,
+             y = percent)) +
+  geom_hline(yintercept = 0) +
+  geom_col(colour = "orange",
+           alpha = 0.5) +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank()) +
+  labs(title = "Scree Plot of PCA of head and neck cancer 
+       peptide expression")
+```
+
+Form the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
+
+```{r}
+protein_data_trans_metadata <- protein_data_trans |> 
+  left_join(y = meta_data, 
+             join_by(sample == sample)) 
+```
+
+```{r}
+
+pca_analysis_aug <-  pca_analysis |> 
+  augment(protein_data_trans_metadata)
+
+```
+
+ajcc_pathologic_stage.diagnoses
+
+vital_status.demographic
+
+```{r}
+pca_analysis_aug |> 
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             color = primary_site)) + 
+  geom_point() 
+```

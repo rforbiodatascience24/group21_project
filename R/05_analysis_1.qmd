@@ -13,6 +13,14 @@ execute:
   warning: FALSE
 ---
 
+## Loading libraries
+
+```{r}
+
+library("tidyverse")
+library("patchwork")
+```
+
 ## Loading the data
 
 -   remember to change to \_aug

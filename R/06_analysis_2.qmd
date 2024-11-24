@@ -28,7 +28,7 @@ library("ggrepel")
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
 ```
 
