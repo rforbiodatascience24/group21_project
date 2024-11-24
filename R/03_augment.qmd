@@ -26,8 +26,6 @@ library("table1")
 library("here")
 ```
 
-=======
->>>>>>> 9b05271b69eb03b080db94ee448be7ff201e9bc4
 ## Loading the data
 
 ```{r}
