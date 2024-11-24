@@ -13,7 +13,7 @@ execute:
   warning: FALSE
 ---
 
-## Loading libraries 
+## Loading libraries
 
 ```{r}
 #| label: "loading-libraries"
@@ -31,7 +31,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_c
 
 ```
 
-## Selecting columns for linear modeling 
+## Selecting columns for linear modeling
 
 Want to make a linear model of the peptide expression levels and the overall survival.
 
@@ -48,7 +48,7 @@ expression_meta_data_analysis6 <- expression_meta_data_aug |>
 expression_meta_data_analysis6
 ```
 
-## Grouping the dataset by peptide_target and nesting. 
+## Grouping the dataset by peptide_target and nesting.
 
 ```{r}
  expression_meta_data_analysis6_nested <- expression_meta_data_analysis6 |> 
@@ -59,7 +59,7 @@ nest()
 
 Each peptide_target now has a dataframe containing the overall survival and the normalized gene expression for the patients. The dataset is grouped by the peptides
 
-## Adding the linear model to the dataset 
+## Adding the linear model to the dataset
 
 ```{r}
 
@@ -84,5 +84,5 @@ Computing the confidence intervals and p-value using tidy()
                                  .f = ~ tidy(conf.int = TRUE,
                                              conf.level = 0.95,
                                              x =.x)))
- expression_meta_data_analysis6_nested_model_tid
+ expression_meta_data_analysis6_nested_model_tidy
 ```
