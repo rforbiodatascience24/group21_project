@@ -22,3 +22,57 @@ execute:
 -   ethnicity
 
 -   gender overall survival
+
+## **Loading libraries**
+
+```{r}
+#| label: "load-libraries" 
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+#| 
+library("ggplot2")
+#library("colorspace")
+```
+
+Loading data
+
+```{r}
+#| label: "load-data" 
+
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
+
+```
+
+## Plot with gender and overall survival
+
+```{r}
+ggplot(data = expression_meta_data_aug,
+       mapping = aes(x = gender,
+                     fill = vital_status
+                     ))+
+  geom_bar(color = "powderblue",
+           position = "fill")+
+  scale_fill_brewer(palette = "Pastel2")+
+   ggtitle("Proportional Vital Status within the two Genders")
+```
+
+Facet wrap with ethnicity and survival
+
+```{r}
+ggplot(data = expression_meta_data_aug,
+       mapping = aes(x = gender,
+                     fill = vital_status
+                     ))+
+  geom_bar(color = "powderblue",
+           position = "fill"
+           )+
+  scale_fill_brewer(palette = "Pastel2")+
+  facet_wrap(~race)+
+  labs(title = "Distribution of Gender and Vital Status Across Races",
+          subtitle = "Proportional representation by gender and race") +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        strip.text = element_text(size = 7, face = "bold"))
+
+```
