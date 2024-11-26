@@ -28,8 +28,6 @@ library("here")
 
 ## Loading the data
 
--   remember to change to \_aug
-
 ```{r}
 #| label: "load-data" 
 
@@ -37,11 +35,12 @@ expression_meta_data_analysis_1 <- read_tsv(file = here("data/04_expression_meta
 
 ```
 
-### Heat-map of 50 random peptide-targets plotted against age
+### Heat-map of 50 random peptide-targets plotted against age (not used)
 
--   %in% - is base R change it to tidyverse
+We have decided to **leave out the plot of 50 random peptide-targets** as we decided that it would be more valuable to take the most up- and downregulated peptide-targets and look at the expression patterns for the different age-groups.
 
 ```{r}
+#| eval: false
 
 # Set seed for reproducibility
 set.seed(123)
@@ -58,11 +57,11 @@ heatmap_data <- expression_meta_data_aug |>
          !is.na(age_at_index),
          !is.na(expression)) |> 
   mutate(
-# Bin ages into 5-year intervals
+    # Bin ages into 5-year intervals
     age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5), include.lowest = TRUE)
   ) |> 
   group_by(peptide_target, age_interval) |> 
-# Aggregate expression values by mean
+  # Aggregate expression values by mean
   summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop")
 
 # Convert `age_interval` to factor for proper ordering
@@ -76,6 +75,7 @@ Plotting the heat-map
 #| label: "heat-map-50-random-against-age"
 #| fig-width: 10
 #| fig-height: 10
+#| eval: false
 
 # Create the heatmap
 heatmap_data |> 
@@ -104,7 +104,7 @@ heatmap_data |>
   )
 ```
 
-### Heat-map of 30 most upregulated and 20 most downregulated peptide-targets plotted against age
+### Heat-map of 20 most up- and downregulated peptide-targets plotted against age
 
 -   Try to make functions, consider
 
@@ -115,25 +115,92 @@ heatmap_data |>
 -   Look at selected_peptrides\$peptide_data
 
 ```{r}
-# Select top 20 most upregulated and bottom 20 most downregulated peptide targets
-top_upregulated <- expression_meta_data_analysis_1 |> 
-  filter(!is.na(age_interval_5_year), # Removing rows with NA
-         !is.na(mean_expression),
-         !peptide_target %in% c("HLA-DQA1", "TTF1")) |>  # Exclude specific peptides
+# Select top 20 most upregulated peptide targets
+most_upregulated <- expression_meta_data_analysis_1 |> 
+  filter(!is.na(mean_expression)) |> # Remove rows with NA
+  group_by(mean_expression) |>        # Group by peptide_target
+  slice_max(order_by = mean_expression, n = 1) |> # Take the row with max mean_expression for each peptide_target
+  ungroup() |>                       # Ungroup to avoid grouped output
+  slice_max(order_by = mean_expression, n = 20)  # Select the 20 highest mean_expression
+
+# Select bottom 20 most downregulated peptide targets
+most_downregulated <- expression_meta_data_analysis_1 |> 
+  filter(!is.na(mean_expression)) |> # Remove rows with NA
+  group_by(mean_expression) |>        # Group by peptide_target
+  slice_min(order_by = mean_expression, n = 1) |> # Take the row with min mean_expression for each peptide_target
+  ungroup() |>                       # Ungroup to avoid grouped output
+  slice_min(order_by = mean_expression, n = 20)  # Select the 20 lowest mean_expression
+
+# Combine the two subsets
+selected_peptides <- bind_rows(most_upregulated, most_downregulated)
+
+# Inspect the data
+selected_peptides
+```
+
+```{r}
+# Select top 20 most upregulated peptide targets
+most_upregulated <- expression_meta_data_analysis_1  |> 
+  
+  filter(!is.na(mean_expression)) |> # Removing rows with NA
+  
   group_by(peptide_target) |> 
-  summarize(mean_expression = mean(mean_expression, na.rm = TRUE), .groups = "drop") |> 
+  
+  summarise(mean_expression) |> 
+  
   slice_max(order_by = mean_expression, n = 20)
 
-top_downregulated <- expression_meta_data_analysis_1 |> 
-  filter(!is.na(age_interval_5_year), # Removing rows with NA
-         !is.na(mean_expression),
-         !peptide_target %in% c("HLA-DQA1", "TTF1")) |>  # Exclude specific peptides
-  group_by(peptide_target) |> 
-  summarize(mean_expression = mean(mean_expression, na.rm = TRUE), .groups = "drop") |> 
+
+# Select bottom 20 most downregulated 
+most_downregulated <- expression_meta_data_analysis_1  |> 
+  
+  filter(!is.na(mean_expression)) |> # Removing rows with NA
+  
+  group_by(peptide_target) |>  
+  
+  summarise(mean_expression)|> 
+  
   slice_min(order_by = mean_expression, n = 20)
 
 # Combine the two subsets
 selected_peptides <- bind_rows(top_downregulated, top_upregulated)
+
+# Inspect data
+selected_peptides
+```
+
+```{r}
+# Select top 20 most upregulated peptide targets
+most_upregulated <- expression_meta_data_analysis_1 |> 
+  
+  summarise(mean_expression)
+  
+  filter(!is.na(mean_expression)) |> # Removing rows with NA
+  
+  group_by(peptide_target) |> 
+  
+  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> # Summarizing the mean_expression even though having a variable of this name, as it requires less coding in this way
+  
+  slice_max(order_by = mean_expression, n = 20)
+
+
+# Select bottom 20 most downregulated 
+most_downregulated <- expression_meta_data_analysis_1 |> 
+  
+  filter(!is.na(age_interval_5_year), # Removing rows with NA
+         !is.na(expression)) |> 
+  
+  group_by(peptide_target) |> 
+  
+  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
+  
+  slice_min(order_by = mean_expression, n = 20)
+
+# Combine the two subsets
+selected_peptides <- bind_rows(top_downregulated, top_upregulated)
+
+# Inspect data
+selected_peptides
 ```
 
 ```{r}
