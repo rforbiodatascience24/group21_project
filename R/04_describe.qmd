@@ -13,6 +13,19 @@ execute:
   warning: FALSE
 ---
 
+## Load Library
+
+```{r}
+#| label: "load-libraries" 
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+
+library("tidyverse")
+library("table1")
+library("here")
+```
+
 ## Loading the data
 
 ```{r}
@@ -23,20 +36,6 @@ expression_meta_data_load<- read_tsv(file = here("data/03_expression_meta_data_l
 expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
 
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
-
-
-```
-
-## Load Library
-
-```{r}
-#| label: "load-libraries" 
-#| echo: TRUE
-#| eval: TRUE 
-#| output: FALSE  
-
-library("tidyverse")
-
 ```
 
 ## Discription
@@ -62,7 +61,7 @@ Check what different pathologic stages there are:
 
 ```{r}
 # Count occurrences of pathologic_stages per patient_id
-expression_meta_trimmed |> 
+expression_meta_data_aug |> 
   group_by(pathologic_stage) |> 
   summarize(count = n(), .groups = "drop")  # Count the occurrences and ungroup
 ```
