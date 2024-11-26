@@ -46,6 +46,10 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 
 ## Plot with gender and overall survival
 
+add absolute numbers
+
+change axis titles from count
+
 ```{r}
 ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
@@ -54,10 +58,13 @@ ggplot(data = expression_meta_data_aug,
   geom_bar(color = "powderblue",
            position = "fill")+
   scale_fill_brewer(palette = "Pastel2")+
-   ggtitle("Proportional Vital Status within the two Genders")
+   ggtitle("Proportional Vital Status within the two Genders")+
+  ggsave("Barplot_VitalStatusGenders")
 ```
 
 Facet wrap with ethnicity and survival
+
+add absolute values
 
 ```{r}
 ggplot(data = expression_meta_data_aug,
