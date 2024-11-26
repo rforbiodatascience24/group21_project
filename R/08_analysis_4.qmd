@@ -34,7 +34,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 
 ## Principle component coordinates
 
-Transposing the dataframe so we can to a PCA of the peptide targets instead patients
+Transposing the dataframe so we can do a PCA of the peptide targets instead patients
 
 ```{r}
 
@@ -42,9 +42,11 @@ protein_data_trans <- protein_data |>
   drop_na() |> 
   pivot_longer(col = -1,
                names_to = "sample",
-               values_to = "expression")  |> 
+               values_to = "expression") |> 
   pivot_wider(names_from = peptide_target,
               values_from = expression)
+
+protein_data_trans
  
 ```
 
