@@ -20,6 +20,7 @@ execute:
 
 library("tidyverse")
 library("broom")
+library("ggthemes")
 library("ggrepel")
 ```
 
@@ -106,7 +107,9 @@ expression_meta_data_analysis6_estimates
 
 ## Clean the data and calculating q.value
 
-Term describes if the patient is dead or alive. 0 = alive and 1 = dead. Therefore the intercept is alive and the slope is dead. **Is this correct???**
+Term describes if the patient is dead or alive. 0 = alive and 1 = dead. Therefore the intercept is alive and the slope + intercept is dead. **Is this correct??? Explain better???**
+
+-   make with smoking or non smoking?
 
 ```{r}
 
@@ -147,10 +150,6 @@ We have 6 peptides where the expression levels are found to be significantly dif
 ## Volcano plot
 
 ```{r}
-library("ggthemes")
-```
-
-```{r}
 #| fig-width: 8
 #| fig-height: 5
 
@@ -163,6 +162,8 @@ expression_meta_data_analysis6_estimates_clean |>
   ggplot(mapping = aes(x = estimate,
                        y = -log10(p.value),
                        color = is_significant)) +
+  geom_point(alpha = 0.5) +
+  scale_color_colorblind() +
   geom_label_repel(aes(label = label),
                   size = 2,
                   max.overlaps = 25) +
@@ -170,12 +171,10 @@ expression_meta_data_analysis6_estimates_clean |>
        subtitle = "Peptides highlighted in XX were significant after multiple testing correction",
        x = "Estimates",
        y = "-log10(p)") +
-  theme_minimal(base_size =12) +
+  theme_minimal(base_size = 12) +
   theme(plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
-        legend.position = "none") +
-  geom_point(alpha = 0.5) + 
-  scale_color_colorblind()
+        legend.position = "none") 
 
 ```
 
