@@ -13,6 +13,18 @@ execute:
   warning: FALSE
 ---
 
+Description added:
+
+RPPA is the method for measuring peptide target expression. These expressions are quantified by comparing them with healthy persons.
+
+To-do list:
+
+describe the columns in both the raw datasets and augmented data
+
+Count patients in each stage
+
+Check the youngest dead and oldest dead
+
 ## Load Library
 
 ```{r}
@@ -57,7 +69,7 @@ expression_meta_data_load |>
 
 ```
 
-Check what different pathologic stages there are:
+-   Check what different pathologic stages there are:
 
 ```{r}
 # Count occurrences of pathologic_stages per patient_id
