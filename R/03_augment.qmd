@@ -122,7 +122,7 @@ expression_meta_data_aug_4 <- expression_meta_data_aug_3 |>
   right_join(mean_of_expression_pathologic_stages, by = "peptide_target")
 ```
 
-## Write the augmentet dataset to a tsv.gz file
+## Write the augmented dataset to a tsv.gz file
 
 ```{r}
 #| label: "write-clean-data-to-tsv.gz"
