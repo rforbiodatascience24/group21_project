@@ -6,7 +6,7 @@ author:
 - "Emma Danø - s203564 - EDanoe"
 - "Andrea Kristensen - s193769 - AndreaMTK"
 - "Yayi Wang - s243554 - Yayi0117"
-  html: 
+html: 
     embed-resources: true
 execute: 
   message: FALSE
@@ -205,7 +205,6 @@ expression_meta_data_analysis_1_1 <- expression_meta_data_analysis_1 |>
     mean_expression_original = mean_expression
   )
 ```
-
 
 ```{r}
 # Step 1: Gather all stage columns into long format

@@ -6,7 +6,7 @@ author:
 - "Emma Danø - s203564 - EDanoe"
 - "Andrea Kristensen - s193769 - AndreaMTK"
 - "Yayi Wang - s243554 - Yayi0117"
-  html: 
+html: 
     embed-resources: true
 execute: 
   message: FALSE
