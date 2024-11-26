@@ -13,6 +13,16 @@ execute:
   warning: FALSE
 ---
 
+Description added:
+
+To-do list:
+
+describe the columns in both the raw datasets and augmented data
+
+Count patients in each stage
+
+Check the youngest dead and oldest dead
+
 ## Load Library
 
 ```{r}
@@ -40,24 +50,43 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 
 ## Discription
 
--   how many patients
+-   Check tables before and after cleaning and augmentation.
+
+    We can see that the columns change.
 
 ```{r}
-expression_meta_data_aug |>
-  select(patient_id) |>
-  n_distinct()
+columns_before <- expression_meta_data_load |> ncol()
+columns_after <- expression_meta_data_aug |> ncol()
+
+columns_before
+columns_after
 ```
 
--   could compare with the original data before cleaning
+After the augmentation, we have 25 columns to analyze:
 
 ```{r}
-expression_meta_data_load |>
+columns_names_after <- expression_meta_data_aug |> colnames()
+
+columns_names_after
+```
+
+-   We can see that patient numbers didn't change from the following code.
+
+```{r}
+n_patient_before <- expression_meta_data_load |>
   select(submitter_id) |>
   n_distinct()
 
+n_patient_after <- expression_meta_data_aug |>
+  select(patient_id) |>
+  n_distinct()
+
+
+n_patient_before
+n_patient_after
 ```
 
-Check what different pathologic stages there are:
+-   Check what different pathologic stages there are:
 
 ```{r}
 # Count occurrences of pathologic_stages per patient_id
