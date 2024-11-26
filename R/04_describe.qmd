@@ -61,7 +61,7 @@ Check what different pathologic stages there are:
 
 ```{r}
 # Count occurrences of pathologic_stages per patient_id
-expression_meta_trimmed |> 
+expression_meta_data_aug |> 
   group_by(pathologic_stage) |> 
   summarize(count = n(), .groups = "drop")  # Count the occurrences and ungroup
 ```
