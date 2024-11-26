@@ -51,15 +51,60 @@ add absolute numbers
 change axis titles from count
 
 ```{r}
+
+gender_totals <- expression_meta_data_aug |> 
+  group_by(gender, vital_status) |> 
+  summarize(total = n(), .group = "drop")
+
+
 ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
                      fill = vital_status
                      ))+
+  
   geom_bar(color = "powderblue",
            position = "fill")+
+  
+  
+  geom_text(data = gender_totals, 
+            aes(x = gender, 
+                y = 0.1,  # Slightly higher than the top of the bars
+                label = paste("Total: ", total)),
+            position = position_stack(vjust = 0.5), 
+            inherit.aes = FALSE,
+            size = 2,   # Adjust text size
+            color = "black")+
+  
+  
   scale_fill_brewer(palette = "Pastel2")+
-   ggtitle("Proportional Vital Status within the two Genders")+
-  ggsave("Barplot_VitalStatusGenders")
+  labs(x = "Gender", 
+       y = "Proportion",
+       title = "Distribution of Gender and Vital Status",
+       subtitle = "Proportional representation by gender and race",
+       fill = "Vital Status"
+       )+
+  
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.position = "right"
+        )
+  
+
+#ggsave("~/projects/group_21_project/doc/images/Barplot_VitalStatusGenders.png", plot= last_plot())
+
+
+
+#trying to add absolute numbers
+#geom_text(data = gender_totals,
+            #aes(x = gender, 
+                #y= 0.2, 
+                #label = total),
+            #position = position_stack(vjust=0.5),
+            #inherit.aes = FALSE,
+            #vjust = 1)+
+
+
+
 ```
 
 Facet wrap with ethnicity and survival
@@ -76,10 +121,31 @@ ggplot(data = expression_meta_data_aug,
            )+
   scale_fill_brewer(palette = "Pastel2")+
   facet_wrap(~race)+
-  labs(title = "Distribution of Gender and Vital Status Across Races",
-          subtitle = "Proportional representation by gender and race") +
+  labs(x = "Gender", 
+       y = "Proportion",
+       title = "Distribution of Gender and Vital Status Across Races",
+          subtitle = "Proportional representation by gender and race",
+       fill = "Vital Status") +
+  
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
-        strip.text = element_text(size = 7, face = "bold"))
+        strip.text = element_text(size = 6, face = "bold"))
+
+```
+
+```{r}
+
+expression_meta_data_aug |> 
+  drop_na(pathologic_stage) |> 
+ggplot(mapping = aes(x = vital_status,
+                     y = cigarettes_per_day))+
+geom_boxplot(color = "lawngreen",
+             fill = "seagreen3")+
+  facet_wrap(~pathologic_stage)+
+  labs(x = "Vital Status", 
+       y = "Cigarettes per day",
+       title = "Distribution of Cigarettes per day and Vital Status Across pathological stages",
+       fill = "Vital Status")+
+  theme(plot.title = element_text(size = 10, hjust = 0.5))
 
 ```
