@@ -30,6 +30,8 @@ library("broom")
 
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
+protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
+
 ```
 
 ## Principle component coordinates
@@ -37,6 +39,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 Transposing the dataframe so we can do a PCA of the peptide targets instead patients
 
 ```{r}
+#| label: "transposing-protein-expression-dataframe" 
 
 protein_data_trans <- protein_data |> 
   drop_na() |> 
@@ -51,6 +54,7 @@ protein_data_trans
 ```
 
 ```{r}
+#| label: "PCA" 
 pca_analysis <- protein_data_trans |> 
   select_if(is.numeric) |> 
   drop_na() |> 
@@ -59,16 +63,16 @@ pca_analysis <- protein_data_trans |>
   
 ```
 
-```{r}
-pca_analysis |> 
-  tidy("pcs")
-```
+## Scree plot
 
 ```{r}
+#| label: "scree-plot" 
+#| fig-width: 7
+#| fig-height: 4
 
-#make this plot prettier ###########################
-pca_analysis |>
-  tidy("pcs") |> 
+
+Scree_plot <- pca_analysis |>
+  tidy("eigenvalues") |> 
   mutate(percent = percent * 100) |> 
   ggplot(aes(x = PC,
              y = percent)) +
@@ -78,33 +82,100 @@ pca_analysis |>
   theme_minimal() +
   theme(panel.grid.minor.x = element_blank(),
         panel.grid.major.x = element_blank()) +
-  labs(title = "Scree Plot of PCA of head and neck cancer 
-       peptide expression")
+  labs(title = "Scree Plot of PCA of Protein Expression",
+       subtitle = "Protein Expression in Tissue from Head and Neck Cancer Patients",
+       x = "Principle Component (PC)",
+       y = "Percent")
+
+ggsave(filename = "08_PCA_analysis_scree.png",
+       plot = Scree_plot, 
+       device = "png",
+       path = "../results/images")
+
+Scree_plot
 ```
 
-Form the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
+From the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
+
+## Adding the meta data to the PCA analysis 
+
+Joining the data frame used in the PCA with the meta_data, to be able to color based on vital status and pathological stage. We are using left join, as we only want the meta data for the patients that we have in our PCA.
 
 ```{r}
+#| label: "joining-portein-expression-with-meta-data" 
+
 protein_data_trans_metadata <- protein_data_trans |> 
   left_join(y = meta_data, 
              join_by(sample == sample)) 
 ```
 
+Adding the metadata to the PC Analysis
+
 ```{r}
+#| label: "augmenting-metadata-to-PCA-data" 
 
 pca_analysis_aug <-  pca_analysis |> 
   augment(protein_data_trans_metadata)
-
 ```
 
-ajcc_pathologic_stage.diagnoses
-
-vital_status.demographic
+Creating labels for the PCA plot, containing the variance percentage. The value is computed using tidy()
 
 ```{r}
-pca_analysis_aug |> 
+#| label: "adding-variance-percentage-to-the-labels" 
+
+pca_axis_labels <- pca_analysis |> 
+  tidy("eigenvalues") |> 
+  mutate(label = str_c("PC", PC, ", VE = ", round(percent*100,2), "%")) |> 
+  pull("label")
+```
+
+## PCA plot 
+
+```{r}
+#| label: "PCA-plot-vital-status" 
+#| fig-width: 7
+#| fig-height: 4
+
+
+pca_plot_vital <- pca_analysis_aug |> 
   ggplot(aes(x = .fittedPC1, 
              y = .fittedPC2, 
-             color = primary_site)) + 
-  geom_point() 
+             color = vital_status.demographic)) + 
+  geom_point() +
+  labs(x = pluck(pca_axis_labels,1),
+       y = pluck(pca_axis_labels,2),
+       title = "PC Analysis of Protein Expression" ,
+       subtitle = "Protein Expression in Tissue from Head and Neck Cancer Patients",
+       color = "Vital status") 
+
+ggsave(filename = "08_PCA_analysis_PCA_vital.png",
+       plot = pca_plot_vital, 
+       device = "png",
+       path = "../results/images")
+
+pca_plot_vital
+```
+
+```{r}
+#| label: "PCA-plot-pathological-stage" 
+#| fig-width: 7
+#| fig-height: 4
+
+pca_plot_stage <- pca_analysis_aug |> 
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             color = ajcc_pathologic_stage.diagnoses)) + 
+  geom_point() +
+  labs(x = pluck(pca_axis_labels,1),
+       y = pluck(pca_axis_labels,2),
+       title = "PC Analysis of Protein Expression" ,
+       subtitle = "Protein Expression in Tissue from Head and Neck Cancer Patients",
+       color = "Pathological stage") 
+
+ggsave(filename = "08_PCA_analysis_PCA_stage.png",
+       plot = pca_plot_stage, 
+       device = "png",
+       path = "../results/images")
+
+pca_plot_stage
 ```
