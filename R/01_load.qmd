@@ -131,14 +131,14 @@ write_tsv( x = peptide_long,
 # Join the datasets on the 'sample' column
 
 
-final_data <- inner_join(meta_data, 
+expression_meta_data <- inner_join(meta_data, 
                          peptide_long, 
                          by = "sample")
 
 data_dir <- here("data/")
 
 
-write_tsv( x = final_data,
+write_tsv( x = expression_meta_data,
            file = str_c(data_dir, 
                   "03_expression_meta_data_load.tsv.gz"))
 
