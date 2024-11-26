@@ -106,8 +106,16 @@ heatmap_data |>
 
 ### Heat-map of 30 most upregulated and 20 most downregulated peptide-targets plotted against age
 
+-   Try to make functions, consider
+
+-   Look at the leave out peptide targets
+
+-   Look intro why taking the mean of the mean
+
+-   Look at selected_peptrides\$peptide_data
+
 ```{r}
-# Select top 30 most upregulated and bottom 20 most downregulated peptide targets
+# Select top 20 most upregulated and bottom 20 most downregulated peptide targets
 top_upregulated <- expression_meta_data_analysis_1 |> 
   filter(!is.na(age_interval_5_year), # Removing rows with NA
          !is.na(mean_expression),
@@ -137,7 +145,7 @@ heatmap_data_filtered <- expression_meta_data_aug |>
 ```
 
 ```{r}
-#| label: "heat-map-30UP-20DOWN-against-age"
+#| label: "heat-map-20UP-20DOWN-against-age"
 #| fig-width: 20
 #| fig-height: 10
 
@@ -195,6 +203,8 @@ heatmap_data_filtered |>
     legend.title = element_text(size = 14)
   )
 ```
+
+-   Our expression is normalized and here we look at the peptide levels'
 
 ### Five heat-maps for the expression pattern sorted by pathological stage
 
