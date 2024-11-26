@@ -38,32 +38,50 @@ expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 ```
 
-## Discription
+## Description
 
--   how many patients
+-   Check tables before and after cleaning and augmentation.
+
+    We can see that the columns changed.
 
 ```{r}
-expression_meta_data_aug |>
-  select(patient_id) |>
-  n_distinct()
+columns_before <- expression_meta_data_load |> ncol()
+columns_after <- expression_meta_data_aug |> ncol()
+
+columns_before
+columns_after
 ```
 
--   could compare with the original data before cleaning
+After cleaning and augmentation, we have 25 columns to analyze:
 
 ```{r}
-expression_meta_data_load |>
+columns_names_after <- expression_meta_data_aug |> colnames()
+
+columns_names_after
+```
+
+-   We can see that patient numbers didn't change from the following code.
+
+```{r}
+n_patient_before <- expression_meta_data_load |>
   select(submitter_id) |>
   n_distinct()
 
+n_patient_after <- expression_meta_data_aug |>
+  select(patient_id) |>
+  n_distinct()
+
+
+n_patient_before
+n_patient_after
 ```
 
-Check what different pathologic stages there are:
+-   Check the different pathologic stages and count how many patients are in each group
 
 ```{r}
-# Count occurrences of pathologic_stages per patient_id
 expression_meta_data_aug |> 
   group_by(pathologic_stage) |> 
-  summarize(count = n(), .groups = "drop")  # Count the occurrences and ungroup
+  summarize(n_patients = n_distinct(patient_id)) 
 ```
 
 -   Check the lowest and highest age
@@ -76,7 +94,15 @@ expression_meta_data_aug |>
   )
 ```
 
--   Check how many peptides
+-   Count how many alive and dead patients
+
+```{r}
+expression_meta_data_aug |> 
+  group_by(vital_status) |>
+  summarise(n_patients = n_distinct(patient_id))
+```
+
+-   Check how many peptides we have
 
 ```{r}
 n_peptides <- expression_meta_data_aug |>
