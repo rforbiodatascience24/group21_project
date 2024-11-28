@@ -122,6 +122,18 @@ expression_meta_data_aug_4 <- expression_meta_data_aug_3 |>
   right_join(mean_of_expression_pathologic_stages, by = "peptide_target")
 ```
 
+## Adding alcohols history as a binomial factor (0 and 1)
+
+```{r}
+
+expression_meta_data_aug_5 <- expression_meta_data_aug_4 |> 
+  mutate(alcohol_history_binomial = case_when(alcohol_history == "No" ~ 0,
+                                              alcohol_history == "Yes" ~ 1)) |> 
+  relocate(alcohol_history_binomial, .after = alcohol_history)
+
+
+```
+
 ## Write the augmented dataset to a tsv.gz file
 
 ```{r}
@@ -130,7 +142,7 @@ expression_meta_data_aug_4 <- expression_meta_data_aug_3 |>
 data_dir <- here("data/")
 
 
-write_tsv( x = expression_meta_data_aug_4,
+write_tsv( x = expression_meta_data_aug_5,
            file = str_c(data_dir, 
                   "04_expression_meta_data_aug.tsv.gz"))
 
