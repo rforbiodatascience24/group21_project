@@ -28,20 +28,22 @@ library("here")
 
 ## Load dataset
 
+Loading the dataset into an object.
+
 ```{r}
 #| label: "load-data" 
 
 expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
 
-
 ```
 
-### Cleaning data
+## Cleaning the data
 
-First we choose the wanted columns to work with in the wanted order and rename them:
+To clean the dataset, we select the variables we want to work with and assign new names to the variables so they follow snake_case.\
+The cleaned dataset is assigned to a new object.
 
 ```{r}
-#| label: "choosing-columns"
+#| label: "choosing-variables-and-assigning-new-names"
 
 expression_meta_data_clean_1 <- expression_meta_data_clean |> 
   select(sample_id = sample,
@@ -60,6 +62,7 @@ expression_meta_data_clean_1 <- expression_meta_data_clean |>
          alcohol_history = alcohol_history.exposures,
          peptide_target,
          expression)
+
 ```
 
 Then we trim the sample_ID to not contain the code TCGA standing for The Cancer Genome Atlas, as all the values comes from this data and has this code in the beginning.
@@ -67,27 +70,22 @@ Then we trim the sample_ID to not contain the code TCGA standing for The Cancer 
 ```{r}
 #| label: "modify-sample-id"
 
-# Modify the sample_id column
 expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
-  mutate(
-    
-# Keep only the last part in sample_id and leave out TCGA-XX
-    sample_id = sub("^TCGA-(.*)", "\\1", sample_id)
-    
-  )
+  mutate(sample_id = sub("^TCGA-(.*)", "\\1", sample_id))
+
 ```
 
 ## Write the clean dataset to a tsv.gz file
+
+The clean dataset is saved as a .tsv.gz file in data folder and will be the dataset used for augmenting the data.
 
 ```{r}
 #| label: "write-clean-data-to-tsv.gz"
 
 data_dir <- here("data/")
 
-
 write_tsv( x = expression_meta_data_clean_2,
            file = str_c(data_dir, 
                   "04_expression_meta_data_clean.tsv.gz"))
-
 
 ```
