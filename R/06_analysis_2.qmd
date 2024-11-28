@@ -33,13 +33,14 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 
 ```
 
-## Selecting columns for linear modeling
+## Selecting variables, grouping and nesting the data for the linear modelling
 
 Want to make a linear model of the peptide expression levels and the overall survival.
 
-Also removing all missing values (NA) as they cannot be included in a linear model.
+Selecting the variables that we want to use for the linear modeling. NA's in "expression" are dropped.
 
 ```{r}
+#| label: "selecting-variables-for-linear-modeling"
 
 expression_meta_data_analysis6 <- expression_meta_data_aug |> 
   select(overall_survival, 
@@ -50,9 +51,11 @@ expression_meta_data_analysis6 <- expression_meta_data_aug |>
 expression_meta_data_analysis6
 ```
 
-## Grouping the dataset by peptide_target and nesting.
+Grouping the data by peptide_target and nesting the data so that each peptide_target gets a dataframe that contains the overall survival and the protein expression for the patients.
 
 ```{r}
+#| label: "grouping-and-nesting-data"
+
 expression_meta_data_analysis6_nested <- expression_meta_data_analysis6 |> 
   group_by(peptide_target) |> 
   nest() 
@@ -60,11 +63,12 @@ expression_meta_data_analysis6_nested <- expression_meta_data_analysis6 |>
 expression_meta_data_analysis6_nested
 ```
 
-Each peptide_target now has a dataframe containing the overall survival and the normalized gene expression for the patients. The dataset is grouped by the peptides
-
 ## Adding the linear model to the dataset
 
+Adding the linear model to the data using mutate().
+
 ```{r}
+#| label: "linear-model-to-the-data"
 
 expression_meta_data_analysis6_nested_model <- expression_meta_data_analysis6_nested |> 
   mutate(model_object = map(.x = data,
