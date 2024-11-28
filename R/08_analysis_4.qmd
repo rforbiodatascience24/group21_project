@@ -13,10 +13,13 @@ execute:
   warning: FALSE
 ---
 
-## Loading libraries
+## Load libraries
 
 ```{r}
-#| label: "loading-libraries"
+#| label: "load-libraries"
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
 
 library("tidyverse")
 library("broom")
