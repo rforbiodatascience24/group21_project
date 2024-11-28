@@ -97,7 +97,7 @@ Scree_plot
 
 From the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
 
-## Adding the meta data to the PCA analysis 
+## Adding the meta data to the PCA analysis
 
 Joining the data frame used in the PCA with the meta_data, to be able to color based on vital status and pathological stage. We are using left join, as we only want the meta data for the patients that we have in our PCA.
 
@@ -129,7 +129,7 @@ pca_axis_labels <- pca_analysis |>
   pull("label")
 ```
 
-## PCA plot 
+## PCA plot
 
 ```{r}
 #| label: "PCA-plot-vital-status" 
@@ -178,4 +178,40 @@ ggsave(filename = "08_PCA_analysis_PCA_stage.png",
        path = "../results/images")
 
 pca_plot_stage
+```
+
+## Rotation matrix 
+
+```{r}
+#| label: "View-rotation-matrix-tibble"
+
+pca_analysis |> 
+  tidy(matrix = "rotation")
+```
+
+```{r}
+#| label: "rotation-matrix"
+#| fig-width: 7
+#| fig-height: 7
+
+arrow_style <- arrow(length = unit(0.03, "npc"),
+                     ends = "first")
+
+pca_analysis |> 
+  tidy(matrix = "rotation") |> 
+  pivot_wider(names_from = "PC", 
+              names_prefix = "PC",
+              values_from = "value") |> 
+  ggplot(aes(x = PC1,
+             y = PC2)) +
+  geom_segment( xend = 0, 
+                yend = 0, 
+                arrow = arrow_style) +
+  coord_fixed() + 
+  theme_minimal() + 
+  labs(x = pluck(pca_axis_labels,1),
+       y = pluck(pca_axis_labels,2),
+       title = "Rotation Matrix of PC Analysis of Protein Expression" ,
+       subtitle = "Protein Expression in Tissue from Head and Neck Cancer Patients")
+  
 ```
