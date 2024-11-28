@@ -139,9 +139,7 @@ geom_boxplot(color = "lawngreen",
 
 Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond.
 
-mean expression vs alder facet wrap til hver af 6 gener
-
-farve i forhold itl vital_status
+The 6 most differentially expressed genes sorted on different ages
 
 ```{r}
 
@@ -159,9 +157,3 @@ expression_meta_data_aug |>
   facet_wrap(~peptide_target)+
   theme_classic()
 ```
-
-```{r}
-
-```
-
-, , , , FIBRONECTIN,
