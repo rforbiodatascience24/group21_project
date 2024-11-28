@@ -52,17 +52,14 @@ change axis titles from count
 
 ```{r}
 
-#gender_totals <- expression_meta_data_aug |> 
-  #group_by(gender, vital_status) |> 
+
   #summarize(total = n(),groups = "keep")
 
 
-gender_totals<- expression_meta_data_aug |> 
-  group_by(pathologic_stage) |> 
-  summarize(n_patients = n_distinct(patient_id)) 
 
 
-ggplot(data = expression_meta_data_aug,
+
+barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
                      fill = vital_status
                      ))+
@@ -70,15 +67,7 @@ ggplot(data = expression_meta_data_aug,
   geom_bar(color = "powderblue",
            position = "fill")+
   
-  
-  geom_text(data = gender_totals, 
-            aes(x = gender, 
-                y = 0.1,  # Slightly higher than the top of the bars
-                label = paste("Total: ", total)),
-            position = position_stack(vjust = 0.5), 
-            inherit.aes = FALSE,
-            size = 2,   # Adjust text size
-            color = "black")+
+
   
   
   scale_fill_brewer(palette = "Pastel2")+
@@ -95,18 +84,11 @@ ggplot(data = expression_meta_data_aug,
         )
   
 
-#ggsave("~/projects/group_21_project/doc/images/Barplot_VitalStatusGenders.png", plot= last_plot())
+ggsave("~/projects/group_21_project/doc/images/barplot_vital_status_genders.png", plot= last_plot())
 
 
 
-#trying to add absolute numbers
-#geom_text(data = gender_totals,
-            #aes(x = gender, 
-                #y= 0.2, 
-                #label = total),
-            #position = position_stack(vjust=0.5),
-            #inherit.aes = FALSE,
-            #vjust = 1)+
+
 
 
 
@@ -143,14 +125,43 @@ ggplot(data = expression_meta_data_aug,
 expression_meta_data_aug |> 
   drop_na(pathologic_stage) |> 
 ggplot(mapping = aes(x = vital_status,
-                     y = cigarettes_per_day))+
+                     y = years_smoked))+
 geom_boxplot(color = "lawngreen",
              fill = "seagreen3")+
   facet_wrap(~pathologic_stage)+
   labs(x = "Vital Status", 
-       y = "Cigarettes per day",
-       title = "Distribution of Cigarettes per day and Vital Status Across pathological stages",
+       y = "Years smoked",
+       title = "Distribution of Years smoked and Vital Status Across pathological stages",
        fill = "Vital Status")+
   theme(plot.title = element_text(size = 10, hjust = 0.5))
 
 ```
+
+Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond.
+
+mean expression vs alder facet wrap til hver af 6 gener
+
+farve i forhold itl vital_status
+
+```{r}
+
+expression_meta_data_aug |> 
+  filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
+  
+  ggplot(mapping = aes(x = age_at_index,
+                       y = expression,
+                       fill = vital_status, 
+                       color = vital_status
+                      ))+
+  geom_point( shape = 8,
+              size = 1)+
+  
+  facet_wrap(~peptide_target)+
+  theme_classic()
+```
+
+```{r}
+
+```
+
+, , , , FIBRONECTIN,
