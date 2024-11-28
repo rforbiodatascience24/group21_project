@@ -28,7 +28,10 @@ library("here")
 
 ## Download data
 
+Code for downloading the datasets we will be working with and saving in data/\_raw/ folder.
+
 ```{r}
+#| label: "Download-protein-data"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.protein.tsv.gz"
@@ -46,6 +49,7 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 ```
 
 ```{r}
+#| label: "Download-survival-data"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.survival.tsv.gz"
@@ -63,6 +67,7 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 ```
 
 ```{r}
+#| label: "Download-clinical-data"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.clinical.tsv.gz"
@@ -81,6 +86,8 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 
 ## Load data
 
+read_tsv is used to load data files from data/\_raw and saving the files in objects.
+
 ```{r}
 #| label: "load-data" 
 
@@ -91,6 +98,8 @@ clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 ```
 
 ## Join meta data: clinical and survival data
+
+The clinical_and survival_data are joined using inner_join() to create a meta_data set. The joined meta_data is saved as a .tsv.gz file in data folder.
 
 ```{r}
 #| label: "join-clinical-and-survival-data" 
@@ -105,12 +114,13 @@ write_tsv(x = meta_data,
 
 ```
 
-## Joining meta data and protein expression
+## Joining meta_data and protein expression
+
+The protein_data is pivoted longer using pivot_longer() and saved as a .tsv.gz file in data folder.
 
 ```{r}
-#| label: "pivot-longer-protein-expression-dataset"
+#| label: "protein_data-pivot-longer"
 
-# Pivot the peptide expression data longer
 peptide_long <- protein_data |> 
                 pivot_longer(cols = -1, 
                              names_to = "sample", 
@@ -122,14 +132,14 @@ write_tsv( x = peptide_long,
            file = str_c(data_dir, 
                   "02_peptide_expression_load.tsv.gz"))
 
-
 ```
+
+meta_data and protein_long datasets are then joined using inner_join(). The resulting dataset is saved as a .tsv.gz file in data folder and will be the dataset used for cleaning the data.
 
 ```{r}
 #| label: "Join-the-data-to-final"
 
 # Join the datasets on the 'sample' column
-
 
 expression_meta_data <- inner_join(meta_data, 
                          peptide_long, 
@@ -142,7 +152,4 @@ write_tsv( x = expression_meta_data,
            file = str_c(data_dir, 
                   "03_expression_meta_data_load.tsv.gz"))
 
-
 ```
-
-The new files have been gzipped to make it easier to load into R-studio.
