@@ -127,11 +127,9 @@ expression_meta_data_aug_5 <- expression_meta_data_aug_4 |>
 
 ```
 
-
 ## Write the augmented dataset to a tsv.gz file
 
 The augmented dataset is saved as a .tsv.gz file in data folder and will be the dataset used for description, analysis and modeling.
-
 
 ```{r}
 #| label: "write-clean-data-to-tsv.gz"

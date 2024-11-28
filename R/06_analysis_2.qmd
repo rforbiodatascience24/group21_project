@@ -13,10 +13,13 @@ execute:
   warning: FALSE
 ---
 
-## Loading libraries
+## Load libraries
 
 ```{r}
-#| label: "loading-libraries"
+#| label: "load-libraries"
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
 
 library("tidyverse")
 library("broom")
@@ -149,9 +152,46 @@ expression_meta_data_analysis6_estimates_clean |>  filter(is_significant == "yes
 
 ```
 
-We have 6 peptides where the expression levels are found to be significantly different between dead and alive patients.
+We have 6 proteins where the expression levels are found to be significantly different between dead and alive patients.
+
+## Forest plot
+
+Creating a forest plot for significant genes using ggplot.
+
+```{r}
+#| label: "forest-plot"
+#| fig-width: 8
+#| fig-height: 5
+
+
+forest_plot <- expression_meta_data_analysis6_estimates_clean |> 
+  filter(is_significant == "yes") |> 
+  ggplot(mapping = aes(x = estimate,
+                       y = fct_reorder(.f = peptide_target,
+                                       .x = estimate))) + 
+  geom_point(color = "blue") + 
+  geom_vline(xintercept = 0,
+             color = "orange",
+             size = 1,
+             alpha = 0.5) +
+  geom_errorbarh(mapping = aes(xmin = conf.low,
+                               xmax = conf.high),
+                 size = 0.5,
+                 height = 0.3,
+                 color = "blue") +
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0)) +
+  labs(title = "Peptides associated with death of Head and Neck patients",
+       x = "Estimates (95% CI)",
+       y = "")
+
+forest_plot
+
+```
 
 ## Volcano plot
+
+Creating a volcano plot to see up- and down regulated proteins.
 
 ```{r}
 #| label: "volcano-plot"
@@ -163,7 +203,7 @@ expression_meta_data_analysis6_estimates_clean <- expression_meta_data_analysis6
                            is_significant == "no" ~ ""))
 expression_meta_data_analysis6_estimates_clean
 
-expression_meta_data_analysis6_estimates_clean |>
+volcano_plot <- expression_meta_data_analysis6_estimates_clean |>
   ggplot(mapping = aes(x = estimate,
                        y = -log10(p.value),
                        color = is_significant)) +
@@ -181,11 +221,13 @@ expression_meta_data_analysis6_estimates_clean |>
         plot.subtitle = element_text(hjust = 0),
         legend.position = "none") 
 
+volcano_plot
+
 ```
 
-**Make more plots with the significant peptides? Eg. looking at the patient groups???**
+## 
 
-# Linear model: alcohol history 
+# Linear model: alcohol history
 
 ## Selecting variables, grouping and nesting the data for the linear modelling
 
