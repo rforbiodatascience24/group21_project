@@ -180,7 +180,7 @@ ggsave(filename = "08_PCA_analysis_PCA_stage.png",
 pca_plot_stage
 ```
 
-## Rotation matrix 
+## Rotation matrix
 
 ```{r}
 #| label: "View-rotation-matrix-tibble"
