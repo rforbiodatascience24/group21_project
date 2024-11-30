@@ -75,8 +75,13 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
 
 barplot_vital_status_genders  
 
-ggsave("~/projects/group_21_project/results/images/barplot_vital_status_genders.png", plot= last_plot())
 
+
+
+ggsave(filename = "barplot_vital_status_genders.png",
+       plot = barplot_vital_status_genders, 
+       device = "png",
+       path = "../results/images")
 
 
 
@@ -121,7 +126,10 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
 
 barplot_vital_status_genders_facet_races
 
-ggsave("~/projects/group_21_project/results/images/barplot_vital_status_genders_facet_races.png", plot= last_plot())
+ggsave(filename = "barplot_vital_status_genders_facet_races.png",
+       plot = barplot_vital_status_genders_facet_races, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
@@ -151,7 +159,10 @@ geom_boxplot(fill = "#eb4cbe",
 
 boxplot_years_smoked_vital_status_facet_pathological
 
-ggsave("~/projects/group_21_project/results/images/boxplot_years_smoked_vital_status_facet_pathological.png", plot= last_plot())
+ggsave(filename = "boxplot_years_smoked_vital_status_facet_pathological.png",
+       plot = boxplot_years_smoked_vital_status_facet_pathological, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
@@ -207,7 +218,10 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
 
 expression_of_6_significant_pep_and_vital_status
 
-ggsave("~/projects/group_21_project/results/images/expression_of_6_significant_pep_and_vital_status.png", plot= last_plot())
+ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
+       plot = expression_of_6_significant_pep_and_vital_status, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
