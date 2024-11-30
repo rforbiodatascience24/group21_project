@@ -16,19 +16,21 @@ execute:
 ## **Loading libraries**
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-07" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
-#| 
+
+library("tidyverse")
 library("ggplot2")
-#library("colorspace")
+library("here")
+
 ```
 
-Loading data
+## Loading data
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-07" 
 
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 

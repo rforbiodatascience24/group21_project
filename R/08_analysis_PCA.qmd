@@ -13,18 +13,17 @@ execute:
   warning: FALSE
 ---
 
-hello
-
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries"
+#| label: "load-libraries-08"
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
 
 library("tidyverse")
 library("broom")
+library("here")
 
 ```
 
@@ -36,6 +35,8 @@ library("broom")
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
 protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
+
+meta_data <- read_tsv(file = here("data/01_meta_data_load.tsv.gz"))
 
 ```
 
@@ -76,7 +77,7 @@ pca_analysis <- protein_data_trans |>
 #| fig-height: 4
 
 
-Scree_plot <- pca_analysis |>
+scree_plot <- pca_analysis |>
   tidy("eigenvalues") |> 
   mutate(percent = percent * 100) |> 
   ggplot(aes(x = PC,
@@ -92,10 +93,10 @@ Scree_plot <- pca_analysis |>
        x = "Principle Component (PC)",
        y = "Percent")
 
-Scree_plot
+scree_plot
 
 ggsave(filename = "08_PCA_analysis_scree.png",
-       plot = Scree_plot, 
+       plot = scree_plot, 
        device = "png",
        path = "../results/images")
 ```

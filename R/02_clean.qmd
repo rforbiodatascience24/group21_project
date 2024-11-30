@@ -18,7 +18,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-02" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -33,7 +33,7 @@ library("here")
 Loading the dataset into an object.
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-02" 
 
 expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
 
@@ -82,7 +82,7 @@ expression_meta_data_clean_2 <- expression_meta_data_clean_1 |>
 The clean dataset is saved as a .tsv.gz file in data folder and will be the dataset used for augmenting the data.
 
 ```{r}
-#| label: "write-clean-data-to-tsv.gz"
+#| label: "write-clean-data-to-tsv-gz"
 
 data_dir <- here("data/")
 
@@ -91,5 +91,3 @@ write_tsv( x = expression_meta_data_clean_2,
                   "04_expression_meta_data_clean.tsv.gz"))
 
 ```
-
-hello

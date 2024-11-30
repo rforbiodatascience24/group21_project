@@ -16,7 +16,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries"
+#| label: "load-libraries-09"
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -152,7 +152,7 @@ expression_meta_data_analysis6_alcohol_estimates_clean |>  filter(is_significant
 
 ```
 
-We have 1protein where the expression levels are found to be significantly different between patients that drink and patients that does not.
+We have 1 protein where the expression levels are found to be significantly different between patients that drink and patients that does not.
 
 ## Volcano plot
 

@@ -18,7 +18,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-03" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -33,7 +33,7 @@ library("here")
 The cleaned data is loaded into a new object.
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-03" 
 
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
 
@@ -143,5 +143,3 @@ write_tsv( x = expression_meta_data_aug_5,
                   "04_expression_meta_data_aug.tsv.gz"))
 
 ```
-
-hello
