@@ -13,16 +13,6 @@ execute:
   warning: FALSE
 ---
 
--   make some descriptive plots eg. facet wrap
-
--   survival vs alcohol and smoking
-
--   vital_status vs tissue_source_location
-
--   ethnicity
-
--   gender overall survival
-
 ## **Loading libraries**
 
 ```{r}
@@ -44,17 +34,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 
 ```
 
-## Plot with gender and overall survival
-
-add absolute numbers
-
-change axis titles from count
-
 ```{r}
-
-
-  #summarize(total = n(),groups = "keep")
-
 
 
 
@@ -64,13 +44,21 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
                      fill = vital_status
                      ))+
   
-  geom_bar(color = "powderblue",
-           position = "fill")+
+  
+  
+  geom_bar(position = "fill"
+            )+
+  
+  scale_fill_manual(
+    values = c(
+      "Alive" = "#eb4cbe",
+      "Dead" = "#beeb4c"    
+    )
+  ) +
   
 
   
   
-  scale_fill_brewer(palette = "Pastel2")+
   labs(x = "Gender", 
        y = "Proportion",
        title = "Distribution of Gender and Vital Status",
@@ -107,10 +95,17 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
        mapping = aes(x = gender,
                      fill = vital_status
                      ))+
-  geom_bar(color = "powderblue",
-           position = "fill"
+  geom_bar(position = "fill"
            )+
-  scale_fill_brewer(palette = "Pastel2")+
+  
+    scale_fill_manual(
+    values = c(
+      "Alive" = "#eb4cbe",
+      "Dead" = "#beeb4c"    
+    )
+  ) +
+  
+  
   facet_wrap(~race)+
   labs(x = "Gender", 
        y = "Proportion",
@@ -124,6 +119,8 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
   theme_classic()
 
 
+barplot_vital_status_genders_facet_races
+
 ggsave("~/projects/group_21_project/results/images/barplot_vital_status_genders_facet_races.png", plot= last_plot())
 
 ```
@@ -134,8 +131,15 @@ boxplot_years_smoked_vital_status_facet_pathological<-expression_meta_data_aug |
   drop_na(pathologic_stage) |> 
 ggplot(mapping = aes(x = vital_status,
                      y = years_smoked))+
-geom_boxplot(color = "lawngreen",
-             fill = "seagreen3")+
+  
+  
+  
+geom_boxplot(fill = "#eb4cbe",
+             color = "#beeb4c")+
+  
+  
+
+  
   facet_wrap(~pathologic_stage)+
   labs(x = "Vital Status", 
        y = "Years smoked",
@@ -153,7 +157,7 @@ ggsave("~/projects/group_21_project/results/images/boxplot_years_smoked_vital_st
 
 Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond.
 
-The 6 most differentially expressed genes sorted on different ages
+The 6 most differentially expressed genes between the two different vital status (dead/alive) sorted on different ages
 
 ```{r}
 
@@ -161,6 +165,65 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
   
   ggplot(mapping = aes(x = age_at_index,
+                       y = expression,
+                       #fill = vital_status,
+                       color = vital_status
+                      ))+
+
+  
+  
+  geom_point( shape = 8,
+              size = 1)+
+  
+  scale_color_manual(
+    values = c(
+      "Alive" = "#eb4cbe",  
+      "Dead" = "#beeb4c"  
+    )
+  ) +
+  
+
+  
+  
+  
+  labs(x = "Age", 
+       y = "Expression level",
+       fill = "Vital Status",
+       color = "Vital Status"
+       )+
+  
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.title = "Vital status",
+        legend.position = "right"
+        )+
+  
+  facet_wrap(~peptide_target)+
+  
+ 
+  
+  theme_classic()
+
+
+expression_of_6_significant_pep_and_vital_status
+
+ggsave("~/projects/group_21_project/results/images/expression_of_6_significant_pep_and_vital_status.png", plot= last_plot())
+
+```
+
+With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in dead people; the blue points cluster in the lower part of the plot. 
+
+
+
+
+Trying to think of another way to dislay the data in a less messy way:
+
+```{r}
+
+expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |> 
+  filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
+  
+  ggplot(mapping = aes(x = age_interval_10_year,
                        y = expression,
                        fill = vital_status,
                        color = vital_status
@@ -173,7 +236,9 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   
   
   labs(x = "Age", 
-       y = "Expression level"
+       y = "Expression level",
+       fill = "Vital Status",
+       color = "Vital Status"
        )+
   
   theme(plot.title = element_text(hjust = 0.5),
@@ -187,9 +252,8 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
 
 
 expression_of_6_significant_pep_and_vital_status
-
-ggsave("~/projects/group_21_project/results/images/expression_of_6_significant_pep_and_vital_status.png", plot= last_plot())
-
 ```
 
-kk
+
+
+
