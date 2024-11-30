@@ -190,3 +190,5 @@ expression_of_6_significant_pep_and_vital_status
 ggsave("~/projects/group_21_project/results/images/expression_of_6_significant_pep_and_vital_status.png", plot= last_plot())
 
 ```
+
+k
