@@ -39,7 +39,7 @@ editor: visual
 ::: {.column width="40%"}
 <!-- -->
 
--   **Download data**
+-   **Download, name and data**
 
     -   Phenotype (n=604)
 
@@ -47,11 +47,7 @@ editor: visual
 
     -   Protein Expression (n=354)
 
--   **Save data**
-
-    -   If directory exists or not
-
--   Join tables
+-   **Join tables**
 
     -   inner_join
 
