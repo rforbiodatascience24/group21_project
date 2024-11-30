@@ -99,7 +99,7 @@ clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 
 ```
 
-## Join meta data: clinical and survival data
+## Join meta data: Clinical and survival data
 
 The clinical_and survival_data are joined using inner_join() to create a meta_data set. The joined meta_data is saved as a .tsv.gz file in data folder.
 
@@ -151,7 +151,7 @@ data_dir <- here("data/")
 
 
 write_tsv( x = expression_meta_data,
-           file = str_c(data_dir,
-                        "03_expression_meta_data_load.tsv.gz"))
+           file = str_c(data_dir, 
+                  "03_expression_meta_data_load.tsv.gz"))
 
 ```

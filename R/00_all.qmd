@@ -102,7 +102,7 @@ file.rename(from = "04_describe.html",
             to = "../results/04_describe.html")
 ```
 
-## Heatmaps
+## Analysis 1
 
 ```{r}
 #| include: false
@@ -114,19 +114,19 @@ file.rename(from = "../R/05_analysis_heatmap.html",
             to = "../results/05_analysis_heatmap.html")
 ```
 
-## Linear model vital status
+## Analysis 2
 
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "../R/06_analysis_lm_vital_status.qmd",
+quarto::quarto_render(input = "../R/06_analysis_lm.qmd",
                       output_format = "html")
 
-file.rename(from = "../R/06_analysis_lm_vital_status.html",
-            to = "../results/06_analysis_lm_vital_status.html")
+file.rename(from = "../R/06_analysis_lm.html",
+            to = "../results/06_analysis_lm.html")
 ```
 
-## Visuals
+## Analysis 3
 
 ```{r}
 #| include: false
@@ -138,7 +138,7 @@ file.rename(from = "../R/07_analysis_visual.html",
             to = "../results/07_analysis_visual.html")
 ```
 
-## PCA
+## Analysis 4
 
 ```{r}
 #| include: false
@@ -151,25 +151,10 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 ```
 
-## Linear model alcohol
-
-```{r}
-#| include: false
-
-quarto::quarto_render(input = "../R/09_analysis_lm_alcohol.qmd",
-                      output_format = "html")
-
-file.rename(from = "../R/09_analysis_lm_alcohol.html",
-            to = "../results/09_analysis_lm_alcohol.html")
-```
-
 ## All
 
 ```{r}
 #| include: false
-
-quarto::quarto_render(input = "../R/00_all.qmd",
-                      output_format = "html")
 
 file.rename(from = "../R/00_all.html",
             to = "../results/00_all.html")
