@@ -15,6 +15,8 @@ execute:
   warning: false
 ---
 
+hello
+
 ## Load libraries
 
 ```{r}
@@ -154,8 +156,6 @@ heatmap <- heatmap_selected_peptides |>
 
 ```
 
-
-
 ```{r}
 ggsave(
   filename = "06_analysis_heatmap.png",
@@ -166,7 +166,6 @@ ggsave(
   height = 10
 )
 ```
-
 
 ### Heat-map of 50 random peptide-targets plotted against age (not used)
 
@@ -211,7 +210,6 @@ heatmap_selected_peptides_random <- expression_meta_data_analysis |>
     .groups = "drop"  # Drop grouping after summarization
   )
 ```
-
 
 ```{r}
 #| label: "heat-map-random-40-against-age"
@@ -265,6 +263,7 @@ heatmap_selected_peptides_random |>
 ```
 
 ### Five heat-maps for the expression pattern sorted by pathological stage
+
 We have decided to **leave out the bar plot of the five most up and downregulated genes for each pathologic stage** as we did not find it useful enough for our analysis.
 
 ```{r}
@@ -324,4 +323,3 @@ top_bottom_genes |>
     strip.text = element_text(size = 12)
   )
 ```
-
