@@ -165,10 +165,12 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
                        fill = vital_status,
                        color = vital_status
                       ))+
+  
+  
   geom_point( shape = 8,
               size = 1)+
   
-  scale_fill_brewer(palette = "Pastel2")+
+  
   
   labs(x = "Age", 
        y = "Expression level"
