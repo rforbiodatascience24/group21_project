@@ -22,7 +22,7 @@ format:
 editor: visual
 ---
 
-## Introduction {.smaller}
+## Introduction Andrea {.smaller}
 
 -   Background
     -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
@@ -31,7 +31,7 @@ editor: visual
     -   Apply Tidyverse techniques learned in class to real-world data.
     -   Extract and uncover scientific insights from the HNSCC datasets.
 
-## Materials and methods {.smaller}
+## Materials and methods Astrid {.smaller}
 
 ::: columns
 ::: {.column width="30%"}
@@ -141,7 +141,7 @@ write_tsv( x = final_data,
 :::
 :::
 
-## Cleaning and Augmenting Data {.smaller}
+## Cleaning and Augmenting Data Yayi {.smaller}
 
 -   Choose columns to work with and rename them.
 
@@ -263,7 +263,7 @@ expression_meta_data_aug_4 <- expression_meta_data_aug_3 |>
 
 -   Write the augmented dataset to a tsv.gz file
 
-## Description {.smaller}
+## Description Yayi {.smaller}
 
 ```{r}
 #| echo: false
@@ -333,7 +333,7 @@ expression_meta_data_aug |>
   n_distinct()
 ```
 
-## Analysis visual {.smaller}
+## Analysis heatmap Andrea {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -345,7 +345,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis heatmap {.smaller}
+## Analysis linear model A and E {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -357,7 +357,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis linear model {.smaller}
+## Analysis visual Astrid {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -369,7 +369,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis PCA {.smaller}
+## Analysis PCA A and E {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -381,7 +381,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis 5 {.smaller}
+## Analysis PCA A and E {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -394,4 +394,4 @@ expression_meta_data_aug |>
 :::
 
 
-## Discussion {.smaller}
+## Discussion A and E {.smaller}
