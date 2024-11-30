@@ -29,13 +29,11 @@ editor: visual
     -   A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
-    -   Extract and uncover scientific insights from the HNSCC datasets.
-  ![](../results/images/head_neck.png){width="100%" height="100%"}
+    -   Extract and uncover scientific insights from the HNSCC datasets. ![](../results/images/head_neck.png){width="100%" height="100%"}
 
 ## Materials and methods Astrid {.smaller}
 
 ::: columns
-
 ::: {.column width="40%"}
 <!-- -->
 
@@ -149,16 +147,13 @@ write_tsv( x = final_data,
 
 ## Cleaning and Augmenting Data Yayi {.smaller}
 
-::: columns 
-::: {.column width="50%"} 
-::: {style="font-size: 0.6em"} 
-::: incremental 
+::: columns ::: {.column width="50%"} ::: {style="font-size: 0.6em"} ::: incremental
 
 -   <strong>00_all</strong>:<br />
 
     ::: nonincremental
--   Running the whole project<br />
-    :::
+
+-   Running the whole project<br /> :::
 
 -   <strong>01_data_load</strong>:<br />
 
@@ -176,18 +171,18 @@ write_tsv( x = final_data,
     ::: ::: :::
 
 ::: {.column width="50%"}
-::: {style="font-size: 0.6em"} 
-::: incremental
+::: {style="font-size: 0.6em"} ::: incremental
 
 -   <strong>03_data_augment</strong>:<br />
 
 <div>
 
-
-    ::: nonincremental
-    -   Creating patient_ID by using `mutate()`
-    -   Adding age interval variables <br />
-    :::
+```         
+::: nonincremental
+-   Creating patient_ID by using `mutate()`
+-   Adding age interval variables <br />
+:::
+```
 
 </div>
 :::
@@ -320,9 +315,9 @@ expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 ```
 
-- Check columns and rows (98 columns vs 26 columns, 353 patients)
-- Check Pathologic Stage (5 stages)
-- Check Patients statistics and distribution
+-   Check columns and rows (98 columns vs 26 columns, 353 patients)
+-   Check Pathologic Stage (5 stages)
+-   Check Patients statistics and distribution
 
 ```{r}
 #| echo: false # Show the code
@@ -341,7 +336,6 @@ expression_meta_data_load |>
   n_distinct()
 ```
 
-
 ```{r}
 #| echo: false  # Show the code
 #| eval: false  # Execute the code
@@ -351,10 +345,7 @@ expression_meta_data_aug |>
   summarize(count = n(), .groups = "drop")
 ```
 
-<<<<<<< HEAD
 Check the lowest and highest age
-=======
->>>>>>> 327ee7542356e942c871f603b20c5ea6662283d1
 
 ```{r}
 #| echo: false  # Show the code
@@ -389,7 +380,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis linear model - Vital stage A and E  {.smaller}
+## Analysis linear model - Vital stage A and E {.smaller}
 
 Linear model for expression of proteins present in tissue from patients with Head and Neck Cancer
 
