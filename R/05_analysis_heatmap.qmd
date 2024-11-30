@@ -84,13 +84,20 @@ peptide_target_levels
 # Filter the main dataset for the selected peptides and arrange by mean_expression in descending order
 heatmap_selected_peptides <- expression_meta_data_analysis |> 
   
+  filter(!age_interval_5_year %in% c("15-19", "20-24")) |> 
+  
   semi_join(selected_peptides, by = "peptide_target") |>  # Keep rows with matching peptide_target
   
   filter(!is.na(mean_expression)) |>  # Removing all NAs
   
-  group_by(peptide_target) |> 
+  group_by(peptide_target, age_interval_5_year) |> 
   
-  arrange(desc(desc(mean_expression)))  # Sort by mean_expression, highest to lowest
+  summarize(
+    mean_expression = mean(expression, na.rm = TRUE),  # Calculate mean expression
+    .groups = "drop") |>   # Drop grouping after summarization
+  
+  arrange(desc(desc(mean_expression)))   # Sort by mean_expression, highest to lowest 
+
 
 heatmap_selected_peptides
 ```
@@ -101,7 +108,7 @@ heatmap_selected_peptides
 #| fig-height: 10
 
 # Create the heatmap
-heatmap_selected_peptides_1 |> 
+heatmap_selected_peptides |> 
   
   ggplot(aes(
     x = factor(peptide_target, levels = peptide_target_levels),  # Use the extracted levels vector
@@ -144,8 +151,9 @@ heatmap_selected_peptides_1 |>
     legend.text = element_text(size = 12),
     legend.title = element_text(size = 14)
   )
-```
+ggsave("~/Projects/group_21_project/results/images/heatmap_selected_peptides.png", plot= last_plot())
 
+```
 
 
 
@@ -180,6 +188,8 @@ peptide_target_levels_random <- selected_peptides_random |>
 #| eval: false
 
 heatmap_selected_peptides_random <- expression_meta_data_analysis |> 
+  
+  filter(!age_interval_5_year %in% c("15-19", "20-24")) |> 
   
   semi_join(selected_peptides_random, by = "peptide_target") |>  # Keep rows with matching peptide_target
   

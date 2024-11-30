@@ -107,11 +107,11 @@ file.rename(from = "04_describe.html",
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "05_analysis_1.qmd",
+quarto::quarto_render(input = "../R/05_analysis_heatmap.qmd",
                       output_format = "html")
 
-file.rename(from = "05_analysis_1.html",
-            to = "../results/05_analysis_1.html")
+file.rename(from = "../R/05_analysis_heatmap.html",
+            to = "../results/05_analysis_heatmap.html")
 ```
 
 ## Analysis 2
@@ -119,11 +119,11 @@ file.rename(from = "05_analysis_1.html",
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "06_analysis_2.qmd",
+quarto::quarto_render(input = "../R/06_analysis_lm.qmd",
                       output_format = "html")
 
-file.rename(from = "06_analysis_2.html",
-            to = "../results/06_analysis_2.html")
+file.rename(from = "../R/06_analysis_lm.html",
+            to = "../results/06_analysis_lm.html")
 ```
 
 ## Analysis 3
@@ -131,11 +131,11 @@ file.rename(from = "06_analysis_2.html",
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "07_analysis_3.qmd",
+quarto::quarto_render(input = "../R/07_analysis_visual.qmd",
                       output_format = "html")
 
-file.rename(from = "07_analysis_3.html",
-            to = "../results/07_analysis_3.html")
+file.rename(from = "../R/07_analysis_visual.html",
+            to = "../results/07_analysis_visual.html")
 ```
 
 ## Analysis 4
@@ -143,24 +143,11 @@ file.rename(from = "07_analysis_3.html",
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "08_analysis_4.qmd",
+quarto::quarto_render(input = "../R/08_analysis_PCA.qmd",
                       output_format = "html")
 
-file.rename(from = "08_analysis_4.html",
-            to = "../results/08_analysis_4.html")
-
-```
-
-## Analysis 5
-
-```{r}
-#| include: false
-
-quarto::quarto_render(input = "09_analysis_5.qmd",
-                      output_format = "html")
-
-file.rename(from = "09_analysis_5.html",
-            to = "../results/09_analysis_5.html")
+file.rename(from = "../R/08_analysis_PCA.html",
+            to = "../results/08_analysis_PCA.html")
 
 ```
 
@@ -169,6 +156,6 @@ file.rename(from = "09_analysis_5.html",
 ```{r}
 #| include: false
 
-file.rename(from = "00_all.html",
+file.rename(from = "../R/00_all.html",
             to = "../results/00_all.html")
 ```
