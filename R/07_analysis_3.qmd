@@ -191,4 +191,4 @@ ggsave("~/projects/group_21_project/results/images/expression_of_6_significant_p
 
 ```
 
-k
+kk
