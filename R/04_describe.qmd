@@ -110,13 +110,13 @@ ggsave(filename = "04_pathologic_stage_distribution.png",
 
 ```
 
-Check the lowest and highest patient age.
+Check the mean and middle values of patients' age.
 
 ```{r}
 expression_meta_data_aug |> 
   summarize(
-    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
-    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
+    mean_age = mean(age_at_index, na.rm = TRUE),   # Mean age
+    middle_age = median(age_at_index, na.rm = TRUE) # Median age
   )
 ```
 

@@ -30,6 +30,7 @@ editor: visual
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
     -   Extract and uncover scientific insights from the HNSCC datasets.
+  ![](../results/images/head_neck.png){width="100%" height="100%"}
 
 ## Materials and methods Astrid {.smaller}
 
@@ -191,8 +192,6 @@ write_tsv( x = expression_meta_data_clean_2,
                   "04_expression_meta_data_clean.tsv.gz"))
 ```
 
-
-
 -   Create a new variable, patient_id
 
 ``` r
@@ -225,7 +224,6 @@ expression_meta_data_aug_2 <- expression_meta_data_aug_1 |>
   relocate(age_interval_5_year, .after = age_at_index) |> 
   relocate(age_interval_10_year, .after = age_interval_5_year)
 ```
-
 
 -   Create a new variable with the mean expression of each peptide_target
 
@@ -275,32 +273,31 @@ expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 ```
 
-Check how many patients
+- Check columns and rows (98 columns vs 26 columns, 353 patients)
+- Check Pathologic Stage (5 stages)
+- Check Patients statistics and distribution
 
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false # Show the code
+#| eval: false  # Execute the code
 
 expression_meta_data_aug |>
   select(patient_id) |>
   n_distinct()
 ```
 
-Compare with the original data before cleaning
-
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false  # Show the code
+#| eval: false  # Execute the code
 expression_meta_data_load |>
   select(submitter_id) |>
   n_distinct()
 ```
 
-Check what different pathologic stages there are
 
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false  # Show the code
+#| eval: false  # Execute the code
 
 expression_meta_data_aug |> 
   group_by(pathologic_stage) |> 
@@ -308,30 +305,26 @@ expression_meta_data_aug |>
 ```
 
 
-
-Check the lowest and highest age
-
 ```{r}
-#| echo: true  # Show the code
+#| echo: false  # Show the code
 #| eval: true  # Execute the code
 
 expression_meta_data_aug |> 
   summarize(
-    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
-    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
+    mean_age = mean(age_at_index, na.rm = TRUE),   # Mean age
+    middle_age = median(age_at_index, na.rm = TRUE) # Median age
   )
 ```
 
-Check how many peptides
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
 
-```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
-
-expression_meta_data_aug |>
-  select(peptide_target) |>
-  n_distinct()
-```
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
 
 ## Analysis heatmap Andrea {.smaller}
 
@@ -392,6 +385,5 @@ expression_meta_data_aug |>
 ![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
 :::
 :::
-
 
 ## Discussion A and E {.smaller}
