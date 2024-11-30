@@ -30,6 +30,7 @@ editor: visual
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
     -   Extract and uncover scientific insights from the HNSCC datasets.
+  ![](../results/images/head_neck.png){width="100%" height="100%"}
 
 ## Materials and methods Astrid {.smaller}
 
@@ -148,48 +149,90 @@ write_tsv( x = final_data,
 
 ## Cleaning and Augmenting Data Yayi {.smaller}
 
+::: columns 
+::: {.column width="50%"} 
+::: {style="font-size: 0.6em"} 
+::: incremental 
+
+-   <strong>00_all</strong>:<br />
+
+    ::: nonincremental
+-   Running the whole project<br />
+    :::
+
+-   <strong>01_data_load</strong>:<br />
+
+    ::: nonincremental
+    -   Loading the data<br />
+    :::
+
+-   <strong>02_data_clean</strong>:<br />
+
+    ::: nonincremental
+    -   Choosing variables of interest
+    -   Trimming sample ID by removing TCGA <br />
+    :::
+
+    ::: ::: :::
+
+::: {.column width="50%"}
+::: {style="font-size: 0.6em"} 
+::: incremental
+
+-   <strong>03_data_augment</strong>:<br />
+
+<div>
+
+
+    ::: nonincremental
+    -   Creating patient_ID by using `mutate()`
+    -   Adding age interval variables <br />
+    :::
+
+</div>
+:::
+
 -   Choose columns to work with and rename them.
 
 -   Trim the sample_ID
 
 -   Save clean dataset to a tsv.gz file
 
-```{r}
+``` r
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
 #| code-line-numbers: "|4-20|22-29|31-33"
 
 
-expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
+# Creating patient_id
+expression_meta_data_aug_1 <- expression_meta_data_aug |> 
+  mutate(patient_id = sub("(.*)-..", "\\1", sample_id)) |> 
+  relocate(patient_id, .before = sample_id)
 
+# Creating age group intervals
+expression_meta_data_aug_2 <- expression_meta_data_aug_1 |> 
+  mutate(age_interval_5_year = cut(age_at_index,
+                                   breaks = seq(0, 100, by = 5),
+                                   labels = paste(seq(0, 95, by = 5),
+                                                  seq(5, 100, by = 5) - 1,
+                                                  sep = "-"), 
+                                   include.lowest = TRUE)) |> 
 
-expression_meta_data_clean_1 <- expression_meta_data_clean |> 
-  select(sample_id = sample,
-         gender = gender.demographic,
-         race = race.demographic,
-         vital_status = vital_status.demographic,
-         overall_survival = OS,
-         primary_site,
-         pathologic_stage = ajcc_pathologic_stage.diagnoses,
-         age_at_index = age_at_index.demographic,
-         year_of_birth = year_of_birth.demographic,
-         year_of_death = year_of_death.demographic,
-         tissue_source_location = name.tissue_source_site,
-         cigarettes_per_day = cigarettes_per_day.exposures,
-         years_smoked = years_smoked.exposures,
-         alcohol_history = alcohol_history.exposures,
-         peptide_target,
-         expression)
+  relocate(age_interval_5_year, .after = age_at_index) |> # Moving the age_interval columns to after age_at_index
 
-# Modify the sample_id column
-expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
-  mutate(
-    
-# Keep only the last part in sample_id and leave out TCGA-XX
-    sample_id = sub("^TCGA-(.*)", "\\1", sample_id)
-    
-  )
+# Creating expression mean variable
+expression_meta_data_aug_3 <- expression_meta_data_aug_2 |> 
+  group_by(peptide_target) |> 
+  mutate(mean_expression = mean(expression, na.rm = TRUE)) |> 
+  ungroup()
+
+# Adding alcohol consumption as binomial value
+expression_meta_data_aug_5 <- expression_meta_data_aug_4 |> 
+  mutate(alcohol_history_binomial = case_when(alcohol_history == "No" ~ 0,
+                                              alcohol_history == "Yes" ~ 1)) |> 
+  relocate(alcohol_history_binomial, .after = alcohol_history)
+
 
 write_tsv( x = expression_meta_data_clean_2,
            file = str_c(data_dir, 
@@ -277,61 +320,62 @@ expression_meta_data_clean <- read_tsv(file = here("data/04_expression_meta_data
 expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 ```
 
-Check how many patients
+- Check columns and rows (98 columns vs 26 columns, 353 patients)
+- Check Pathologic Stage (5 stages)
+- Check Patients statistics and distribution
 
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false # Show the code
+#| eval: false  # Execute the code
 
 expression_meta_data_aug |>
   select(patient_id) |>
   n_distinct()
 ```
 
-Compare with the original data before cleaning
-
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false  # Show the code
+#| eval: false  # Execute the code
 expression_meta_data_load |>
   select(submitter_id) |>
   n_distinct()
 ```
 
-Check what different pathologic stages there are
 
 ```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
+#| echo: false  # Show the code
+#| eval: false  # Execute the code
 
 expression_meta_data_aug |> 
   group_by(pathologic_stage) |> 
   summarize(count = n(), .groups = "drop")
 ```
 
+<<<<<<< HEAD
 Check the lowest and highest age
+=======
+>>>>>>> 327ee7542356e942c871f603b20c5ea6662283d1
 
 ```{r}
-#| echo: true  # Show the code
+#| echo: false  # Show the code
 #| eval: true  # Execute the code
 
 expression_meta_data_aug |> 
   summarize(
-    min_age = min(age_at_index, na.rm = TRUE), # Lowest age
-    max_age = max(age_at_index, na.rm = TRUE)  # Highest age
+    mean_age = mean(age_at_index, na.rm = TRUE),   # Mean age
+    middle_age = median(age_at_index, na.rm = TRUE) # Median age
   )
 ```
 
-Check how many peptides
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
 
-```{r}
-#| echo: true  # Show the code
-#| eval: true  # Execute the code
-
-expression_meta_data_aug |>
-  select(peptide_target) |>
-  n_distinct()
-```
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
 
 ## Analysis heatmap Andrea {.smaller}
 
