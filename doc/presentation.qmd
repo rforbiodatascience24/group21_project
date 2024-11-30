@@ -191,8 +191,6 @@ write_tsv( x = expression_meta_data_clean_2,
                   "04_expression_meta_data_clean.tsv.gz"))
 ```
 
-
-
 -   Create a new variable, patient_id
 
 ``` r
@@ -225,7 +223,6 @@ expression_meta_data_aug_2 <- expression_meta_data_aug_1 |>
   relocate(age_interval_5_year, .after = age_at_index) |> 
   relocate(age_interval_10_year, .after = age_interval_5_year)
 ```
-
 
 -   Create a new variable with the mean expression of each peptide_target
 
@@ -307,8 +304,6 @@ expression_meta_data_aug |>
   summarize(count = n(), .groups = "drop")
 ```
 
-
-
 Check the lowest and highest age
 
 ```{r}
@@ -345,15 +340,19 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis linear model A and E {.smaller}
+## Analysis linear model - Vital stage A and E  {.smaller}
+
+Linear model for expression of proteins present in tissue from patients with Head and Neck Cancer
+
+Fitting a linear model to the protein expression data and the vital stage. This model is used to investigate if there is a difference in the protein expression levels in patients who is alive and patients who end up dying.
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+![](images/06_analysis_lm_volcano_vital.png)
 :::
 
 ::: {.column width="50%"}
-![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+![](images/06_analysis_lm_forest_plot.png)
 :::
 :::
 
@@ -369,7 +368,7 @@ expression_meta_data_aug |>
 :::
 :::
 
-## Analysis PCA A and E {.smaller}
+## Analysis Linear model - Alcohol history A and E {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -385,13 +384,12 @@ expression_meta_data_aug |>
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+![](images/08_PCA_analysis_scree-01.png)
 :::
 
 ::: {.column width="50%"}
-![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+![](images/08_PCA_analysis_PCA_stage.png)
 :::
 :::
-
 
 ## Discussion A and E {.smaller}
