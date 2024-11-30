@@ -141,7 +141,6 @@ write_tsv( x = final_data,
 :::
 :::
 
-
 ## Cleaning and Augmenting Data Andrea {.smaller}
 
 ::: columns
@@ -168,7 +167,6 @@ write_tsv( x = final_data,
 :::
 
 ::: {.column width="60%"}
-
 ```{r}
 #| echo: TRUE
 #| eval: FALSE 
@@ -204,8 +202,6 @@ expression_meta_data_aug_5 <- expression_meta_data_aug_4 |>
                                               alcohol_history == "Yes" ~ 1)) |> 
   relocate(alcohol_history_binomial, .after = alcohol_history)
 ```
-
-
 :::
 :::
 
