@@ -153,32 +153,16 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 ## All
 
-{{< include 01_load.qmd >}}
-
-{{< include 02_clean.qmd >}}
-
-{{< include 03_augment.qmd >}}
-
-{{< include 04_describe.qmd >}}
-
-{{< include 05_analysis_heatmap.qmd >}}
-
-{{< include 06_analysis_lm_vital_status.qmd >}}
-
-{{< include 07_analysis_visual.qmd >}}
-
-{{< include 08_analysis_PCA.qmd >}}
-
-{{< include 09_analysis_lm_alcohol.qmd >}}
-
 ```{r}
 #|inlcude: false 
 
 quarto::quarto_render("00_all.qmd", 
                       output_format = "html")
+#| include: false
+
 
 file.rename(from = "../R/00_all.html",
             to = "../results/00_all.html")
-
-
 ```
+
+hello

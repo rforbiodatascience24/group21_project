@@ -23,7 +23,6 @@ execute:
 
 library("tidyverse")
 library("broom")
-library("here")
 
 ```
 
@@ -32,11 +31,9 @@ library("here")
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/05_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
 protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
-
-meta_data <-  read_tsv(file = here("data/01_meta_data_load.tsv.gz"))
 
 ```
 
@@ -112,7 +109,7 @@ Joining the data frame used in the PCA with the meta_data, to be able to color b
 
 protein_data_trans_metadata <- protein_data_trans |> 
   left_join(y = meta_data, 
-            join_by(sample == sample)) 
+             join_by(sample == sample)) 
 ```
 
 Adding the metadata to the PC Analysis
