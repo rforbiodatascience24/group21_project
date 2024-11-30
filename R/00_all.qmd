@@ -1,16 +1,18 @@
 ---
 title: "00_all"
-author:
-- "Asta Zeuner - s203544 - azeuner"
-- "Astrid Ginnerup - s203523 - AGinnerup"
-- "Emma Danø - s203564 - EDanoe"
-- "Andrea Kristensen - s193769 - AndreaMTK"
-- "Yayi Wang - s243554 - Yayi0117"
+author: 
+  - "Asta Zeuner - s203544 - azeuner"
+  - "Astrid Ginnerup - s203523 - AGinnerup"
+  - "Emma Danø - s203564 - EDanoe"
+  - "Andrea Kristensen - s193769 - AndreaMTK"
+  - "Yayi Wang - s243554 - Yayi0117"
+format: 
   html: 
     embed-resources: true
+editor: visual
 execute: 
-  message: FALSE
-  warning: FALSE
+  message: false
+  warning: false
 ---
 
 # Master document for running all code in the project

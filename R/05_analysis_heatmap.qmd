@@ -1,16 +1,18 @@
 ---
-title: "05_analysis_1"
-author:
-- "Asta Zeuner - s203544 - azeuner"
-- "Astrid Ginnerup - s203523 - AGinnerup"
-- "Emma Danø - s203564 - EDanoe"
-- "Andrea Kristensen - s193769 - AndreaMTK"
-- "Yayi Wang - s243554 - Yayi0117"
-html: 
+title: "05_analysis_heatmap"
+author: 
+  - "Asta Zeuner - s203544 - azeuner"
+  - "Astrid Ginnerup - s203523 - AGinnerup"
+  - "Emma Danø - s203564 - EDanoe"
+  - "Andrea Kristensen - s193769 - AndreaMTK"
+  - "Yayi Wang - s243554 - Yayi0117"
+format: 
+  html: 
     embed-resources: true
+editor: visual
 execute: 
-  message: FALSE
-  warning: FALSE
+  message: false
+  warning: false
 ---
 
 ## Load libraries
@@ -35,8 +37,6 @@ expression_meta_data_analysis_1 <- read_tsv(file = here("data/04_expression_meta
 
 ```
 
-
-
 ### Heat-map of 20 most up- and downregulated peptide-targets plotted against age
 
 -   Try to make functions, consider
@@ -46,7 +46,6 @@ expression_meta_data_analysis_1 <- read_tsv(file = here("data/04_expression_meta
 -   Look intro why taking the mean of the mean
 
 -   Look at selected_peptrides\$peptide_data
-
 
 ```{r}
 # Select top 20 most upregulated peptide targets
@@ -149,8 +148,6 @@ heatmap_selected_peptides_1 |>
     legend.title = element_text(size = 14)
   )
 ```
-
-
 
 ```{r}
 #| label: "heat-map-20UP-20DOWN-against-age"
