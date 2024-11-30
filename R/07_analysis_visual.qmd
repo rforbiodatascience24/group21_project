@@ -21,19 +21,16 @@ execute:
 #| eval: TRUE 
 #| output: FALSE  
 #| 
-
-library("tidyverse")
 library("ggplot2")
-library("here")
-
+#library("colorspace")
 ```
 
-## Loading data
+Loading data
 
 ```{r}
 #| label: "load-data" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/05_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
 ```
 
@@ -284,10 +281,3 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
 
 expression_of_6_significant_pep_and_vital_status
 ```
-<<<<<<< HEAD
-
-
-k
-
-=======
->>>>>>> 5b1ab56c731e461e3adb938cc7786bee9ffdf09e
