@@ -80,7 +80,7 @@ Scree_plot <- pca_analysis |>
   ggplot(aes(x = PC,
              y = percent)) +
   geom_hline(yintercept = 0) +
-  geom_col(colour = "orange",
+  geom_col(colour = "#f5910e",
            alpha = 0.5) +
   theme_minimal() +
   theme(panel.grid.minor.x = element_blank(),
@@ -90,12 +90,12 @@ Scree_plot <- pca_analysis |>
        x = "Principle Component (PC)",
        y = "Percent")
 
+Scree_plot
+
 ggsave(filename = "08_PCA_analysis_scree.png",
        plot = Scree_plot, 
        device = "png",
        path = "../results/images")
-
-Scree_plot
 ```
 
 From the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
@@ -145,6 +145,8 @@ pca_plot_vital <- pca_analysis_aug |>
              y = .fittedPC2, 
              color = vital_status.demographic)) + 
   geom_point() +
+  scale_color_manual(values = c("Alive"= "#2d0ef5", 
+                                "Dead" = "#f5910e")) +
   labs(x = pluck(pca_axis_labels,1),
        y = pluck(pca_axis_labels,2),
        title = "PC Analysis of Protein Expression" ,
@@ -169,6 +171,11 @@ pca_plot_stage <- pca_analysis_aug |>
              y = .fittedPC2, 
              color = ajcc_pathologic_stage.diagnoses)) + 
   geom_point() +
+   scale_color_manual(values = c("Stage I"= "#2d0ef5", 
+                                 "Stage II" = "#f5910e",
+                                 "Stage III" = "#2bd11f",
+                                "Stage IVA" = "#eb4cbe",
+                                "Stage IVB" = "#beeb4c")) +
   labs(x = pluck(pca_axis_labels,1),
        y = pluck(pca_axis_labels,2),
        title = "PC Analysis of Protein Expression" ,
@@ -200,7 +207,7 @@ pca_analysis |>
 arrow_style <- arrow(length = unit(0.03, "npc"),
                      ends = "first")
 
-pca_analysis |> 
+rotation_matrix <- pca_analysis |> 
   tidy(matrix = "rotation") |> 
   pivot_wider(names_from = "PC", 
               names_prefix = "PC",
@@ -209,12 +216,20 @@ pca_analysis |>
              y = PC2)) +
   geom_segment( xend = 0, 
                 yend = 0, 
-                arrow = arrow_style) +
+                arrow = arrow_style, 
+                color = "#2bd11f") +
   coord_fixed() + 
   theme_minimal() + 
   labs(x = pluck(pca_axis_labels,1),
        y = pluck(pca_axis_labels,2),
        title = "Rotation Matrix of PC Analysis of Protein Expression" ,
        subtitle = "Protein Expression in Tissue from Head and Neck Cancer Patients")
+
+rotation_matrix
+
+ggsave(filename = "08_PCA_analysis_RM.png",
+       plot = rotation_matrix, 
+       device = "png",
+       path = "../results/images")
   
 ```
