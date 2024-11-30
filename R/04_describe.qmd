@@ -73,7 +73,7 @@ n_patient_before
 n_patient_after
 ```
 
-Check the different pathologic stages and count how many patients are in each group.
+Check the different pathologic stages and how patients are distributed among these groups.
 
 ```{r}
 expression_meta_data_aug |> 
@@ -96,7 +96,7 @@ expression_meta_data_aug |>
   scale_fill_brewer(palette = "Set3", name = "Pathologic Stage")
 ```
 
-Check the lowest and highest age.
+Check the lowest and highest patient age.
 
 ```{r}
 expression_meta_data_aug |> 
