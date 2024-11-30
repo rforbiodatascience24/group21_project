@@ -31,7 +31,7 @@ editor: visual
     -   Apply Tidyverse techniques learned in class to real-world data.
     -   Extract and uncover scientific insights from the HNSCC datasets.
 
-## Materials {.smaller}
+## Materials and methods {.smaller}
 
 ::: columns
 ::: {.column width="30%"}
@@ -191,7 +191,7 @@ write_tsv( x = expression_meta_data_clean_2,
                   "04_expression_meta_data_clean.tsv.gz"))
 ```
 
-## Argument Data {.smaller}
+
 
 -   Create a new variable, patient_id
 
@@ -226,7 +226,6 @@ expression_meta_data_aug_2 <- expression_meta_data_aug_1 |>
   relocate(age_interval_10_year, .after = age_interval_5_year)
 ```
 
-##  {.smaller}
 
 -   Create a new variable with the mean expression of each peptide_target
 
@@ -308,7 +307,7 @@ expression_meta_data_aug |>
   summarize(count = n(), .groups = "drop")
 ```
 
-##  {.smaller}
+
 
 Check the lowest and highest age
 
@@ -334,7 +333,7 @@ expression_meta_data_aug |>
   n_distinct()
 ```
 
-## Analysis {.smaller}
+## Analysis visual {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
@@ -345,5 +344,54 @@ expression_meta_data_aug |>
 ![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
 :::
 :::
+
+## Analysis heatmap {.smaller}
+
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
+
+## Analysis linear model {.smaller}
+
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
+
+## Analysis PCA {.smaller}
+
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
+
+## Analysis 5 {.smaller}
+
+::: columns
+::: {.column width="50%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
+:::
+
+::: {.column width="50%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
+:::
+:::
+
 
 ## Discussion {.smaller}
