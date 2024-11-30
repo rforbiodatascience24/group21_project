@@ -408,8 +408,6 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 :::
 :::
 
-##  {.smaller}
-
 ## Analysis visual Astrid {.smaller}
 
 ::: columns
@@ -420,8 +418,6 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 ::: {.column width="50%"}
 ![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
 :::
-
-##  {.smaller}
 :::
 
 ## Analysis PCA A and E {.smaller}
