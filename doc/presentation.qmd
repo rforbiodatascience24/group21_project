@@ -22,14 +22,14 @@ format:
 editor: visual
 ---
 
-## Introduction Yayi {.smaller}
+## Introduction Yayi
 
 -   Background
     -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
-    -   A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.
+    -   A focus on phenotype, survival data, and protein expression quantification.
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
-    -   Extract and uncover scientific insights from the HNSCC datasets. ![](../results/images/head_neck.png){width="80%" height="80%"}
+    -   Extract and uncover scientific insights from the HNSCC datasets.
 
 ## Materials and methods Astrid {.smaller}
 
