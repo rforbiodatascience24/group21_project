@@ -19,7 +19,7 @@ execute:
 
 ```{r}
 #| label: "load-libraries" 
-#| echo: FALSE
+#| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
 

@@ -164,28 +164,33 @@ Creating a forest plot for significant genes using ggplot.
 #| fig-height: 5
 
 
-forest_plot <- expression_meta_data_analysis6_estimates_clean |> 
+forest_plot_vital <- expression_meta_data_analysis6_estimates_clean |> 
   filter(is_significant == "yes") |> 
   ggplot(mapping = aes(x = estimate,
                        y = fct_reorder(.f = peptide_target,
                                        .x = estimate))) + 
-  geom_point(color = "blue") + 
+  geom_point(color = "#d11f2b") + 
   geom_vline(xintercept = 0,
-             color = "orange",
+             color = "#beeb4c",
              size = 1,
              alpha = 0.5) +
   geom_errorbarh(mapping = aes(xmin = conf.low,
                                xmax = conf.high),
                  size = 0.5,
                  height = 0.3,
-                 color = "blue") +
+                 color = "#eb4cbe") +
   theme_minimal() + 
   theme(plot.title = element_text(hjust = 0)) +
   labs(title = "Peptides associated with death of Head and Neck patients",
        x = "Estimates (95% CI)",
        y = "")
 
-forest_plot
+forest_plot_vital
+
+ggsave(filename = "06_analysis_lm_forest_plot.png",
+       plot = forest_plot_vital, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
@@ -203,17 +208,18 @@ expression_meta_data_analysis6_estimates_clean <- expression_meta_data_analysis6
                            is_significant == "no" ~ ""))
 expression_meta_data_analysis6_estimates_clean
 
-volcano_plot <- expression_meta_data_analysis6_estimates_clean |>
+volcano_plot_vital <- expression_meta_data_analysis6_estimates_clean |>
   ggplot(mapping = aes(x = estimate,
                        y = -log10(p.value),
                        color = is_significant)) +
   geom_point(alpha = 0.5) +
-  scale_color_colorblind() +
+  scale_color_manual(values = c("yes" =  "#2bd11f", 
+                                "no" ="#eb4cbe")) + 
   geom_label_repel(aes(label = label),
-                  size = 2,
-                  max.overlaps = 25) +
+                   size = 4,
+                   max.overlaps = 25) +
   labs(title = "Peptides associated with death of Head and Neck patients",
-       subtitle = "Peptides highlighted in XX were significant after multiple testing correction",
+       subtitle = "Peptides with a label were significant after multiple testing correction",
        x = "Estimates",
        y = "-log10(p)") +
   theme_minimal(base_size = 12) +
@@ -221,7 +227,12 @@ volcano_plot <- expression_meta_data_analysis6_estimates_clean |>
         plot.subtitle = element_text(hjust = 0),
         legend.position = "none") 
 
-volcano_plot
+volcano_plot_vital
+
+ggsave(filename = "06_analysis_lm_volcano_vital.png",
+       plot = volcano_plot_vital, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
@@ -355,22 +366,31 @@ expression_meta_data_analysis6_alcohol_estimates_clean <- expression_meta_data_a
                            is_significant == "no" ~ ""))
 expression_meta_data_analysis6_alcohol_estimates_clean
 
-expression_meta_data_analysis6_alcohol_estimates_clean |>
+volcano_plot_alcohol <- expression_meta_data_analysis6_alcohol_estimates_clean |>
   ggplot(mapping = aes(x = estimate,
                        y = -log10(p.value),
                        color = is_significant)) +
   geom_point(alpha = 0.5) +
-  scale_color_colorblind() +
+  scale_color_manual(values = c("yes" =  "#2bd11f", 
+                                "no" ="#eb4cbe")) +
   geom_label_repel(aes(label = label),
-                  size = 2,
-                  max.overlaps = 25) +
+                   size = 4,
+                   max.overlaps = 25) +
   labs(title = "Peptides associated with alcohol history of Head and Neck patients",
-       subtitle = "Peptides highlighted in XX were significant after multiple testing correction",
+       subtitle = "Peptides with a label were significant after multiple testing correction",
        x = "Estimates",
        y = "-log10(p)") +
   theme_minimal(base_size = 12) +
   theme(plot.title = element_text(hjust = 0),
         plot.subtitle = element_text(hjust = 0),
         legend.position = "none") 
+
+volcano_plot_alcohol
+
+ggsave(filename = "06_analysis_lm_volcano_alcohol.png",
+       plot = volcano_plot_alcohol, 
+       device = "png",
+       path = "../results/images")
+
 
 ```
