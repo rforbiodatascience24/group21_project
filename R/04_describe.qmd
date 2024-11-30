@@ -49,7 +49,7 @@ columns_before
 columns_after
 ```
 
-After cleaning and augmentation, we have 25 columns to analyze:
+After cleaning and augmentation, we have 26 columns to analyze:
 
 ```{r}
 columns_names_after <- expression_meta_data_aug |> colnames()
@@ -130,7 +130,8 @@ expression_meta_data_aug |>
     fill = "Vital Status"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
 
 
 ```
