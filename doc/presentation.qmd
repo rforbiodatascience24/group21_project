@@ -22,7 +22,7 @@ format:
 editor: visual
 ---
 
-## Introduction Yayi {.smaller}
+## Introduction Andrea {.smaller}
 
 -   Background
     -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
@@ -35,29 +35,34 @@ editor: visual
 ## Materials and methods Astrid {.smaller}
 
 ::: columns
-::: {.column width="30%"}
--   download data
+
+::: {.column width="40%"}
+<!-- -->
+
+-   **Download data**
 
     -   Phenotype (n=604)
 
     -   Survival data (n=603)
 
-    -   Protein Expression Quantification (n=354)
+    -   Protein Expression (n=354)
+
+-   **Save data**
+
+    -   If directory exists or not
 
 -   Join tables
 
     -   inner_join
 
-    -   pivot_longer
-
--   Save data
+    -   pivot_longer\
 :::
 
-::: {.column width="70%"}
+::: {.column width="60%"}
 ```{r}
 #| echo: true
 #| warning: false
-#| code-line-numbers: "|5-16|49-72|76-78"
+#| code-line-numbers: "|5-16|49-55|58-67||69-71|76-78"
 
 library("tidyverse")
 library("table1")
@@ -142,7 +147,7 @@ write_tsv( x = final_data,
 :::
 :::
 
-## Cleaning and Augmenting Data Andrea {.smaller}
+## Cleaning and Augmenting Data Yayi {.smaller}
 
 ::: columns 
 ::: {.column width="50%"} 
