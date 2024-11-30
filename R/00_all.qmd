@@ -20,7 +20,7 @@ execute:
 ## Load library
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-00" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -33,7 +33,7 @@ library("here")
 
 ```{r}
 #| label: "creating-result-folder"
-#| include: false
+#| include: FALSE
 
 # Creating results folder
 
@@ -66,6 +66,8 @@ file.rename(from = "01_load.html",
 
 ```
 
+{{< include 01_load.qmd >}}
+
 ## Cleaning the data
 
 ```{r}
@@ -77,6 +79,8 @@ quarto::quarto_render(input = "02_clean.qmd",
 file.rename(from = "02_clean.html",
             to = "../results/02_clean.html")
 ```
+
+{{< include 02_clean.qmd >}}
 
 ## Augmenting the data
 
@@ -90,6 +94,8 @@ file.rename(from = "03_augment.html",
             to = "../results/03_augment.html")
 ```
 
+{{< include 03_augment.qmd >}}
+
 ## Description
 
 ```{r}
@@ -102,7 +108,9 @@ file.rename(from = "04_describe.html",
             to = "../results/04_describe.html")
 ```
 
-## Analysis 1
+{{< include 04_describe.qmd >}}
+
+## Analysis: Heatmap
 
 ```{r}
 #| include: false
@@ -114,7 +122,9 @@ file.rename(from = "../R/05_analysis_heatmap.html",
             to = "../results/05_analysis_heatmap.html")
 ```
 
-## Analysis 2
+{{< include 05_analysis_heatmap.qmd >}}
+
+## Analysis: Linear model on vital status
 
 ```{r}
 #| include: false
@@ -122,11 +132,13 @@ file.rename(from = "../R/05_analysis_heatmap.html",
 quarto::quarto_render(input = "../R/06_analysis_lm_vital.qmd",
                       output_format = "html")
 
-file.rename(from = "../R/06_analysis_lm.html",
-            to = "../results/06_analysis_lm.html")
+file.rename(from = "../R/06_analysis_lm_vital.html",
+            to = "../results/06_analysis_lm_vital.html")
 ```
 
-## Analysis 3
+{{< include 06_analysis_lm_vital.qmd >}}
+
+## Analysis: Visual
 
 ```{r}
 #| include: false
@@ -138,7 +150,9 @@ file.rename(from = "../R/07_analysis_visual.html",
             to = "../results/07_analysis_visual.html")
 ```
 
-## Analysis 4
+{{< include 07_analysis_visual.qmd >}}
+
+## Analysis: PCA
 
 ```{r}
 #| include: false
@@ -151,18 +165,13 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 ```
 
+{{< include 08_analysis_PCA.qmd >}}
+
 ## All
 
 ```{r}
-#|inlcude: false 
-
-quarto::quarto_render("00_all.qmd", 
-                      output_format = "html")
-#| include: false
-
+#| inlcude: false 
 
 file.rename(from = "../R/00_all.html",
             to = "../results/00_all.html")
 ```
-
-Hello

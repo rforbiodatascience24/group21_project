@@ -18,7 +18,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-01" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -33,7 +33,7 @@ library("here")
 Code for downloading the datasets we will be working with and saving in data/\_raw/ folder.
 
 ```{r}
-#| label: "Download-protein-data"
+#| label: "Download-protein-data-01"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.protein.tsv.gz"
@@ -51,7 +51,7 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 ```
 
 ```{r}
-#| label: "Download-survival-data"
+#| label: "Download-survival-data-01"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.survival.tsv.gz"
@@ -69,7 +69,7 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 ```
 
 ```{r}
-#| label: "Download-clinical-data"
+#| label: "Download-clinical-data-01"
 
 raw_dir <- here("data/_raw/")
 data_file <- "TCGA-HNSC.clinical.tsv.gz"
@@ -91,7 +91,7 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 read_tsv is used to load data files from data/\_raw and saving the files in objects.
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-01" 
 
 protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
 survival_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.survival.tsv.gz"))
@@ -155,5 +155,3 @@ write_tsv( x = expression_meta_data,
                   "03_expression_meta_data_load.tsv.gz"))
 
 ```
-
-hello
