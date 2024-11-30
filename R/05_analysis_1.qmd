@@ -35,74 +35,7 @@ expression_meta_data_analysis_1 <- read_tsv(file = here("data/04_expression_meta
 
 ```
 
-### Heat-map of 50 random peptide-targets plotted against age (not used)
 
-We have decided to **leave out the plot of 50 random peptide-targets** as we decided that it would be more valuable to take the most up- and downregulated peptide-targets and look at the expression patterns for the different age-groups.
-
-```{r}
-#| eval: false
-
-# Set seed for reproducibility
-set.seed(123)
-
-# Randomly select 50 peptide targets
-random_peptides <- expression_meta_data_aug |> 
-  distinct(peptide_target) |> 
-  sample_n(50) |> 
-  pull(peptide_target)
-
-# Filter for selected peptides and exclude rows where age and expression is NA
-heatmap_data <- expression_meta_data_aug |> 
-  filter(peptide_target %in% random_peptides, 
-         !is.na(age_at_index),
-         !is.na(expression)) |> 
-  mutate(
-    # Bin ages into 5-year intervals
-    age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5), include.lowest = TRUE)
-  ) |> 
-  group_by(peptide_target, age_interval) |> 
-  # Aggregate expression values by mean
-  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop")
-
-# Convert `age_interval` to factor for proper ordering
-heatmap_data <- heatmap_data |> 
-  mutate(age_interval = factor(age_interval, levels = unique(age_interval)))
-```
-
-Plotting the heat-map
-
-```{r}
-#| label: "heat-map-50-random-against-age"
-#| fig-width: 10
-#| fig-height: 10
-#| eval: false
-
-# Create the heatmap
-heatmap_data |> 
-  filter(!is.na(age_interval)) |> 
-  ggplot(aes(x = peptide_target, 
-             y = age_interval, 
-             fill = mean_expression)) +
-  
-  geom_tile(color = "white") +  # Add grid lines
-  scale_fill_gradient2(low = "blue",
-                       mid = "white",
-                       high = "red",
-                       na.value = "black") +  # Color gradient
-  
-  labs(
-    title = "Heatmap of Expression Across Age Intervals and 50 Random Peptide Targets",
-    x = "Peptide Target",
-    y = "Age Interval",
-    fill = "Mean Expression"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 60, hjust = 1),
-    axis.text.y = element_text(size = 8),
-    legend.position = "bottom"
-  )
-```
 
 ### Heat-map of 20 most up- and downregulated peptide-targets plotted against age
 
@@ -114,66 +47,10 @@ heatmap_data |>
 
 -   Look at selected_peptrides\$peptide_data
 
-```{r}
-# Select top 20 most upregulated peptide targets
-most_upregulated <- expression_meta_data_analysis_1 |> 
-  filter(!is.na(mean_expression)) |> # Remove rows with NA
-  group_by(mean_expression) |>        # Group by peptide_target
-  slice_max(order_by = mean_expression, n = 1) |> # Take the row with max mean_expression for each peptide_target
-  ungroup() |>                       # Ungroup to avoid grouped output
-  slice_max(order_by = mean_expression, n = 20)  # Select the 20 highest mean_expression
-
-# Select bottom 20 most downregulated peptide targets
-most_downregulated <- expression_meta_data_analysis_1 |> 
-  filter(!is.na(mean_expression)) |> # Remove rows with NA
-  group_by(mean_expression) |>        # Group by peptide_target
-  slice_min(order_by = mean_expression, n = 1) |> # Take the row with min mean_expression for each peptide_target
-  ungroup() |>                       # Ungroup to avoid grouped output
-  slice_min(order_by = mean_expression, n = 20)  # Select the 20 lowest mean_expression
-
-# Combine the two subsets
-selected_peptides <- bind_rows(most_upregulated, most_downregulated)
-
-# Inspect the data
-selected_peptides
-```
-
-```{r}
-# Select top 20 most upregulated peptide targets
-most_upregulated <- expression_meta_data_analysis_1  |> 
-  
-  filter(!is.na(mean_expression)) |> # Removing rows with NA
-  
-  group_by(peptide_target) |> 
-  
-  summarise(mean_expression) |> 
-  
-  slice_max(order_by = mean_expression, n = 20)
-
-
-# Select bottom 20 most downregulated 
-most_downregulated <- expression_meta_data_analysis_1  |> 
-  
-  filter(!is.na(mean_expression)) |> # Removing rows with NA
-  
-  group_by(peptide_target) |>  
-  
-  summarise(mean_expression)|> 
-  
-  slice_min(order_by = mean_expression, n = 20)
-
-# Combine the two subsets
-selected_peptides <- bind_rows(top_downregulated, top_upregulated)
-
-# Inspect data
-selected_peptides
-```
 
 ```{r}
 # Select top 20 most upregulated peptide targets
 most_upregulated <- expression_meta_data_analysis_1 |> 
-  
-  summarise(mean_expression)
   
   filter(!is.na(mean_expression)) |> # Removing rows with NA
   
@@ -187,9 +64,8 @@ most_upregulated <- expression_meta_data_analysis_1 |>
 # Select bottom 20 most downregulated 
 most_downregulated <- expression_meta_data_analysis_1 |> 
   
-  filter(!is.na(age_interval_5_year), # Removing rows with NA
-         !is.na(expression)) |> 
-  
+  filter(!is.na(expression)) |>  # Removing rows with NA
+         
   group_by(peptide_target) |> 
   
   summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
@@ -197,18 +73,21 @@ most_downregulated <- expression_meta_data_analysis_1 |>
   slice_min(order_by = mean_expression, n = 20)
 
 # Combine the two subsets
-selected_peptides <- bind_rows(top_downregulated, top_upregulated)
+selected_peptides <- bind_rows(most_downregulated, most_upregulated)
 
 # Inspect data
 selected_peptides
 ```
 
 ```{r}
-# Filter the main dataset for the selected peptides
-heatmap_data_filtered <- expression_meta_data_aug |> 
-  filter(peptide_target %in% selected_peptides$peptide_target,
-         !is.na(age_interval_5_year), 
-         !is.na(expression))
+# Filter the main dataset for the selected peptides and arrange by mean_expression in descending order
+heatmap_selected_peptides <- expression_meta_data_analysis_1 |> 
+  semi_join(selected_peptides, by = "peptide_target") |>  # Keep rows with matching peptide_target
+  filter(!is.na(mean_expression)) |>  # Removing all NAs
+  group_by(peptide_target) |> 
+  arrange(desc(desc(mean_expression)))  # Sort by mean_expression, highest to lowest
+
+heatmap_selected_peptides
 ```
 
 ```{r}
@@ -217,7 +96,7 @@ heatmap_data_filtered <- expression_meta_data_aug |>
 #| fig-height: 10
 
 # Calculate mean_expression and count for each group
-heatmap_data_filtered <- expression_meta_data_aug |> 
+heatmap_selected_peptides_1 <- expression_meta_data_analysis_1 |> 
   filter(peptide_target %in% selected_peptides$peptide_target,
          !is.na(age_interval_5_year), 
          !is.na(expression),
@@ -231,7 +110,69 @@ heatmap_data_filtered <- expression_meta_data_aug |>
   )
 
 # Create the heatmap
-heatmap_data_filtered |> 
+heatmap_selected_peptides_1 |> 
+  ggplot(aes(x = factor(peptide_target, levels = selected_peptides$peptide_target), 
+             y = age_interval_5_year, 
+             fill = mean_expression)) +
+  
+  # Heatmap tiles
+  geom_tile(color = "white") +
+  
+  # Color gradient for expression
+  scale_fill_gradient2(low = "blue", 
+                       mid = "white", 
+                       high = "red", 
+                       na.value = "black") +
+  
+  # Labels
+  labs(
+    title = "Heatmap of Expression Across Age Intervals and 20 Most Upregulated and 20 Most Downregulated Peptide Targets",
+    x = "Peptide Target",
+    y = "Age Interval",
+    fill = "Mean Expression"
+  ) +
+  
+  # Themes
+  theme(
+    # Axis text size
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 15),
+    axis.text.y = element_text(size = 15),
+    
+    # Title and axis label sizes
+    plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    
+    # Legend position and text size
+    legend.position = "bottom",
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14)
+  )
+```
+
+
+
+```{r}
+#| label: "heat-map-20UP-20DOWN-against-age"
+#| fig-width: 20
+#| fig-height: 10
+
+# Calculate mean_expression and count for each group
+mean_expression_5_year <- expression_meta_data_analysis_1 |> 
+  filter(peptide_target %in% selected_peptides$peptide_target,
+         !is.na(age_interval_5_year), 
+         !is.na(expression),
+         # Leaving out age intervals 15-19 and 20-24 as less than three represented
+         !age_interval_5_year %in% c("15-19", "20-24")) |> 
+  group_by(peptide_target, age_interval_5_year) |> 
+  summarize(
+    mean_expression = mean(expression, na.rm = TRUE),
+    count = n(),  # Count the number of data points in each group
+    .groups = "drop"
+  )
+
+# Create the heatmap
+heatmap_selected_peptides |> 
   ggplot(aes(x = factor(peptide_target, levels = selected_peptides$peptide_target), 
              y = age_interval_5_year, 
              fill = mean_expression)) +
@@ -476,4 +417,73 @@ plot_stage_5 <- heatmap_data_filtered |>
 
 ```{r}
 plot_stage_1 / plot_stage_2
+```
+
+### Heat-map of 50 random peptide-targets plotted against age (not used)
+
+We have decided to **leave out the plot of 50 random peptide-targets** as we decided that it would be more valuable to take the most up- and downregulated peptide-targets and look at the expression patterns for the different age-groups.
+
+```{r}
+#| eval: false
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Randomly select 50 peptide targets
+random_peptides <- expression_meta_data_aug |> 
+  distinct(peptide_target) |> 
+  sample_n(50) |> 
+  pull(peptide_target)
+
+# Filter for selected peptides and exclude rows where age and expression is NA
+heatmap_data <- expression_meta_data_aug |> 
+  filter(peptide_target %in% random_peptides, 
+         !is.na(age_at_index),
+         !is.na(expression)) |> 
+  mutate(
+    # Bin ages into 5-year intervals
+    age_interval = cut(age_at_index, breaks = seq(20, 90, by = 5), include.lowest = TRUE)
+  ) |> 
+  group_by(peptide_target, age_interval) |> 
+  # Aggregate expression values by mean
+  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop")
+
+# Convert `age_interval` to factor for proper ordering
+heatmap_data <- heatmap_data |> 
+  mutate(age_interval = factor(age_interval, levels = unique(age_interval)))
+```
+
+Plotting the heat-map
+
+```{r}
+#| label: "heat-map-50-random-against-age"
+#| fig-width: 10
+#| fig-height: 10
+#| eval: false
+
+# Create the heatmap
+heatmap_data |> 
+  filter(!is.na(age_interval)) |> 
+  ggplot(aes(x = peptide_target, 
+             y = age_interval, 
+             fill = mean_expression)) +
+  
+  geom_tile(color = "white") +  # Add grid lines
+  scale_fill_gradient2(low = "blue",
+                       mid = "white",
+                       high = "red",
+                       na.value = "black") +  # Color gradient
+  
+  labs(
+    title = "Heatmap of Expression Across Age Intervals and 50 Random Peptide Targets",
+    x = "Peptide Target",
+    y = "Age Interval",
+    fill = "Mean Expression"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 60, hjust = 1),
+    axis.text.y = element_text(size = 8),
+    legend.position = "bottom"
+  )
 ```
