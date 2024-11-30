@@ -18,7 +18,7 @@ format:
     transition: fade
     background-transition: fade
     highlight-style: ayu-mirage
-    code-block-height: 450px
+    code-block-height: 600px
 editor: visual
 ---
 
@@ -164,6 +164,10 @@ write_tsv( x = final_data,
     -   Creating patient_ID by using `mutate()`
 
     -   Adding age interval variables
+    
+    -   Peptide target xpression mean variable
+    
+    -   Alcohol consumption as binomial variable
 :::
 
 ::: {.column width="60%"}
@@ -171,7 +175,7 @@ write_tsv( x = final_data,
 #| echo: TRUE
 #| eval: FALSE 
 #| output: FALSE  
-#| code-line-numbers: "|4-20|22-29|31-33"
+#| code-line-numbers: "|1-4|6-15|17-21|23-27"
 
 
 # Creating patient_id
