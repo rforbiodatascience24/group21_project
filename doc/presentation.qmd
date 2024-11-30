@@ -338,11 +338,11 @@ expression_meta_data_aug |>
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/pathologic_stage_distribution.png){width="100%" height="100%"}
+![](../results/images/04_pathologic_stage_distribution.png){width="100%" height="100%"}
 :::
 
 ::: {.column width="50%"}
-![](../results/images/vital_status_age_distribution.png){width="100%" height="100%"}
+![](../results/images/04_vital_status_age_distribution.png){width="100%" height="100%"}
 :::
 :::
 

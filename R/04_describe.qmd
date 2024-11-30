@@ -103,8 +103,10 @@ pathologic_stage_distribution <- expression_meta_data_aug |>
 
 pathologic_stage_distribution
 
-ggsave("~/projects/group_21_project/results/images/pathologic_stage_distribution.png", plot= last_plot())
-
+ggsave(filename = "04_pathologic_stage_distribution.png",
+       plot = pathologic_stage_distribution, 
+       device = "png",
+       path = "../results/images")
 
 ```
 
@@ -145,8 +147,10 @@ vital_status_age_distribution <- expression_meta_data_aug |>
 
 vital_status_age_distribution
 
-ggsave("~/projects/group_21_project/results/images/vital_status_age_distribution.png", plot= last_plot())
-
+ggsave(filename = "04_vital_status_age_distribution.png",
+       plot = vital_status_age_distribution, 
+       device = "png",
+       path = "../results/images")
 
 
 ```
