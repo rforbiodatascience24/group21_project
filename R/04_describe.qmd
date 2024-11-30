@@ -26,7 +26,6 @@ execute:
 library("tidyverse")
 library("table1")
 library("here")
-library("ggrepel")
 ```
 
 ## Loading the data
@@ -78,24 +77,35 @@ n_patient_after
 Check the different pathologic stages and how patients are distributed among these groups.
 
 ```{r}
-expression_meta_data_aug |> 
+pathologic_stage_distribution <- expression_meta_data_aug |> 
   mutate(pathologic_stage = replace_na(pathologic_stage, "Not Reported")) |> 
   group_by(pathologic_stage) |> 
   summarize(n_patients = n_distinct(patient_id)) |>
-  mutate(percentage = n_patients / sum(n_patients) * 100) |>
   
-  ggplot(aes(x = "", y = n_patients, fill = pathologic_stage)) +
-  geom_bar(stat = "identity", width = 1) +
-  geom_text_repel(aes(label = paste0(round(percentage, 1), "%")),
-                  position = position_stack(vjust = 0.5),
-                  box.padding = 0.3, # Padding around the text box
-                  direction = "y", # Ensure vertical alignment
-                  show.legend = FALSE) +
-  coord_polar(theta = "y") +
-  labs(title = "Distribution of Patients by Pathologic Stage",
-       x = NULL, y = NULL) +
-  theme_void() +
-  scale_fill_brewer(palette = "Set3", name = "Pathologic Stage")
+  ggplot(aes(x = pathologic_stage, 
+             y = n_patients, 
+             fill = pathologic_stage)) +
+  geom_bar(stat = "identity", 
+           alpha = 0.8) +
+  labs(title = "Patients Number Distribution by Pathologic Stage",
+       x = "Pathologic Stage",
+       y = "Patient Number") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  scale_fill_manual(values = c(
+    "Not Reported" = "#eb4cbe", 
+    "Stage I" = "#2d0ef5", 
+    "Stage II" = "#2bd11f", 
+    "Stage III" = "#beeb4c", 
+    "Stage IVA" = "#f5910e", 
+    "Stage IVB" = "#d11f2b"
+  ))
+
+pathologic_stage_distribution
+
+ggsave("~/projects/group_21_project/results/images/pathologic_stage_distribution.png", plot= last_plot())
+
+
 ```
 
 Check the lowest and highest patient age.
@@ -111,7 +121,7 @@ expression_meta_data_aug |>
 Check the age distribution of patients and stratified on vital_status
 
 ```{r}
-expression_meta_data_aug |> 
+vital_status_age_distribution <- expression_meta_data_aug |> 
   group_by(vital_status, 
            age_interval_5_year) |>
   summarize(n = n_distinct(patient_id),
@@ -120,11 +130,9 @@ expression_meta_data_aug |>
            vital_status, 
            fill = list(n = 0)) |> # Fill missing combinations
   
-  ggplot(aes(x = age_interval_5_year, 
-             y = n, 
-             fill = vital_status)) +
-  geom_bar(stat = "identity",
-           position = "dodge") +
+  ggplot(aes(x = age_interval_5_year, y = n, fill = vital_status)) +
+  geom_bar(stat = "identity", position = "dodge",alpha = 0.8) +
+  scale_fill_manual(values = c("Alive" = "#eb4cbe", "Dead" = "#beeb4e")) +
   labs(
     title = "Count of Patients by Age, Stratified by Vital Status",
     x = "Age",
@@ -134,6 +142,11 @@ expression_meta_data_aug |>
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "bottom")
+
+vital_status_age_distribution
+
+ggsave("~/projects/group_21_project/results/images/vital_status_age_distribution.png", plot= last_plot())
+
 
 
 ```

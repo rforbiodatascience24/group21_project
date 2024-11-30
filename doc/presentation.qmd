@@ -22,14 +22,14 @@ format:
 editor: visual
 ---
 
-## Introduction
+## Introduction {.smaller}
 
 -   Background
     -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
     -   A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.
 -   Research Objective
-    -   TBD.
-    -   TBD.
+    -   Apply Tidyverse techniques learned in class to real-world data.
+    -   Extract and uncover scientific insights from the HNSCC datasets.
 
 ## Materials {.smaller}
 
@@ -336,15 +336,13 @@ expression_meta_data_aug |>
 
 ## Analysis {.smaller}
 
-Heatmaps
-
 ::: columns
 ::: {.column width="50%"}
-![Left Image](images/heatmap_1.png){width="100%" height="100%"}
+![](../results/images/pathologic_stage_distribution.png){width="100%" height="100%"}
 :::
 
 ::: {.column width="50%"}
-![Right Image](images/heatmap_2.png){width="100%" height="100%"}
+![](../results/images/vital_status_age_distribution.png){width="100%" height="100%"}
 :::
 :::
 
