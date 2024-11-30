@@ -24,6 +24,7 @@ execute:
 library("tidyverse")
 library("table1")
 library("here")
+library("ggrepel")
 ```
 
 ## Loading the data
@@ -76,8 +77,23 @@ Check the different pathologic stages and count how many patients are in each gr
 
 ```{r}
 expression_meta_data_aug |> 
+  mutate(pathologic_stage = replace_na(pathologic_stage, "Not Reported")) |> 
   group_by(pathologic_stage) |> 
-  summarize(n_patients = n_distinct(patient_id)) 
+  summarize(n_patients = n_distinct(patient_id)) |>
+  mutate(percentage = n_patients / sum(n_patients) * 100) |>
+  
+  ggplot(aes(x = "", y = n_patients, fill = pathologic_stage)) +
+  geom_bar(stat = "identity", width = 1) +
+  geom_text_repel(aes(label = paste0(round(percentage, 1), "%")),
+                  position = position_stack(vjust = 0.5),
+                  box.padding = 0.3, # Padding around the text box
+                  direction = "y", # Ensure vertical alignment
+                  show.legend = FALSE) +
+  coord_polar(theta = "y") +
+  labs(title = "Distribution of Patients by Pathologic Stage",
+       x = NULL, y = NULL) +
+  theme_void() +
+  scale_fill_brewer(palette = "Set3", name = "Pathologic Stage")
 ```
 
 Check the lowest and highest age.
