@@ -108,7 +108,7 @@ heatmap_selected_peptides
 #| fig-height: 10
 
 # Create the heatmap
-heatmap_selected_peptides |> 
+heatmap <- heatmap_selected_peptides |> 
   
   ggplot(aes(
     x = factor(peptide_target, levels = peptide_target_levels),  # Use the extracted levels vector
@@ -151,12 +151,21 @@ heatmap_selected_peptides |>
     legend.text = element_text(size = 12),
     legend.title = element_text(size = 14)
   )
-ggsave("~/Projects/group_21_project/results/images/heatmap_selected_peptides.png", plot= last_plot())
 
 ```
 
 
 
+```{r}
+ggsave(
+  filename = "06_analysis_heatmap.png",
+  plot = heatmap,   # Pass the ggplot object, not the data frame
+  device = "png",
+  path = "../results/images",
+  width = 20,
+  height = 10
+)
+```
 
 
 ### Heat-map of 50 random peptide-targets plotted against age (not used)
