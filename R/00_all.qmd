@@ -15,9 +15,43 @@ execute:
 
 # Master document for running all code in the project
 
-## Load data
+## Load library
 
-{{< include 01_load.qmd >}}
+```{r}
+#| label: "load-libraries" 
+#| echo: TRUE
+#| eval: TRUE 
+#| output: FALSE  
+
+library("here")
+
+```
+
+## Create folders if needed
+
+```{r}
+#| label: "creating-result-folder"
+#| include: false
+
+# Creating results folder
+
+results_dir <- here("results/")
+
+if( !dir.exists(results_dir) ){
+  dir.create(path = results_dir)
+}
+
+# Creating images folder
+
+images_dir <- here("results/images/")
+
+if( !dir.exists(images_dir) ){
+  dir.create(path = images_dir)
+}
+
+```
+
+## Load data
 
 ```{r}
 #| include: false
@@ -32,8 +66,6 @@ file.rename(from = "01_load.html",
 
 ## Cleaning the data
 
-{{< include 02_clean.qmd >}}
-
 ```{r}
 #| include: false
 
@@ -45,8 +77,6 @@ file.rename(from = "02_clean.html",
 ```
 
 ## Augmenting the data
-
-{{< include 03_augment.qmd >}}
 
 ```{r}
 #| include: false
@@ -60,8 +90,6 @@ file.rename(from = "03_augment.html",
 
 ## Description
 
-{{< include 04_describe.qmd >}}
-
 ```{r}
 #| include: false
 
@@ -73,8 +101,6 @@ file.rename(from = "04_describe.html",
 ```
 
 ## Analysis 1
-
-{{< include 05_analysis_1.qmd >}}
 
 ```{r}
 #| include: false
@@ -88,8 +114,6 @@ file.rename(from = "05_analysis_1.html",
 
 ## Analysis 2
 
-{{< include 06_analysis_2.qmd >}}
-
 ```{r}
 #| include: false
 
@@ -101,8 +125,6 @@ file.rename(from = "06_analysis_2.html",
 ```
 
 ## Analysis 3
-
-{{< include 07_analysis_3.qmd >}}
 
 ```{r}
 #| include: false
@@ -116,8 +138,6 @@ file.rename(from = "07_analysis_3.html",
 
 ## Analysis 4
 
-{{< include 08_analysis_4.qmd >}}
-
 ```{r}
 #| include: false
 
@@ -130,8 +150,6 @@ file.rename(from = "08_analysis_4.html",
 ```
 
 ## Analysis 5
-
-{{< include 09_analysis_5.qmd >}}
 
 ```{r}
 #| include: false
