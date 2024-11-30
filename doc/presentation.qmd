@@ -141,13 +141,8 @@ write_tsv( x = final_data,
 :::
 :::
 
-<<<<<<< HEAD
-## Cleaning and Augmenting Data Andrea {.smaller}
 
-::: columns ::: {.column width="50%"} ::: {style="font-size: 0.6em"} ::: incremental
-=======
-## Cleaning and Augmenting Data {.smaller}
->>>>>>> 731c8b0ce4cd9b185dd0227a7650c4de44f937ba
+## Cleaning and Augmenting Data Andrea {.smaller}
 
 ::: columns
 ::: {.column width="40%"}
