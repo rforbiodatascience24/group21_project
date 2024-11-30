@@ -141,7 +141,7 @@ write_tsv( x = final_data,
 :::
 :::
 
-## Clean Data {.smaller}
+## Cleaning and Augmenting Data {.smaller}
 
 -   Choose columns to work with and rename them.
 
