@@ -66,11 +66,13 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
        fill = "Vital Status"
        )+
   
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5),
+  theme_classic()+
+  
+  theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(size = 8, hjust = 0.5),
         legend.position = "right"
-        )+
-  theme_classic()
+        )
+ 
 
 
 barplot_vital_status_genders  
@@ -118,10 +120,12 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
           subtitle = "Proportional representation by gender and race",
        fill = "Vital Status") +
   
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5),
-        strip.text = element_text(size = 6, face = "bold"))+
-  theme_classic()
+   theme_classic()+
+  
+  theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(size = 8, hjust = 0.5),
+        strip.text = element_text(size = 5))
+  
 
 
 barplot_vital_status_genders_facet_races
@@ -149,12 +153,19 @@ geom_boxplot(fill = "#eb4cbe",
 
   
   facet_wrap(~pathologic_stage)+
+  
   labs(x = "Vital Status", 
        y = "Years smoked",
        title = "Distribution of Years smoked and Vital Status Across pathological stages",
        fill = "Vital Status")+
-  theme(plot.title = element_text(size = 10, hjust = 0.5))+
-  theme_classic()
+  
+  theme_classic()+
+  
+  theme(plot.title = element_text(size = 10, 
+                                  hjust = 0.5,
+                                  face = "bold"))
+  
+  
 
 
 boxplot_years_smoked_vital_status_facet_pathological
@@ -186,6 +197,9 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   geom_point( shape = 8,
               size = 1)+
   
+  facet_wrap(~peptide_target)+
+  
+  
   scale_color_manual(
     values = c(
       "Alive" = "#eb4cbe",  
@@ -200,20 +214,23 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   labs(x = "Age", 
        y = "Expression level",
        fill = "Vital Status",
-       color = "Vital Status"
+       color = "Vital Status", 
+       title = "Peptides significantly expressed between vital status"
        )+
   
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5),
-        legend.title = "Vital status",
-        legend.position = "right"
-        )+
+  theme_classic()+
   
-  facet_wrap(~peptide_target)+
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5),
+        strip.text = element_text(size = 6)
+      
+        )
+  
+  
   
  
   
-  theme_classic()
+  
 
 
 expression_of_6_significant_pep_and_vital_status
