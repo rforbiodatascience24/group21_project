@@ -151,7 +151,7 @@ data_dir <- here("data/")
 
 
 write_tsv( x = expression_meta_data,
-           file = str_c(data_dir, 
-                  "03_expression_meta_data_load.tsv.gz"))
+           file = str_c(data_dir,
+                        "03_expression_meta_data_load.tsv.gz"))
 
 ```
