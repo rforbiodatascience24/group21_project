@@ -18,7 +18,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-05" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -26,12 +26,13 @@ execute:
 library("tidyverse")
 library("table1")
 library("here")
+
 ```
 
 ## Loading the data
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-05" 
 
 expression_meta_data_analysis <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
 
@@ -40,6 +41,8 @@ expression_meta_data_analysis <- read_tsv(file = here("data/04_expression_meta_d
 ### Heat-map of 20 most up- and downregulated peptide-targets plotted against age
 
 ```{r}
+#| label: "heatmap-20-most-up-and-down-regulated" 
+
 # Select top 20 most upregulated peptide targets
 most_upregulated <- expression_meta_data_analysis |> 
   
@@ -72,6 +75,8 @@ selected_peptides
 ```
 
 ```{r}
+#| label: "extract-peptide-target-levels" 
+
 # Extract the peptide_target levels for ordering in the heatmap
 peptide_target_levels <- selected_peptides |> 
   
@@ -81,6 +86,8 @@ peptide_target_levels
 ```
 
 ```{r}
+#| label: "filter-and-arrage-data" 
+
 # Filter the main dataset for the selected peptides and arrange by mean_expression in descending order
 heatmap_selected_peptides <- expression_meta_data_analysis |> 
   
@@ -154,9 +161,9 @@ heatmap <- heatmap_selected_peptides |>
 
 ```
 
-
-
 ```{r}
+#| label: "saving-heatmap" 
+
 ggsave(
   filename = "06_analysis_heatmap.png",
   plot = heatmap,   # Pass the ggplot object, not the data frame
@@ -166,7 +173,6 @@ ggsave(
   height = 10
 )
 ```
-
 
 ### Heat-map of 50 random peptide-targets plotted against age (not used)
 
@@ -211,7 +217,6 @@ heatmap_selected_peptides_random <- expression_meta_data_analysis |>
     .groups = "drop"  # Drop grouping after summarization
   )
 ```
-
 
 ```{r}
 #| label: "heat-map-random-40-against-age"
@@ -265,6 +270,7 @@ heatmap_selected_peptides_random |>
 ```
 
 ### Five heat-maps for the expression pattern sorted by pathological stage
+
 We have decided to **leave out the bar plot of the five most up and downregulated genes for each pathologic stage** as we did not find it useful enough for our analysis.
 
 ```{r}
@@ -324,4 +330,3 @@ top_bottom_genes |>
     strip.text = element_text(size = 12)
   )
 ```
-
