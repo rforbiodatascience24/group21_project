@@ -43,7 +43,7 @@ css: style.css
 ::: {.column width="45%"}
 <!-- -->
 
--   **Download, name and data**
+-   **Download and naming**
 
 -   **Join tables**
 
