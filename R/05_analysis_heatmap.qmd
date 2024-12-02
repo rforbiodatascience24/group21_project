@@ -112,7 +112,7 @@ heatmap_selected_peptides
 ```{r}
 #| label: "heat-map-20UP-20DOWN-against-age"
 #| fig-width: 20
-#| fig-height: 10
+#| fig-height: 20
 
 # Create the heatmap
 heatmap <- heatmap_selected_peptides |> 
@@ -165,7 +165,7 @@ heatmap <- heatmap_selected_peptides |>
 #| label: "saving-heatmap" 
 
 ggsave(
-  filename = "06_analysis_heatmap.png",
+  filename = "05_analysis_heatmap.png",
   plot = heatmap,   # Pass the ggplot object, not the data frame
   device = "png",
   path = "../results/images",
