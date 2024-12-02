@@ -113,7 +113,7 @@ expression_meta_data_lm_alcohol_estimates
 
 ## Clean the data and calculating q.value
 
-Term describes if the patient drinks alcohol. 0 = no and 1 = yes. Therefore the intercept the patient does not drink alcohol and the slope + intercept the patient does drink alcohol. **Is this correct??? Explain better???**
+Term describes if the patient drinks alcohol. 0 = no and 1 = yes. Therefore the intercept the patient does not drink alcohol and the slope + intercept the patient does drink alcohol.
 
 ```{r}
 #| label: "filtering-and-selecting-09"
@@ -185,7 +185,7 @@ volcano_plot_alcohol <- expression_meta_data_lm_alcohol_estimates_clean |>
 
 volcano_plot_alcohol
 
-ggsave(filename = "06_analysis_lm_volcano_alcohol.png",
+ggsave(filename = "09_analysis_lm_volcano_alcohol.png",
        plot = volcano_plot_alcohol, 
        device = "png",
        path = "../results/images")

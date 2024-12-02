@@ -105,7 +105,7 @@ ggsave(filename = "08_PCA_analysis_scree.png",
        path = "../results/images")
 ```
 
-From the scree plot it can be observed that a few of the proteinshave a much higher percent variance compared to the rest of the proteins. Therefore further analysis are conducted.
+From the scree plot it can be observed that a few of the proteins have a much higher percent variance compared to the rest of the proteins. Therefore further analysis are conducted.
 
 ## Adding the meta data to the PCA analysis
 
