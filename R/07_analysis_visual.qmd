@@ -37,16 +37,19 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 
 ```
 
+## **Exploring the survival of each gender**
+
+## 
+
 ```{r}
 
-
+#| label: "survival-between-genders-barplot-07" 
 
 
 barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
                      fill = vital_status
                      ))+
-  
   
   
   geom_bar(position = "fill"
@@ -58,9 +61,6 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
       "Dead" = "#beeb4c"    
     )
   ) +
-  
-
-  
   
   labs(x = "Gender", 
        y = "Proportion",
@@ -77,9 +77,7 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
         )
  
 
-
 barplot_vital_status_genders  
-
 
 
 
@@ -89,18 +87,18 @@ ggsave(filename = "barplot_vital_status_genders.png",
        path = "../results/images")
 
 
-
-
-
-
-
 ```
 
-Facet wrap with ethnicity and survival
+The barplot visualizes the proportion of the vital status distributed between the two genders. The position = fill in geom_bar computed the proportion and thus allows for direct comparison between the two genders. It does though not reveal absolute numbers which is important to make any conclusions on the survival likelihood of each gender. The barplot indicates that the proportion of dead patients is higher within the female patients.
 
-add absolute values
+## Exploring the vital status between different races
+
+With a facet on each race, we can visually interpret any deviations in vital status between the different races
 
 ```{r}
+
+#| label: "survival-between-genders-and-races-barplot-07" 
+
 barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
                      fill = vital_status
@@ -114,7 +112,6 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
       "Dead" = "#beeb4c"    
     )
   ) +
-  
   
   facet_wrap(~race)+
   labs(x = "Gender", 
@@ -140,20 +137,21 @@ ggsave(filename = "barplot_vital_status_genders_facet_races.png",
 
 ```
 
+## Exploring the effect of smoking on the vital status 
+
+Constructing a boxplot to visually and statistically interpret the relationship between "years smoked" and the vital status across the different pathological stages.
+
 ```{r}
+
+#| label: "years-smoked-vital-status-07" 
 
 boxplot_years_smoked_vital_status_facet_pathological<-expression_meta_data_aug |> 
   drop_na(pathologic_stage) |> 
 ggplot(mapping = aes(x = vital_status,
                      y = years_smoked))+
   
-  
-  
 geom_boxplot(fill = "#eb4cbe",
              color = "#beeb4c")+
-  
-  
-
   
   facet_wrap(~pathologic_stage)+
   
@@ -167,9 +165,6 @@ geom_boxplot(fill = "#eb4cbe",
   theme(plot.title = element_text(size = 10, 
                                   hjust = 0.5,
                                   face = "bold"))
-  
-  
-
 
 boxplot_years_smoked_vital_status_facet_pathological
 
