@@ -36,7 +36,7 @@ css: style.css
 
 ## Materials and methods {.smaller}
 
-![](../results/images/flowchart_project.jpg){width="100%" height="400px"}
+![](images/flowchart_project.jpeg)
 
 ## Cleaning and Augmenting Data {.smaller}
 

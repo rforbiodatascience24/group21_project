@@ -65,7 +65,7 @@ file.rename(from = "01_load.html",
 
 {{< include 01_load.qmd >}}
 
-## Cleaning the data
+# Cleaning the data
 
 ```{r}
 #| include: false
@@ -79,7 +79,7 @@ file.rename(from = "02_clean.html",
 
 {{< include 02_clean.qmd >}}
 
-## Augmenting the data
+# Augmenting the data
 
 ```{r}
 #| include: false
@@ -93,7 +93,7 @@ file.rename(from = "03_augment.html",
 
 {{< include 03_augment.qmd >}}
 
-## Description
+# Description
 
 ```{r}
 #| include: false
@@ -107,7 +107,7 @@ file.rename(from = "04_describe.html",
 
 {{< include 04_describe.qmd >}}
 
-## Analysis: Heatmap most up and down regulated proteins
+# Analysis: Heatmap most up and down regulated proteins
 
 ```{r}
 #| include: false
@@ -121,7 +121,7 @@ file.rename(from = "../R/05_analysis_heatmap.html",
 
 {{< include 05_analysis_heatmap.qmd >}}
 
-## Analysis: Linear model on vital status
+# Analysis: Linear model on vital status
 
 ```{r}
 #| include: false
@@ -135,7 +135,7 @@ file.rename(from = "../R/06_analysis_lm_vital.html",
 
 {{< include 06_analysis_lm_vital.qmd >}}
 
-## Analysis: Visual
+# Analysis: Visual
 
 ```{r}
 #| include: false
@@ -149,7 +149,7 @@ file.rename(from = "../R/07_analysis_visual.html",
 
 {{< include 07_analysis_visual.qmd >}}
 
-## Analysis: PCA on protein expression
+# Analysis: PCA on protein expression
 
 ```{r}
 #| include: false
@@ -164,7 +164,7 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 {{< include 08_analysis_PCA.qmd >}}
 
-## Analysis: Linear model on alcohol history
+# Analysis: Linear model on alcohol history
 
 ```{r}
 #| include: false
@@ -180,7 +180,7 @@ file.rename(from = "../R/09_analysis_lm_alcohol.html",
 
 {{< include 09_analysis_lm_alcohol.qmd >}}
 
-## Full report 
+## Full report
 
 ```{r}
 #| include: false
