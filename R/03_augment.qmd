@@ -35,7 +35,7 @@ The cleaned data is loaded into a new object.
 ```{r}
 #| label: "load-data-03" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_clean.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/02_expression_meta_data_clean.tsv.gz"))
 
 ```
 
@@ -46,9 +46,9 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_c
 A new variable called patient_id is created from sample_id using mutate().
 
 ```{r}
-#| label: "Create-patient-id"
+#| label: "Create-patient-id-03"
 
-expression_meta_data_aug_1 <- expression_meta_data_aug |> 
+expression_meta_data_aug <- expression_meta_data_aug |> 
   mutate(patient_id = sub("(.*)-..", "\\1", sample_id)) |> 
   relocate(patient_id, .before = sample_id)
 
@@ -59,9 +59,9 @@ expression_meta_data_aug_1 <- expression_meta_data_aug |>
 Adding new variables with 5 and 10 year age intervals to the data using mutate() and saving in a new object. cut() is used to divide age_at_index into intervals of 5 years specified by breaks. Lables to represent each interval are created and ages at the lower boundary are included.
 
 ```{r}
-#| label: "creating-5-and-10-year-intervals"
+#| label: "creating-5-and-10-year-intervals-03"
 
-expression_meta_data_aug_2 <- expression_meta_data_aug_1 |> 
+expression_meta_data_aug <- expression_meta_data_aug |> 
   mutate(age_interval_5_year = cut(age_at_index,
                                    breaks = seq(0, 100, by = 5),
                                    labels = paste(seq(0, 95, by = 5),
@@ -85,9 +85,9 @@ expression_meta_data_aug_2 <- expression_meta_data_aug_1 |>
 Adding a variable for the mean expression of each peptide_target using group_by() and mutate().
 
 ```{r}
-#| label: "creating-expression-mean-variable"
+#| label: "creating-expression-mean-variable-03"
 
-expression_meta_data_aug_3 <- expression_meta_data_aug_2 |> 
+expression_meta_data_aug <- expression_meta_data_aug |> 
   group_by(peptide_target) |> 
   mutate(mean_expression = mean(expression, na.rm = TRUE)) |> 
   ungroup() # Removing the grouping to ensure that the following work is not messed up
@@ -101,10 +101,10 @@ The table is then widened with the new variables with the calculated mean named 
 The mean expressions are then added to the dataset using right_join().
 
 ```{r}
-#| label: "creating-expression-mean-variable-for-each-pathologic-state"
+#| label: "creating-expression-mean-variable-for-each-pathologic-state-03"
 
 # Calculate the mean for each pathologic stage
-mean_of_expression_pathologic_stages <- expression_meta_data_aug_3 |> 
+mean_of_expression_pathologic_stages <- expression_meta_data_aug |> 
   filter(!is.na(pathologic_stage)) |>  
   group_by(peptide_target, pathologic_stage) |> 
   summarise(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
@@ -113,15 +113,16 @@ mean_of_expression_pathologic_stages <- expression_meta_data_aug_3 |>
               names_prefix = "mean_expression_")
 
 # Join the calculated means back into the original dataset with the join function
-expression_meta_data_aug_4 <- expression_meta_data_aug_3 |> 
+expression_meta_data_aug <- expression_meta_data_aug |> 
   right_join(mean_of_expression_pathologic_stages, by = "peptide_target")
 ```
 
 ### Adding alcohols history as a binomial factor (0 and 1)
 
 ```{r}
+#| label: "Binomial-variable-alcohol-history-03"
 
-expression_meta_data_aug_5 <- expression_meta_data_aug_4 |> 
+expression_meta_data_aug <- expression_meta_data_aug |> 
   mutate(alcohol_history_binomial = case_when(alcohol_history == "No" ~ 0,
                                               alcohol_history == "Yes" ~ 1)) |> 
   relocate(alcohol_history_binomial, .after = alcohol_history)
@@ -134,12 +135,12 @@ expression_meta_data_aug_5 <- expression_meta_data_aug_4 |>
 The augmented dataset is saved as a .tsv.gz file in data folder and will be the dataset used for description, analysis and modeling.
 
 ```{r}
-#| label: "write-clean-data-to-tsv.gz"
+#| label: "write-clean-data-to-tsv-gz-03"
 
 data_dir <- here("data/")
 
-write_tsv( x = expression_meta_data_aug_5,
+write_tsv( x = expression_meta_data_aug,
            file = str_c(data_dir, 
-                  "05_expression_meta_data_aug.tsv.gz"))
+                  "03_expression_meta_data_aug.tsv.gz"))
 
 ```

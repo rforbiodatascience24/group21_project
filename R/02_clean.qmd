@@ -35,19 +35,19 @@ Loading the dataset into an object.
 ```{r}
 #| label: "load-data-02" 
 
-expression_meta_data_clean <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
+expression_meta_data_clean <- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
 
 ```
 
 ## Cleaning the data
 
-To clean the dataset, we select the variables we want to work with and assign new names to the variables so they follow snake_case.\
+To clean the dataset, we select the variables we want to work with and assign new names to the variables so they follow snake_case. Additionally we use the select to relocate the variables in the order we want them. \
 The cleaned dataset is assigned to a new object.
 
 ```{r}
-#| label: "choosing-variables-and-assigning-new-names"
+#| label: "choosing-variables-and-assigning-new-names-02"
 
-expression_meta_data_clean_1 <- expression_meta_data_clean |> 
+expression_meta_data_clean <- expression_meta_data_clean |> 
   select(sample_id = sample,
          gender = gender.demographic,
          race = race.demographic,
@@ -70,9 +70,9 @@ expression_meta_data_clean_1 <- expression_meta_data_clean |>
 Then we trim the sample_ID to not contain the code TCGA standing for The Cancer Genome Atlas, as all the values comes from this data and has this code in the beginning.
 
 ```{r}
-#| label: "modify-sample-id"
+#| label: "modify-sample-id-02"
 
-expression_meta_data_clean_2 <- expression_meta_data_clean_1 |> 
+expression_meta_data_clean <- expression_meta_data_clean |> 
   mutate(sample_id = sub("^TCGA-(.*)", "\\1", sample_id))
 
 ```
@@ -82,12 +82,12 @@ expression_meta_data_clean_2 <- expression_meta_data_clean_1 |>
 The clean dataset is saved as a .tsv.gz file in data folder and will be the dataset used for augmenting the data.
 
 ```{r}
-#| label: "write-clean-data-to-tsv-gz"
+#| label: "write-clean-data-to-tsv-gz-02"
 
 data_dir <- here("data/")
 
-write_tsv( x = expression_meta_data_clean_2,
+write_tsv( x = expression_meta_data_clean,
            file = str_c(data_dir, 
-                  "04_expression_meta_data_clean.tsv.gz"))
+                  "02_expression_meta_data_clean.tsv.gz"))
 
 ```

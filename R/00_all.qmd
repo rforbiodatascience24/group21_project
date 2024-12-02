@@ -15,21 +15,18 @@ execute:
   warning: false
 ---
 
-# Master document for running all code in the project
-
-## Load library
+# Analysis of Head and Neck Squamous Cell Carcinomas Data  
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-00" 
 #| echo: TRUE
 #| eval: TRUE 
-#| output: FALSE  
+#| output: FALSE 
+#| include: FALSE 
 
 library("here")
 
 ```
-
-## Create folders if needed
 
 ```{r}
 #| label: "creating-result-folder"
@@ -53,7 +50,7 @@ if( !dir.exists(images_dir) ){
 
 ```
 
-## Load data
+## Loading the Dataset 
 
 ```{r}
 #| include: false
@@ -65,6 +62,8 @@ file.rename(from = "01_load.html",
             to = "../results/01_load.html")
 
 ```
+
+{{< include 01_load.qmd >}}
 
 ## Cleaning the data
 
@@ -78,6 +77,8 @@ file.rename(from = "02_clean.html",
             to = "../results/02_clean.html")
 ```
 
+{{< include 02_clean.qmd >}}
+
 ## Augmenting the data
 
 ```{r}
@@ -89,6 +90,8 @@ quarto::quarto_render(input = "03_augment.qmd",
 file.rename(from = "03_augment.html",
             to = "../results/03_augment.html")
 ```
+
+{{< include 03_augment.qmd >}}
 
 ## Description
 
@@ -102,7 +105,9 @@ file.rename(from = "04_describe.html",
             to = "../results/04_describe.html")
 ```
 
-## Analysis 1
+{{< include 04_describe.qmd >}}
+
+## Analysis: Heatmap most up and down regulated proteins
 
 ```{r}
 #| include: false
@@ -114,19 +119,23 @@ file.rename(from = "../R/05_analysis_heatmap.html",
             to = "../results/05_analysis_heatmap.html")
 ```
 
-## Analysis 2
+{{< include 05_analysis_heatmap.qmd >}}
+
+## Analysis: Linear model on vital status
 
 ```{r}
 #| include: false
 
-quarto::quarto_render(input = "../R/06_analysis_lm.qmd",
+quarto::quarto_render(input = "../R/06_analysis_lm_vital.qmd",
                       output_format = "html")
 
-file.rename(from = "../R/06_analysis_lm.html",
-            to = "../results/06_analysis_lm.html")
+file.rename(from = "../R/06_analysis_lm_vital.html",
+            to = "../results/06_analysis_lm_vital.html")
 ```
 
-## Analysis 3
+{{< include 06_analysis_lm_vital.qmd >}}
+
+## Analysis: Visual 
 
 ```{r}
 #| include: false
@@ -138,7 +147,9 @@ file.rename(from = "../R/07_analysis_visual.html",
             to = "../results/07_analysis_visual.html")
 ```
 
-## Analysis 4
+{{< include 07_analysis_visual.qmd >}}
+
+## Analysis: PCA on protein expression 
 
 ```{r}
 #| include: false
@@ -151,32 +162,20 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 ```
 
-## All
-
-{{< include 01_load.qmd >}}
-
-{{< include 02_clean.qmd >}}
-
-{{< include 03_augment.qmd >}}
-
-{{< include 04_describe.qmd >}}
-
-{{< include 05_analysis_heatmap.qmd >}}
-
-{{< include 06_analysis_lm_vital_status.qmd >}}
-
-{{< include 07_analysis_visual.qmd >}}
-
 {{< include 08_analysis_PCA.qmd >}}
 
-{{< include 09_analysis_lm_alcohol.qmd >}}
+## Analysis: Linear model on alcohol history 
 
 ```{r}
-#|inlcude: false 
+#| include: false
 
+quarto::quarto_render(input = "../R/09_analysis_lm_alcohol.qmd",
+                      output_format = "html")
 
-file.rename(from = "../R/00_all.html",
-            to = "../results/00_all.html")
+file.rename(from = "../R/09_analysis_lm_alcohol.html",
+            to = "../results/09_analysis_lm_alcohol.html")
 
 
 ```
+
+{{< include 09_analysis_lm_alcohol.qmd >}}

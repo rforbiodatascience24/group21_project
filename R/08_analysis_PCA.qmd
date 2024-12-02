@@ -16,7 +16,7 @@ execute:
 ## Load libraries
 
 ```{r}
-#| label: "load-libraries"
+#| label: "load-libraries-08"
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -30,9 +30,9 @@ library("here")
 ## Loading data
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-08" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/05_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_aug.tsv.gz"))
 
 protein_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.protein.tsv.gz"))
 
@@ -42,10 +42,10 @@ meta_data <-  read_tsv(file = here("data/01_meta_data_load.tsv.gz"))
 
 ## Principle component coordinates
 
-Transposing the dataframe so we can do a PCA of the peptide targets instead patients
+Transposing the dataframe so the data is in the format for doing a PCA on the proteins. This is done using pivot_longer() and pivot_wider(). NA's are dropped.
 
 ```{r}
-#| label: "transposing-protein-expression-dataframe" 
+#| label: "transposing-protein-expression-dataframe-08" 
 
 protein_data_trans <- protein_data |> 
   drop_na() |> 
@@ -59,8 +59,10 @@ protein_data_trans
  
 ```
 
+Selecting numeric values in the data for computing the PCA analysis. NA's are dropped.
+
 ```{r}
-#| label: "PCA" 
+#| label: "PCA-08" 
 pca_analysis <- protein_data_trans |> 
   select_if(is.numeric) |> 
   drop_na() |> 
@@ -71,13 +73,15 @@ pca_analysis <- protein_data_trans |>
 
 ## Scree plot
 
+Making a scree plot using the eigenvalues using the tidy() function. The plot is saved using ggsave().
+
 ```{r}
-#| label: "scree-plot" 
+#| label: "scree-plot-08" 
 #| fig-width: 7
 #| fig-height: 4
 
 
-Scree_plot <- pca_analysis |>
+scree_plot <- pca_analysis |>
   tidy("eigenvalues") |> 
   mutate(percent = percent * 100) |> 
   ggplot(aes(x = PC,
@@ -93,22 +97,22 @@ Scree_plot <- pca_analysis |>
        x = "Principle Component (PC)",
        y = "Percent")
 
-Scree_plot
+scree_plot
 
 ggsave(filename = "08_PCA_analysis_scree.png",
-       plot = Scree_plot, 
+       plot = scree_plot, 
        device = "png",
        path = "../results/images")
 ```
 
-From the scree plot it can be observed that a few of the peptides have a much higher percent variance compared to the rest of the peptides. Therefore further analysis are conducted.
+From the scree plot it can be observed that a few of the proteinshave a much higher percent variance compared to the rest of the proteins. Therefore further analysis are conducted.
 
 ## Adding the meta data to the PCA analysis
 
 Joining the data frame used in the PCA with the meta_data, to be able to color based on vital status and pathological stage. We are using left join, as we only want the meta data for the patients that we have in our PCA.
 
 ```{r}
-#| label: "joining-portein-expression-with-meta-data" 
+#| label: "joining-portein-expression-with-meta-data-08" 
 
 protein_data_trans_metadata <- protein_data_trans |> 
   left_join(y = meta_data, 
@@ -118,16 +122,16 @@ protein_data_trans_metadata <- protein_data_trans |>
 Adding the metadata to the PC Analysis
 
 ```{r}
-#| label: "augmenting-metadata-to-PCA-data" 
+#| label: "augmenting-metadata-to-PCA-data-08" 
 
 pca_analysis_aug <-  pca_analysis |> 
   augment(protein_data_trans_metadata)
 ```
 
-Creating labels for the PCA plot, containing the variance percentage. The value is computed using tidy()
+Creating labels for the PCA plot, containing the variance percentage. The value is computed using tidy().
 
 ```{r}
-#| label: "adding-variance-percentage-to-the-labels" 
+#| label: "adding-variance-percentage-to-the-labels-08" 
 
 pca_axis_labels <- pca_analysis |> 
   tidy("eigenvalues") |> 
@@ -137,8 +141,10 @@ pca_axis_labels <- pca_analysis |>
 
 ## PCA plot
 
+Plotting the PCA plot using PC1 and PC2 for the x and y axis respectively.
+
 ```{r}
-#| label: "PCA-plot-vital-status" 
+#| label: "PCA-plot-vital-status-08" 
 #| fig-width: 7
 #| fig-height: 4
 
@@ -165,7 +171,7 @@ pca_plot_vital
 ```
 
 ```{r}
-#| label: "PCA-plot-pathological-stage" 
+#| label: "PCA-plot-pathological-stage-08" 
 #| fig-width: 7
 #| fig-height: 4
 
@@ -196,14 +202,14 @@ pca_plot_stage
 ## Rotation matrix
 
 ```{r}
-#| label: "View-rotation-matrix-tibble"
+#| label: "View-rotation-matrix-tibble-08"
 
 pca_analysis |> 
   tidy(matrix = "rotation")
 ```
 
 ```{r}
-#| label: "rotation-matrix"
+#| label: "rotation-matrix-08"
 #| fig-width: 7
 #| fig-height: 7
 
