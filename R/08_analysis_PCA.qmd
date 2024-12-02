@@ -13,7 +13,7 @@ execute:
   warning: FALSE
 ---
 
-## Load libraries
+## Load libraries 
 
 ```{r}
 #| label: "load-libraries-08"
@@ -198,6 +198,10 @@ ggsave(filename = "08_PCA_analysis_PCA_stage.png",
 
 pca_plot_stage
 ```
+
+For both the PCA plot where data points are colored according to vital status and for the PCA plot where data points are colored according to vital status, we see that there is no grouping of the data points or tendencies that indicate that one group of the data varies from another group.
+
+If we had succeded in performing the PCA analysis on the grouped data, eg. for pathological stage, we might have seen some gruping of data points in the PCA, that would show if there was a variance in the protein expression between the different pathological stages.
 
 ## Rotation matrix
 
