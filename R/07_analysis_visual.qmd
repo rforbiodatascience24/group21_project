@@ -45,29 +45,10 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 
 #| label: "survival-between-genders-barplot-07" 
 
-
-<<<<<<< HEAD
-barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
-       mapping = aes(x = gender,
-                     fill = vital_status
-                     ))+
-  
-  geom_bar(position = "fill"
-            )+
-  
-  scale_fill_manual(
-    values = c(
-      "Alive" = "#eb4cbe",
-      "Dead" = "#beeb4c"    
-    )
-  ) +
-=======
 barplot_vital_status_genders <- expression_meta_data_aug |> 
   ggplot(mapping = aes(x = gender,
                        fill = vital_status)) +
-  geom_bar(position = "fill")+
->>>>>>> f3c18164257e86ba7f478c2d7c47a3688c9f0bbb
-  
+  geom_bar(position = "fill") +
   scale_fill_manual(values = c("Alive" = "#eb4cbe",
                                "Dead" = "#beeb4c")) +
   labs(x = "Gender", 
