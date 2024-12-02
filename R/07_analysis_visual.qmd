@@ -137,7 +137,7 @@ ggsave(filename = "barplot_vital_status_genders_facet_races.png",
 
 ```
 
-## Exploring the effect of smoking on the vital status 
+## Exploring the effect of smoking on the vital status
 
 Constructing a boxplot to visually and statistically interpret the relationship between "years smoked" and the vital status across the different pathological stages.
 
@@ -178,8 +178,9 @@ ggsave(filename = "boxplot_years_smoked_vital_status_facet_pathological.png",
 Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond. We can quickly determine the number of patients with NA;
 
 ```{r}
-meta_data |> 
-  filter(is.na(years_smoked.exposures)) |> 
+expression_meta_data_aug |> 
+  filter(is.na(years_smoked)) |>
+  distinct(patient_id) |> 
   nrow()
   
 ```
@@ -188,11 +189,11 @@ And we thus see that there are actually more than half of the patients with inst
 
 ## Visualizing significant proteins related to vital status
 
-As the amount of significant differentially expressed proteins between alive and dead patients were found to be a relatively low number and thus we can visualize their individual expression levels.
-
-The 6 most differentially expressed proteins between the two different vital status sorted on different ages
+As the amount of significant differentially expressed proteins between alive and dead patients were found to be a relatively low number, we can visualize their individual expression levels of each patient.
 
 ```{r}
+
+#| label: "expression-of-6-significant-peptides-07" 
 
 expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |> 
   filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
@@ -237,6 +238,8 @@ ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
 ```
 
 With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in dead people; the blue points cluster in the lower part of the plot.
+
+Below is a dead end:
 
 Trying to think of another way to display the data in a less messy way:
 
