@@ -1,5 +1,5 @@
 ---
-title: "08_analysis_4"
+title: "08_analysis_PCA"
 author:
 - "Asta Zeuner - s203544 - azeuner"
 - "Astrid Ginnerup - s203523 - AGinnerup"
@@ -29,6 +29,8 @@ library("here")
 
 ## Loading data
 
+Loading the data sets that we need for the Principal Component Analysis.
+
 ```{r}
 #| label: "load-data-08" 
 
@@ -42,7 +44,7 @@ meta_data <-  read_tsv(file = here("data/01_meta_data_load.tsv.gz"))
 
 ## Principle component coordinates
 
-Transposing the dataframe so the data is in the format for doing a PCA on the proteins. This is done using pivot_longer() and pivot_wider(). NA's are dropped.
+Transposing the dataframe so the data is in the correct format for doing a PCA on the protein expression. This is done using pivot_longer() and pivot_wider(). NA's are dropped.
 
 ```{r}
 #| label: "transposing-protein-expression-dataframe-08" 
@@ -59,7 +61,7 @@ protein_data_trans
  
 ```
 
-Selecting numeric values in the data for computing the PCA analysis. NA's are dropped.
+Selecting numeric values in the data for computing the PCA analysis. NA's are dropped. The data is centered and scaled before doing the PCA.
 
 ```{r}
 #| label: "PCA-08" 
@@ -73,7 +75,7 @@ pca_analysis <- protein_data_trans |>
 
 ## Scree plot
 
-Making a scree plot using the eigenvalues using the tidy() function. The plot is saved using ggsave().
+Making a scree plot using using the tidy() function to extract the output from the prcom() function that performed the PCA analysis.
 
 ```{r}
 #| label: "scree-plot-08" 
@@ -109,7 +111,7 @@ From the scree plot it can be observed that a few of the proteins have a much hi
 
 ## Adding the meta data to the PCA analysis
 
-Joining the data frame used in the PCA with the meta_data, to be able to color based on vital status and pathological stage. We are using left join, as we only want the meta data for the patients that we have in our PCA.
+Joining the data frame used in the PCA with the meta_data. We do this to be able to color the datapoints in the plot based on vital status and pathological stage. We are using left join, as we only want the meta data for the patients that we have in our PCA.
 
 ```{r}
 #| label: "joining-portein-expression-with-meta-data-08" 
@@ -119,7 +121,7 @@ protein_data_trans_metadata <- protein_data_trans |>
             join_by(sample == sample)) 
 ```
 
-Adding the metadata to the PC Analysis
+Adding the metadata to the PCA:
 
 ```{r}
 #| label: "augmenting-metadata-to-PCA-data-08" 
@@ -128,7 +130,7 @@ pca_analysis_aug <-  pca_analysis |>
   augment(protein_data_trans_metadata)
 ```
 
-Creating labels for the PCA plot, containing the variance percentage. The value is computed using tidy().
+Creating labels for the PCA plot, containing the variance percentage. The value is computed using tidy() and mutate(). The variance percentage is riunded to 2 decimal points. The labels are then pulled.
 
 ```{r}
 #| label: "adding-variance-percentage-to-the-labels-08" 
@@ -141,13 +143,12 @@ pca_axis_labels <- pca_analysis |>
 
 ## PCA plot
 
-Plotting the PCA plot using PC1 and PC2 for the x and y axis respectively.
+Making the PCA plot using PC1 and PC2 for the x and y axis respectively.
 
 ```{r}
 #| label: "PCA-plot-vital-status-08" 
 #| fig-width: 7
 #| fig-height: 4
-
 
 pca_plot_vital <- pca_analysis_aug |> 
   ggplot(aes(x = .fittedPC1, 
@@ -200,6 +201,8 @@ pca_plot_stage
 ```
 
 ## Rotation matrix
+
+Plotting the rotation matrix.
 
 ```{r}
 #| label: "View-rotation-matrix-tibble-08"
