@@ -3,6 +3,6 @@
 .RData
 .Ruserdata
 *.Rproj
-data
+data/*
 R/*_files/
 doc/*_files/libs
