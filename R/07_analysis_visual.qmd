@@ -51,7 +51,6 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
                      fill = vital_status
                      ))+
   
-  
   geom_bar(position = "fill"
             )+
   
@@ -89,11 +88,11 @@ ggsave(filename = "barplot_vital_status_genders.png",
 
 ```
 
-The barplot visualizes the proportion of the vital status distributed between the two genders. The position = fill in geom_bar computed the proportion and thus allows for direct comparison between the two genders. It does though not reveal absolute numbers which is important to make any conclusions on the survival likelihood of each gender. The barplot indicates that the proportion of dead patients is higher within the female patients.
+The barplot visualizes the proportion of the vital status distributed between the two genders. The position = fill in geom_bar computes the proportion and thus allows for direct comparison between the two genders. It does though not reveal absolute numbers. The barplot indicates that the proportion of dead patients is higher within the female patients.
 
 ## Exploring the vital status between different races
 
-With a facet on each race, we can visually interpret any deviations in vital status between the different races
+With a facet on each race, we can visually interpret any deviations in vital status between the different races and still keep the distributions on gender
 
 ```{r}
 
@@ -200,7 +199,6 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   
   ggplot(mapping = aes(x = age_at_index,
                        y = expression,
-                       #fill = vital_status,
                        color = vital_status
                       ))+
   geom_point( shape = 8,
@@ -237,7 +235,7 @@ ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
 
 ```
 
-With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in dead people; the blue points cluster in the lower part of the plot.
+With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in patients who died; the blue points cluster in the lower part of the plot.
 
 Below is a dead end:
 
