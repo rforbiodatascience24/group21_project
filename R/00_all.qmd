@@ -15,7 +15,7 @@ execute:
   warning: false
 ---
 
-# Analysis of Head and Neck Squamous Cell Carcinomas Data  
+# Analysis of Head and Neck Squamous Cell Carcinomas Data
 
 ```{r}
 #| label: "load-libraries-00" 
@@ -50,7 +50,7 @@ if( !dir.exists(images_dir) ){
 
 ```
 
-## Loading the Dataset 
+## Loading the Dataset
 
 ```{r}
 #| include: false
@@ -135,7 +135,7 @@ file.rename(from = "../R/06_analysis_lm_vital.html",
 
 {{< include 06_analysis_lm_vital.qmd >}}
 
-## Analysis: Visual 
+## Analysis: Visual
 
 ```{r}
 #| include: false
@@ -149,7 +149,7 @@ file.rename(from = "../R/07_analysis_visual.html",
 
 {{< include 07_analysis_visual.qmd >}}
 
-## Analysis: PCA on protein expression 
+## Analysis: PCA on protein expression
 
 ```{r}
 #| include: false
@@ -164,7 +164,7 @@ file.rename(from = "../R/08_analysis_PCA.html",
 
 {{< include 08_analysis_PCA.qmd >}}
 
-## Analysis: Linear model on alcohol history 
+## Analysis: Linear model on alcohol history
 
 ```{r}
 #| include: false
@@ -179,3 +179,12 @@ file.rename(from = "../R/09_analysis_lm_alcohol.html",
 ```
 
 {{< include 09_analysis_lm_alcohol.qmd >}}
+
+## Full report 
+
+```{r}
+#| include: false
+
+file.rename(from = "00_all.html",
+            to = "../results/00_all.html")
+```
