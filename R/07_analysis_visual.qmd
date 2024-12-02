@@ -124,7 +124,7 @@ barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug
   
   theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
         plot.subtitle = element_text(size = 8, hjust = 0.5),
-        strip.text = element_text(size = 5))
+        strip.text = element_text(size = 5, face = "bold"))
   
 
 
