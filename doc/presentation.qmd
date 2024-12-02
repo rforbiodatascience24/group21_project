@@ -20,6 +20,7 @@ format:
     highlight-style: ayu-mirage
     code-block-height: 600px
     slide-number: true
+    embed-resources: true
 editor: visual
 css: style.css
 ---

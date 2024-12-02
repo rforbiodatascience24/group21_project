@@ -84,10 +84,10 @@ expression_meta_data_lm_vital_nested_model <- expression_meta_data_lm_vital_nest
 expression_meta_data_lm_vital_nested_model
 ```
 
-Computing the confidence intervals and p-value based on th elinear model using the tidy()-function
+We use the tidy() function to get the output from the linear model into a tidy dataframe. We specify that we want to include the 95% confidence intervals.
 
 ```{r}
-#| label: "computing-CI-using-tidy-06"
+#| label: "computing-CI-95-using-tidy-06"
 
 expression_meta_data_lm_vital_nested_model_tidy <- expression_meta_data_lm_vital_nested_model |> 
   mutate(model_object_tidy = map(.x = model_object,
@@ -150,6 +150,8 @@ expression_meta_data_lm_vital_estimates_clean
 
 ```
 
+Then we check if we have any proteins that are expressed significantly different, between the alive patients and the ones who have died.
+
 ```{r}
 #| label: "filter-for-significant-proteins-06"
 
@@ -159,11 +161,11 @@ expression_meta_data_lm_vital_estimates_clean |>
 
 ```
 
-We have 6 proteins where the expression levels are found to be significantly different between dead and alive patients. From the Estimates it can be observed that 5 of them are upregulated and 1 is downregulated
+We have 6 proteins where the expression levels are found to be significantly different between dead and alive patients. From the estimates it can be observed that 5 of them are upregulated and 1 is downregulated
 
 ## Forest plot of significant proteins for vital stage
 
-Creating a forest plot for significant genes using ggplot.
+Creating a forest plot for significant proteins using ggplot.
 
 ```{r}
 #| label: "forest-plot-06"
@@ -237,3 +239,5 @@ ggsave(filename = "06_analysis_lm_volcano_vital.png",
        path = "../results/images")
 
 ```
+
+From the linear model it has been found that 6 proteins are expressed significantly different (with alpha of 5%) between patients who die from head and neck cancer and patients who do not. It would be interesting to further investigate the possible influence of these 6 proteins.
