@@ -36,7 +36,6 @@ css: style.css
 
 ![](../results/images/flowchart_project.jpg){width="100%" height="400px"}
 
-
 ## Cleaning and Augmenting Data {.smaller}
 
 ::: columns
@@ -45,11 +44,7 @@ css: style.css
 
 -   **Download, name and data**
 
-    -   Phenotype (n=604), survival data (n=603), protein Expression (n=354)
-
 -   **Join tables**
-
-    -   inner_join and pivot_longer
 
 -   **Cleaning**
 
@@ -350,7 +345,7 @@ expression_meta_data_lm_vital_estimates_clean <- expression_meta_data_lm_vital_e
 
 ## Analysis Linear model - Alcohol history {.smaller}
 
-![](images/09_analysis_lm_volcano_alcohol.png)
+![](../results/images/09_analysis_lm_volcano_alcohol.png)
 
 ## Analysis visual {.smaller}
 
