@@ -34,9 +34,9 @@ library("here")
 ```{r}
 #| label: "load-data-04" 
 
-expression_meta_data_load <- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
+expression_meta_data_load <- read_tsv(file = here("data/01_expression_meta_data_load.tsv.gz"))
 
-expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_aug.tsv.gz"))
 
 ```
 
@@ -45,7 +45,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/04_expression_meta_data_a
 First of all, check tables before and after cleaning and augmentation. We can see that the columns changed.
 
 ```{r}
-#| label: "checking-number-of-columns" 
+#| label: "checking-number-of-columns-04" 
 
 columns_before <- expression_meta_data_load |> ncol()
 columns_after <- expression_meta_data_aug |> ncol()
@@ -57,17 +57,17 @@ columns_after
 After cleaning and augmentation, we have 26 columns to analyze:
 
 ```{r}
-#| label: "number-of-columns-in-data" 
+#| label: "number-of-columns-in-data-04" 
 
 columns_names_after <- expression_meta_data_aug |> colnames()
 
 columns_names_after
 ```
 
-We can see that patient numbers didn't change from the following code.
+We can see that patient numbers did not change from the following code.
 
 ```{r}
-#| label: "number-of-patients" 
+#| label: "number-of-patients-04" 
 
 n_patient_before <- expression_meta_data_load |>
   select(submitter_id) |>
@@ -85,7 +85,7 @@ n_patient_after
 Check the different pathologic stages and how patients are distributed among these groups.
 
 ```{r}
-#| label: "pathologic-stage-distribution-plot" 
+#| label: "pathologic-stage-distribution-plot-04" 
 
 pathologic_stage_distribution <- expression_meta_data_aug |> 
   mutate(pathologic_stage = replace_na(pathologic_stage, "Not Reported")) |> 
@@ -123,7 +123,7 @@ ggsave(filename = "04_pathologic_stage_distribution.png",
 Check the mean and middle values of patients' age.
 
 ```{r}
-#| label: "assing-mean-and-median-age" 
+#| label: "assing-mean-and-median-age-04" 
 
 expression_meta_data_aug |> 
   summarize(
@@ -135,7 +135,7 @@ expression_meta_data_aug |>
 Check the age distribution of patients and stratified on vital_status
 
 ```{r}
-#| label: "vital-status-age-distribution" 
+#| label: "vital-status-age-distribution-04" 
 
 vital_status_age_distribution <- expression_meta_data_aug |> 
   group_by(vital_status, 
@@ -172,7 +172,7 @@ ggsave(filename = "04_vital_status_age_distribution.png",
 Check how many peptides we have:
 
 ```{r}
-#| label: "check-number-of-peptides"
+#| label: "check-number-of-peptides-04"
  
 n_peptides <- expression_meta_data_aug |>
   select(peptide_target) |>

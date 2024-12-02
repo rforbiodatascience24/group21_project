@@ -34,14 +34,14 @@ library("here")
 ```{r}
 #| label: "load-data-05" 
 
-expression_meta_data_analysis <- read_tsv(file = here("data/04_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_analysis <- read_tsv(file = here("data/03_expression_meta_data_aug.tsv.gz"))
 
 ```
 
 ### Heat-map of 20 most up- and downregulated peptide-targets plotted against age
 
 ```{r}
-#| label: "heatmap-20-most-up-and-down-regulated" 
+#| label: "heatmap-20-most-up-and-down-regulated-05" 
 
 # Select top 20 most upregulated peptide targets
 most_upregulated <- expression_meta_data_analysis |> 
@@ -75,7 +75,7 @@ selected_peptides
 ```
 
 ```{r}
-#| label: "extract-peptide-target-levels" 
+#| label: "extract-peptide-target-levels-05" 
 
 # Extract the peptide_target levels for ordering in the heatmap
 peptide_target_levels <- selected_peptides |> 
@@ -86,7 +86,7 @@ peptide_target_levels
 ```
 
 ```{r}
-#| label: "filter-and-arrage-data" 
+#| label: "filter-and-arrage-data-05" 
 
 # Filter the main dataset for the selected peptides and arrange by mean_expression in descending order
 heatmap_selected_peptides <- expression_meta_data_analysis |> 
@@ -110,7 +110,7 @@ heatmap_selected_peptides
 ```
 
 ```{r}
-#| label: "heat-map-20UP-20DOWN-against-age"
+#| label: "heat-map-20UP-20DOWN-against-age-05"
 #| fig-width: 20
 #| fig-height: 15
 
@@ -162,7 +162,7 @@ heatmap <- heatmap_selected_peptides |>
 ```
 
 ```{r}
-#| label: "saving-heatmap" 
+#| label: "saving-heatmap-05" 
 
 ggsave(
   filename = "05_analysis_heatmap.png",
@@ -219,7 +219,7 @@ heatmap_selected_peptides_random <- expression_meta_data_analysis |>
 ```
 
 ```{r}
-#| label: "heat-map-random-40-against-age"
+#| label: "heat-map-random-40-against-age-05"
 #| fig-width: 20
 #| fig-height: 10
 #| eval: false

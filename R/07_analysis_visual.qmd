@@ -16,7 +16,7 @@ execute:
 ## **Loading libraries**
 
 ```{r}
-#| label: "load-libraries" 
+#| label: "load-libraries-07" 
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -31,9 +31,9 @@ library("here")
 ## Loading data
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-07" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/05_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_aug.tsv.gz"))
 
 ```
 
@@ -284,10 +284,3 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
 
 expression_of_6_significant_pep_and_vital_status
 ```
-<<<<<<< HEAD
-
-
-k
-
-=======
->>>>>>> 5b1ab56c731e461e3adb938cc7786bee9ffdf09e

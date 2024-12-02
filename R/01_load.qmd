@@ -104,7 +104,7 @@ clinical_data <- read_tsv(file = here("data/_raw/TCGA-HNSC.clinical.tsv.gz"))
 The clinical_and survival_data are joined using inner_join() to create a meta_data set. The joined meta_data is saved as a .tsv.gz file in data folder.
 
 ```{r}
-#| label: "join-clinical-and-survival-data" 
+#| label: "join-clinical-and-survival-data-01" 
 
 meta_data <- inner_join(clinical_data, survival_data, by = c("sample" = "sample"))
 
@@ -118,28 +118,22 @@ write_tsv(x = meta_data,
 
 ## Joining meta_data and protein expression
 
-The protein_data is pivoted longer using pivot_longer() and saved as a .tsv.gz file in data folder.
+The protein_data is pivoted longer using pivot_longer()
 
 ```{r}
-#| label: "protein_data-pivot-longer"
+#| label: "protein_data-pivot-longer-01"
 
 peptide_long <- protein_data |> 
                 pivot_longer(cols = -1, 
                              names_to = "sample", 
                              values_to = "expression")
 
-data_dir <- here("data/")
-
-write_tsv( x = peptide_long,
-           file = str_c(data_dir, 
-                  "02_peptide_expression_load.tsv.gz"))
-
 ```
 
 meta_data and protein_long datasets are then joined using inner_join(). The resulting dataset is saved as a .tsv.gz file in data folder and will be the dataset used for cleaning the data.
 
 ```{r}
-#| label: "Join-the-data-to-final"
+#| label: "Join-the-data-to-final-01"
 
 # Join the datasets on the 'sample' column
 
@@ -152,6 +146,6 @@ data_dir <- here("data/")
 
 write_tsv( x = expression_meta_data,
            file = str_c(data_dir,
-                        "03_expression_meta_data_load.tsv.gz"))
+                        "01_expression_meta_data_load.tsv.gz"))
 
 ```

@@ -16,11 +16,7 @@ execute:
 ## Load libraries
 
 ```{r}
-<<<<<<< HEAD
-#| label: "load-libraries"
-=======
 #| label: "load-libraries-09"
->>>>>>> 2464e0ace8c0659672914fcfa9f1afa7a5cb9155
 #| echo: TRUE
 #| eval: TRUE 
 #| output: FALSE  
@@ -36,9 +32,9 @@ library("here")
 ## Loading data
 
 ```{r}
-#| label: "load-data" 
+#| label: "load-data-09" 
 
-expression_meta_data_aug <- read_tsv(file = here("data/05_expression_meta_data_aug.tsv.gz"))
+expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_aug.tsv.gz"))
 
 ```
 
@@ -51,15 +47,15 @@ Want to make a linear model of the peptide expression levels and if the patient 
 Selecting the variables that we want to use for the linear modeling. NA's in "expression" are dropped.
 
 ```{r}
-#| label: "selecting-variables-for-linear-modeling"
+#| label: "selecting-variables-for-linear-modeling-09"
 
-expression_meta_data_analysis6_alcohol <- expression_meta_data_aug |> 
+expression_meta_data_lm_alcohol <- expression_meta_data_aug |> 
   select(alcohol_history_binomial, 
          peptide_target,
          expression) |> 
    drop_na(expression)
 
-expression_meta_data_analysis6_alcohol 
+expression_meta_data_lm_alcohol 
 ```
 
 Grouping the data by peptide_target and nesting the data so that each peptide_target gets a dataframe that contains the overall survival and the protein expression for the patients.
@@ -67,11 +63,11 @@ Grouping the data by peptide_target and nesting the data so that each peptide_ta
 ```{r}
 #| label: "grouping-and-nesting-data"
 
-expression_meta_data_analysis6_alcohol_nested <- expression_meta_data_analysis6_alcohol |> 
+expression_meta_data_lm_alcohol_nested <- expression_meta_data_lm_alcohol |> 
   group_by(peptide_target) |> 
   nest() 
 
-expression_meta_data_analysis6_alcohol_nested
+expression_meta_data_lm_alcohol_nested
 ```
 
 ## Adding the linear model to the dataset
@@ -79,39 +75,39 @@ expression_meta_data_analysis6_alcohol_nested
 Adding the linear model to the data using mutate().
 
 ```{r}
-#| label: "linear-model-to-the-data"
+#| label: "linear-model-to-the-data-09"
 
-expression_meta_data_analysis6_alcohol_nested_model <- expression_meta_data_analysis6_alcohol_nested |> 
+expression_meta_data_lm_alcohol_nested_model <- expression_meta_data_lm_alcohol_nested |> 
   mutate(model_object = map(.x = data,
                             .f = ~lm(formula = expression ~ alcohol_history_binomial,
                                    data = .x)))
 
-expression_meta_data_analysis6_alcohol_nested_model
+expression_meta_data_lm_alcohol_nested_model
 ```
 
 Computing the confidence intervals and p-value using tidy()
 
 ```{r}
-#| label: "computing-CI-using-tidy"
+#| label: "computing-CI-using-tidy-09"
 
-expression_meta_data_analysis6_alcohol_nested_model_tidy <- expression_meta_data_analysis6_alcohol_nested_model |> 
+expression_meta_data_lm_alcohol_nested_model_tidy <- expression_meta_data_lm_alcohol_nested_model |> 
   mutate(model_object_tidy = map(.x = model_object,
                                  .f = ~ tidy(conf.int = TRUE,
                                              conf.level = 0.95,
                                              x =.x)))
 
-expression_meta_data_analysis6_alcohol_nested_model_tidy
+expression_meta_data_lm_alcohol_nested_model_tidy
 ```
 
 ## Wrangling the expression data estimates
 
 ```{r}
-#| label: "unnest-data"
+#| label: "unnest-data-09"
 
-expression_meta_data_analysis6_alcohol_estimates <- expression_meta_data_analysis6_alcohol_nested_model_tidy |>
+expression_meta_data_lm_alcohol_estimates <- expression_meta_data_lm_alcohol_nested_model_tidy |>
   unnest(model_object_tidy)
 
-expression_meta_data_analysis6_alcohol_estimates
+expression_meta_data_lm_alcohol_estimates
 
 ```
 
@@ -120,9 +116,9 @@ expression_meta_data_analysis6_alcohol_estimates
 Term describes if the patient drinks alcohol. 0 = no and 1 = yes. Therefore the intercept the patient does not drink alcohol and the slope + intercept the patient does drink alcohol. **Is this correct??? Explain better???**
 
 ```{r}
-#| label: "filtering-and-selecting"
+#| label: "filtering-and-selecting-09"
 
-expression_meta_data_analysis6_alcohol_estimates_clean <- expression_meta_data_analysis6_alcohol_estimates |> 
+expression_meta_data_lm_alcohol_estimates_clean <- expression_meta_data_lm_alcohol_estimates |> 
   filter(term == "alcohol_history_binomial") |> 
   select(peptide_target,
          p.value,
@@ -131,50 +127,44 @@ expression_meta_data_analysis6_alcohol_estimates_clean <- expression_meta_data_a
          conf.high) |> 
   ungroup(peptide_target)
 
-expression_meta_data_analysis6_alcohol_estimates_clean
+expression_meta_data_lm_alcohol_estimates_clean
 ```
 
 Adding the adjusted p-value in a new variable, q.value, and add extra variable that tells if the q-value is significant or not with alpha = 5%
 
 ```{r}
-#| label: "mutate-is.significant"
+#| label: "mutate-is.significant-09"
 
-expression_meta_data_analysis6_alcohol_estimates_clean <- expression_meta_data_analysis6_alcohol_estimates_clean |> 
+expression_meta_data_lm_alcohol_estimates_clean <- expression_meta_data_lm_alcohol_estimates_clean |> 
   mutate(q.value = p.adjust(p = p.value),
          is_significant = case_when(q.value > 0.05 ~ "no",
-                                    q.value <= 0.05 ~ "yes"))
+                                    q.value <= 0.05 ~ "yes"),
+         label = case_when(is_significant == "yes" ~ peptide_target,
+                           is_significant == "no" ~ ""))
 
-expression_meta_data_analysis6_alcohol_estimates_clean
-
+expression_meta_data_lm_alcohol_estimates_clean
 ```
 
 ```{r}
-#| label: "filter-for-significant-proteins"
+#| label: "filter-for-significant-proteins-09"
 
-expression_meta_data_analysis6_alcohol_estimates_clean |>  filter(is_significant == "yes")
+expression_meta_data_lm_alcohol_estimates_clean |>  
+  filter(is_significant == "yes")
 
 
 ```
 
-<<<<<<< HEAD
-We have 1protein where the expression levels are found to be significantly different between patients that drink and patients that does not.
-=======
-We have 1 protein where the expression levels are found to be significantly different between patients that drink and patients that does not.
->>>>>>> 2464e0ace8c0659672914fcfa9f1afa7a5cb9155
+We have 1 protein where the expression levels are found to be significantly different between patients that drink alcohol and patients that does not.
 
 ## Volcano plot
 
 ```{r}
-#| label: "volcano-plot"
+#| label: "volcano-plot-09"
 #| fig-width: 8
 #| fig-height: 5
 
-expression_meta_data_analysis6_alcohol_estimates_clean <- expression_meta_data_analysis6_alcohol_estimates_clean |>
-  mutate(label = case_when(is_significant == "yes" ~ peptide_target,
-                           is_significant == "no" ~ ""))
-expression_meta_data_analysis6_alcohol_estimates_clean
 
-volcano_plot_alcohol <- expression_meta_data_analysis6_alcohol_estimates_clean |>
+volcano_plot_alcohol <- expression_meta_data_lm_alcohol_estimates_clean |>
   ggplot(mapping = aes(x = estimate,
                        y = -log10(p.value),
                        color = is_significant)) +
