@@ -30,6 +30,8 @@ library("here")
 
 ## Download data
 
+The data is from UCSC Xena. The data is from a cohort study, GDC TGGA Head and Neck Cancer (HNSC).
+
 Code for downloading the datasets we will be working with and saving in data/\_raw/ folder.
 
 ```{r}
@@ -87,6 +89,14 @@ if( !file.exists(str_c(raw_dir, data_file)) ){
 ```
 
 ## Load data
+
+We are downloading 3 files form the Head and Neck Cancer cohort:
+
+-   **Protein expression data:** this is a dataset including the expression levels for the different proteins in the tissue samples, for the different patients. The expression levels are obtained using RPPA, with healthy tissue samples as control. Thus the expression levels are normalized values compared to a healthy sample.
+
+-   **Survival data**: this is a dataset including the survival status of the patients, including the number of days they survived after diagnosis, if they are not dead it is the number of days from diagnosis till last chek up.
+
+-   **Clinical data:** this is meta data about patients in the study, including age, alcohol history etc
 
 read_tsv is used to load data files from data/\_raw and saving the files in objects.
 
