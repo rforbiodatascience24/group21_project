@@ -34,31 +34,44 @@ css: style.css
 
 ## Materials and methods {.smaller}
 
+![](../results/images/flowchart_project.jpg){width="100%" height="400px"}
+
+
+## Cleaning and Augmenting Data {.smaller}
+
 ::: columns
-::: {.column width="40%"}
+::: {.column width="45%"}
 <!-- -->
 
 -   **Download, name and data**
 
-    -   Phenotype (n=604)
-
-    -   Survival data (n=603)
-
-    -   Protein Expression (n=354)
+    -   Phenotype (n=604), survival data (n=603), protein Expression (n=354)
 
 -   **Join tables**
 
-    -   inner_join
+    -   inner_join and pivot_longer
 
-    -   pivot_longer\
+-   **Cleaning**
+
+    -   Choosing variables and removing TCGA in sample_id
+
+-   **Augmenting**
+
+    -   Creating patient_id from sample_id
+
+    -   Creating 5 and 10 years age interval
+
+    -   Creating expression mean variables
+
+    -   Creating binominal variable for alcohol history
 :::
 
-::: {.column width="60%"}
+::: {.column width="55%"}
 ```{r}
 #| echo: true
 #| eval: false
 #| warning: false
-#| code-line-numbers: "|5-16|49-55|58-67|69-71"
+#| code-line-numbers: "|5-16|49-55|58-67|69-71|80-97|100-102|105-108|111-128|131-145|147-149|152-156"
 
 library("tidyverse")
 library("table1")
@@ -138,42 +151,6 @@ data_dir <- here("data/")
 write_tsv( x = final_data,
            file = str_c(data_dir, 
                   "03_expression_meta_data_load.tsv.gz"))
-
-```
-:::
-:::
-
-## Cleaning and Augmenting Data {.smaller}
-
-::: columns
-::: {.column width="35%"}
-<!-- -->
-
--   **Cleaning**
-
-    -   Choosing variables
-
-    -   Removing TCGA in sample_id
-
--   **Augmenting**
-
-    -   Creating patient_id from sample_id
-
-    -   Creating 5 and 10 years age interval
-
-    -   Creating expression mean variables
-
-    -   Creating binominal variable for alcohol history
-:::
-
-::: {.column width="65%"}
-```{r}
-#| echo: true
-#| eval: false
-#| warning: false
-#| code-line-numbers: "|1-18|21-23|26-29|32-49|52-56|59-70|73-77"
-
-
 
 # Choosing variables
 expression_meta_data_clean_1 <- expression_meta_data_clean |> 
@@ -330,9 +307,9 @@ expression_meta_data_aug |>
 
 ## Analysis heatmap {.smaller}
 
--   Selecting top up- and downregulated peptide targets with ´filter()´, ´group_by()´, ´summarize()´ and ´slice_max()´ and ´slice_min()´
--   Extract the peptide_target levels as vector with ´pull()´
--   Filter the main dataset for the selected peptides with ´semi_join()´
+-   Selecting top up- and downregulated peptide targets with filter(), group_by(), summarize() and slice_max() and slice_min()
+-   Extract the peptide_target levels as vector with pull()
+-   Filter the main dataset for the selected peptides with semi_join()
 
 ![](../results/images/05_analysis_heatmap.png){width="100%" height="80%"}
 
