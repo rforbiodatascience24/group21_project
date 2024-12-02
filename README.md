@@ -17,3 +17,8 @@ Data was retrieved from UCSC Xena. The data is from a cohort study, GDC TCGA Hea
 
 Data can be retrieved from the database using the following link: https://xenabrowser.net/datapages/?cohort=GDC%20TCGA%20Head%20and%20Neck%20Cancer%20(HNSC)&removeHub=https%3A%2F%2Fxena.treehouse.gi.ucsc.edu%3A443
 
+## Running the entire analysis
+To run the entire analysis and generating all figures, run the file
+```r
+00_all.qmd
+

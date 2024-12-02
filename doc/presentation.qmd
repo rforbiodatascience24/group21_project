@@ -19,6 +19,8 @@ format:
     background-transition: fade
     highlight-style: ayu-mirage
     code-block-height: 600px
+    slide-number: true
+    embed-resources: true
 editor: visual
 css: style.css
 ---
@@ -42,7 +44,7 @@ css: style.css
 ::: {.column width="45%"}
 <!-- -->
 
--   **Download, name and data**
+-   **Download and naming**
 
 -   **Join tables**
 
@@ -351,18 +353,16 @@ expression_meta_data_lm_vital_estimates_clean <- expression_meta_data_lm_vital_e
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="400px"}
+![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="500px"}
 :::
 
 ::: {.column width="50%"}
-![](../results/images/boxplot_years_smoked_vital_status_facet_pathological.png){width="100%" height="400px"}
+![](../results/images/boxplot_years_smoked_vital_status_facet_pathological.png){width="100%" height="500px"}
 :::
 :::
 
 ## Analysis PCA {.smaller}
 
-::: columns
-::: {.column width="50%"}
 ```{r}
 #| echo: true
 #| eval: false 
@@ -383,6 +383,8 @@ pca_analysis <- protein_data_trans |>
          scale = TRUE )
 ```
 
+::: columns
+::: {.column width="50%"}
 ![](../results/images/08_PCA_analysis_scree.png)
 :::
 
@@ -392,3 +394,9 @@ pca_analysis <- protein_data_trans |>
 :::
 
 ## Discussion {.smaller}
+
+-   Indications of what proteins to look further into
+
+-   Limitations in dataset
+
+    -   Lack of continous variables restricts possibilities of visualization
