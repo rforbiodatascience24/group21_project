@@ -37,7 +37,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 
 ```
 
-# Linear model - dead or alive
+# Linear model - dead or alive 
 
 ## Selecting variables, grouping and nesting the data for the linear modelling
 
