@@ -100,6 +100,7 @@
     code span.wa { color: #f28779; } /* Warning */
   </style>
   <link rel="stylesheet" href="presentation_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="style.css">
   <link href="presentation_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="presentation_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -427,42 +428,43 @@ Yayi Wang s243554
 </div>
 
 </section>
-<section id="introduction" class="slide level2">
+<section id="introduction" class="slide level2 smaller">
 <h2>Introduction</h2>
 <ul>
 <li>Background
 <ul>
 <li>Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.</li>
-<li>A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.</li>
+<li>A focus on phenotype, survival data, and protein expression quantification from the UCSC Xena.</li>
 </ul></li>
 <li>Research Objective
 <ul>
-<li>TBD.</li>
-<li>TBD.</li>
+<li>Apply Tidyverse techniques learned in class to real-world data.</li>
+<li>Extract and uncover scientific insights from the HNSCC datasets.</li>
 </ul></li>
 </ul>
 </section>
-<section id="materials" class="slide level2 smaller">
-<h2>Materials</h2>
+<section id="materials-and-methods-astrid" class="slide level2 smaller">
+<h2>Materials and methods Astrid</h2>
 <div class="columns">
-<div class="column" style="width:30%;">
+<div class="column" style="width:40%;">
+<!-- -->
 <ul>
-<li><p>download data</p>
+<li><p><strong>Download, name and data</strong></p>
 <ul>
 <li><p>Phenotype (n=604)</p></li>
 <li><p>Survival data (n=603)</p></li>
-<li><p>Protein Expression Quantification (n=354)</p></li>
+<li><p>Protein Expression (n=354)</p></li>
 </ul></li>
-<li><p>Join tables</p>
+<li><p><strong>Join tables</strong></p>
 <ul>
 <li><p>inner_join</p></li>
-<li><p>pivot_longer</p></li>
+<li><p>pivot_longer<br>
+</p></li>
 </ul></li>
-<li><p>Save data</p></li>
 </ul>
-</div><div class="column" style="width:70%;">
+</div><div class="column" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|5-16|49-72|76-78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span>
+<div class="sourceCode cell-code" id="cb1" data-code-line-numbers="|5-16|49-55|58-67||69-71|76-78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>)</span>
 <span id="cb1-2"><a href=""></a><span class="fu">library</span>(<span class="st">"table1"</span>)</span>
 <span id="cb1-3"><a href=""></a><span class="fu">library</span>(<span class="st">"here"</span>)</span>
 <span id="cb1-4"><a href=""></a></span>
@@ -544,204 +546,184 @@ Yayi Wang s243554
 </div>
 </div>
 </section>
-<section id="clean-data" class="slide level2 smaller">
-<h2>Clean Data</h2>
+<section id="cleaning-and-augmenting-data" class="slide level2 smaller">
+<h2>Cleaning and Augmenting Data</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<!-- -->
 <ul>
-<li><p>Choose columns to work with and rename them.</p></li>
-<li><p>Trim the sample_ID</p></li>
-<li><p>Save clean dataset to a tsv.gz file</p></li>
+<li><p><strong>Cleaning</strong></p>
+<ul>
+<li><p>Choosing variables</p></li>
+<li><p>Removing TCGA in sample_id</p></li>
+</ul></li>
+<li><p><strong>Augmenting</strong></p>
+<ul>
+<li><p>Creating patient_id from sample_id</p></li>
+<li><p>Creating 5 and 10 years age interval</p></li>
+<li><p>Creating expression mean variables</p></li>
+<li><p>Creating binominal variable for alcohol history</p></li>
+</ul></li>
 </ul>
+</div><div class="column" style="width:65%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|4-20|22-29|31-33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>expression_meta_data_clean <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data/03_expression_meta_data_load.tsv.gz"</span>))</span>
-<span id="cb2-2"><a href=""></a></span>
-<span id="cb2-3"><a href=""></a></span>
-<span id="cb2-4"><a href=""></a>expression_meta_data_clean_1 <span class="ot">&lt;-</span> expression_meta_data_clean <span class="sc">|&gt;</span> </span>
-<span id="cb2-5"><a href=""></a>  <span class="fu">select</span>(<span class="at">sample_id =</span> sample,</span>
-<span id="cb2-6"><a href=""></a>         <span class="at">gender =</span> gender.demographic,</span>
-<span id="cb2-7"><a href=""></a>         <span class="at">race =</span> race.demographic,</span>
-<span id="cb2-8"><a href=""></a>         <span class="at">vital_status =</span> vital_status.demographic,</span>
-<span id="cb2-9"><a href=""></a>         <span class="at">overall_survival =</span> OS,</span>
-<span id="cb2-10"><a href=""></a>         primary_site,</span>
-<span id="cb2-11"><a href=""></a>         <span class="at">pathologic_stage =</span> ajcc_pathologic_stage.diagnoses,</span>
-<span id="cb2-12"><a href=""></a>         <span class="at">age_at_index =</span> age_at_index.demographic,</span>
-<span id="cb2-13"><a href=""></a>         <span class="at">year_of_birth =</span> year_of_birth.demographic,</span>
-<span id="cb2-14"><a href=""></a>         <span class="at">year_of_death =</span> year_of_death.demographic,</span>
-<span id="cb2-15"><a href=""></a>         <span class="at">tissue_source_location =</span> name.tissue_source_site,</span>
-<span id="cb2-16"><a href=""></a>         <span class="at">cigarettes_per_day =</span> cigarettes_per_day.exposures,</span>
-<span id="cb2-17"><a href=""></a>         <span class="at">years_smoked =</span> years_smoked.exposures,</span>
-<span id="cb2-18"><a href=""></a>         <span class="at">alcohol_history =</span> alcohol_history.exposures,</span>
-<span id="cb2-19"><a href=""></a>         peptide_target,</span>
-<span id="cb2-20"><a href=""></a>         expression)</span>
-<span id="cb2-21"><a href=""></a></span>
-<span id="cb2-22"><a href=""></a><span class="co"># Modify the sample_id column</span></span>
-<span id="cb2-23"><a href=""></a>expression_meta_data_clean_2 <span class="ot">&lt;-</span> expression_meta_data_clean_1 <span class="sc">|&gt;</span> </span>
-<span id="cb2-24"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-25"><a href=""></a>    </span>
-<span id="cb2-26"><a href=""></a><span class="co"># Keep only the last part in sample_id and leave out TCGA-XX</span></span>
-<span id="cb2-27"><a href=""></a>    <span class="at">sample_id =</span> <span class="fu">sub</span>(<span class="st">"^TCGA-(.*)"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, sample_id)</span>
-<span id="cb2-28"><a href=""></a>    </span>
-<span id="cb2-29"><a href=""></a>  )</span>
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="|1-18|21-23|26-29|32-49|52-56|59-70|73-77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Choosing variables</span></span>
+<span id="cb2-2"><a href=""></a>expression_meta_data_clean_1 <span class="ot">&lt;-</span> expression_meta_data_clean <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href=""></a>  <span class="fu">select</span>(<span class="at">sample_id =</span> sample,</span>
+<span id="cb2-4"><a href=""></a>         <span class="at">gender =</span> gender.demographic,</span>
+<span id="cb2-5"><a href=""></a>         <span class="at">race =</span> race.demographic,</span>
+<span id="cb2-6"><a href=""></a>         <span class="at">vital_status =</span> vital_status.demographic,</span>
+<span id="cb2-7"><a href=""></a>         <span class="at">overall_survival =</span> OS,</span>
+<span id="cb2-8"><a href=""></a>         primary_site,</span>
+<span id="cb2-9"><a href=""></a>         <span class="at">pathologic_stage =</span> ajcc_pathologic_stage.diagnoses,</span>
+<span id="cb2-10"><a href=""></a>         <span class="at">age_at_index =</span> age_at_index.demographic,</span>
+<span id="cb2-11"><a href=""></a>         <span class="at">year_of_birth =</span> year_of_birth.demographic,</span>
+<span id="cb2-12"><a href=""></a>         <span class="at">year_of_death =</span> year_of_death.demographic,</span>
+<span id="cb2-13"><a href=""></a>         <span class="at">tissue_source_location =</span> name.tissue_source_site,</span>
+<span id="cb2-14"><a href=""></a>         <span class="at">cigarettes_per_day =</span> cigarettes_per_day.exposures,</span>
+<span id="cb2-15"><a href=""></a>         <span class="at">years_smoked =</span> years_smoked.exposures,</span>
+<span id="cb2-16"><a href=""></a>         <span class="at">alcohol_history =</span> alcohol_history.exposures,</span>
+<span id="cb2-17"><a href=""></a>         peptide_target,</span>
+<span id="cb2-18"><a href=""></a>         expression)</span>
+<span id="cb2-19"><a href=""></a></span>
+<span id="cb2-20"><a href=""></a></span>
+<span id="cb2-21"><a href=""></a><span class="co"># Removing TCGA in sample_id</span></span>
+<span id="cb2-22"><a href=""></a>expression_meta_data_clean_2 <span class="ot">&lt;-</span> expression_meta_data_clean_1 <span class="sc">|&gt;</span> </span>
+<span id="cb2-23"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">sample_id =</span> <span class="fu">sub</span>(<span class="st">"^TCGA-(.*)"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, sample_id))</span>
+<span id="cb2-24"><a href=""></a></span>
+<span id="cb2-25"><a href=""></a></span>
+<span id="cb2-26"><a href=""></a><span class="co"># Creating patient_id from sample_id</span></span>
+<span id="cb2-27"><a href=""></a>expression_meta_data_aug_1 <span class="ot">&lt;-</span> expression_meta_data_aug <span class="sc">|&gt;</span> </span>
+<span id="cb2-28"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">patient_id =</span> <span class="fu">sub</span>(<span class="st">"(.*)-.."</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, sample_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-29"><a href=""></a>  <span class="fu">relocate</span>(patient_id, <span class="at">.before =</span> sample_id)</span>
 <span id="cb2-30"><a href=""></a></span>
-<span id="cb2-31"><a href=""></a><span class="fu">write_tsv</span>( <span class="at">x =</span> expression_meta_data_clean_2,</span>
-<span id="cb2-32"><a href=""></a>           <span class="at">file =</span> <span class="fu">str_c</span>(data_dir, </span>
-<span id="cb2-33"><a href=""></a>                  <span class="st">"04_expression_meta_data_clean.tsv.gz"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-31"><a href=""></a></span>
+<span id="cb2-32"><a href=""></a><span class="co"># Creating 5 and 10 years age intervals as variables</span></span>
+<span id="cb2-33"><a href=""></a>expression_meta_data_aug_2 <span class="ot">&lt;-</span> expression_meta_data_aug_1 <span class="sc">|&gt;</span> </span>
+<span id="cb2-34"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">age_interval_5_year =</span> <span class="fu">cut</span>(age_at_index,</span>
+<span id="cb2-35"><a href=""></a>                                   <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-36"><a href=""></a>                                   <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">95</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb2-37"><a href=""></a>                                                  <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">5</span>) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb2-38"><a href=""></a>                                                  <span class="at">sep =</span> <span class="st">"-"</span>), </span>
+<span id="cb2-39"><a href=""></a>                                   <span class="at">include.lowest =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb2-40"><a href=""></a>          <span class="at">age_interval_10_year =</span> <span class="fu">cut</span>(age_at_index,</span>
+<span id="cb2-41"><a href=""></a>                                     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb2-42"><a href=""></a>                                     <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">90</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb2-43"><a href=""></a>                                                    <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>) <span class="sc">-</span> <span class="dv">1</span>,</span>
+<span id="cb2-44"><a href=""></a>                                                    <span class="at">sep =</span> <span class="st">"-"</span>), </span>
+<span id="cb2-45"><a href=""></a>                                     <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-46"><a href=""></a></span>
+<span id="cb2-47"><a href=""></a><span class="co"># Placing variables after age_at_index variable</span></span>
+<span id="cb2-48"><a href=""></a>  <span class="fu">relocate</span>(age_interval_5_year, <span class="at">.after =</span> age_at_index) <span class="sc">|&gt;</span> </span>
+<span id="cb2-49"><a href=""></a>  <span class="fu">relocate</span>(age_interval_10_year, <span class="at">.after =</span> age_interval_5_year)</span>
+<span id="cb2-50"><a href=""></a></span>
+<span id="cb2-51"><a href=""></a></span>
+<span id="cb2-52"><a href=""></a><span class="co"># Creating expression mean variable</span></span>
+<span id="cb2-53"><a href=""></a>expression_meta_data_aug_3 <span class="ot">&lt;-</span> expression_meta_data_aug_2 <span class="sc">|&gt;</span> </span>
+<span id="cb2-54"><a href=""></a>  <span class="fu">group_by</span>(peptide_target) <span class="sc">|&gt;</span> </span>
+<span id="cb2-55"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-56"><a href=""></a>  <span class="fu">ungroup</span>() <span class="co"># Removing the grouping to ensure that the following work is not messed up</span></span>
+<span id="cb2-57"><a href=""></a></span>
+<span id="cb2-58"><a href=""></a></span>
+<span id="cb2-59"><a href=""></a><span class="co"># Creating expression mean variable for each pathologic state</span></span>
+<span id="cb2-60"><a href=""></a>mean_of_expression_pathologic_stages <span class="ot">&lt;-</span> expression_meta_data_aug_3 <span class="sc">|&gt;</span> </span>
+<span id="cb2-61"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(pathologic_stage)) <span class="sc">|&gt;</span>  </span>
+<span id="cb2-62"><a href=""></a>  <span class="fu">group_by</span>(peptide_target, pathologic_stage) <span class="sc">|&gt;</span> </span>
+<span id="cb2-63"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-64"><a href=""></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> pathologic_stage,</span>
+<span id="cb2-65"><a href=""></a>              <span class="at">values_from =</span> mean_expression,</span>
+<span id="cb2-66"><a href=""></a>              <span class="at">names_prefix =</span> <span class="st">"mean_expression_"</span>)</span>
+<span id="cb2-67"><a href=""></a></span>
+<span id="cb2-68"><a href=""></a><span class="co"># Join the calculated means back into the original dataset with the join function</span></span>
+<span id="cb2-69"><a href=""></a>expression_meta_data_aug_4 <span class="ot">&lt;-</span> expression_meta_data_aug_3 <span class="sc">|&gt;</span> </span>
+<span id="cb2-70"><a href=""></a>  <span class="fu">right_join</span>(mean_of_expression_pathologic_stages, <span class="at">by =</span> <span class="st">"peptide_target"</span>)</span>
+<span id="cb2-71"><a href=""></a></span>
+<span id="cb2-72"><a href=""></a></span>
+<span id="cb2-73"><a href=""></a><span class="co"># Creating binominal variable for alcohol history</span></span>
+<span id="cb2-74"><a href=""></a>expression_meta_data_aug_5 <span class="ot">&lt;-</span> expression_meta_data_aug_4 <span class="sc">|&gt;</span> </span>
+<span id="cb2-75"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">alcohol_history_binomial =</span> <span class="fu">case_when</span>(alcohol_history <span class="sc">==</span> <span class="st">"No"</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb2-76"><a href=""></a>                                              alcohol_history <span class="sc">==</span> <span class="st">"Yes"</span> <span class="sc">~</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-77"><a href=""></a>  <span class="fu">relocate</span>(alcohol_history_binomial, <span class="at">.after =</span> alcohol_history)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="argument-data" class="slide level2 smaller">
-<h2>Argument Data</h2>
-<ul>
-<li>Create a new variable, patient_id</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>expression_meta_data_aug_1 <span class="ot">&lt;-</span> expression_meta_data_aug <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-3"><a href=""></a>    <span class="at">patient_id =</span> <span class="fu">sub</span>(<span class="st">"(.*)-.."</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, sample_id)</span>
-<span id="cb3-4"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb3-5"><a href=""></a>  <span class="fu">relocate</span>(patient_id, <span class="at">.before =</span> sample_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li>Create columns with 5 and 10 years age intervals</li>
-</ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>expression_meta_data_aug_2 <span class="ot">&lt;-</span> expression_meta_data_aug_1 <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-3"><a href=""></a>    <span class="at">age_interval_5_year =</span> <span class="fu">cut</span>(</span>
-<span id="cb4-4"><a href=""></a>      age_at_index,</span>
-<span id="cb4-5"><a href=""></a>      <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
-<span id="cb4-6"><a href=""></a>      <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">95</span>, <span class="at">by =</span> <span class="dv">5</span>), <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">5</span>) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">sep =</span> <span class="st">"-"</span>), </span>
-<span id="cb4-7"><a href=""></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span>          </span>
-<span id="cb4-8"><a href=""></a>    ),</span>
-<span id="cb4-9"><a href=""></a></span>
-<span id="cb4-10"><a href=""></a>    <span class="at">age_interval_10_year =</span> <span class="fu">cut</span>(</span>
-<span id="cb4-11"><a href=""></a>      age_at_index,</span>
-<span id="cb4-12"><a href=""></a>      <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
-<span id="cb4-13"><a href=""></a>      <span class="at">labels =</span> <span class="fu">paste</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">90</span>, <span class="at">by =</span> <span class="dv">10</span>), <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">sep =</span> <span class="st">"-"</span>), </span>
-<span id="cb4-14"><a href=""></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span></span>
-<span id="cb4-15"><a href=""></a>    )</span>
-<span id="cb4-16"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb4-17"><a href=""></a>  <span class="fu">relocate</span>(age_interval_5_year, <span class="at">.after =</span> age_at_index) <span class="sc">|&gt;</span> </span>
-<span id="cb4-18"><a href=""></a>  <span class="fu">relocate</span>(age_interval_10_year, <span class="at">.after =</span> age_interval_5_year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="section" class="slide level2 smaller">
-<h2></h2>
-<ul>
-<li>Create a new variable with the mean expression of each peptide_target</li>
-</ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>expression_meta_data_aug_3 <span class="ot">&lt;-</span> expression_meta_data_aug_2 <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href=""></a>  <span class="fu">group_by</span>(peptide_target) <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href=""></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-4"><a href=""></a>    <span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-5"><a href=""></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb5-6"><a href=""></a><span class="co"># Removing the grouping to ensure that the following work is not messed up</span></span>
-<span id="cb5-7"><a href=""></a>  <span class="fu">ungroup</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li>Creat mean expression of each peptide_target for each pathologic state</li>
-</ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="co"># Calculate the mean for each pathologic stage</span></span>
-<span id="cb6-2"><a href=""></a>mean_of_expression_pathologic_stages <span class="ot">&lt;-</span> expression_meta_data_aug_3 <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href=""></a><span class="co"># Exclude NA values in pathologic_stage and group by peptide_target and pathologic_state</span></span>
-<span id="cb6-4"><a href=""></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(pathologic_stage)) <span class="sc">|&gt;</span>  </span>
-<span id="cb6-5"><a href=""></a>  <span class="fu">group_by</span>(peptide_target, pathologic_stage) <span class="sc">|&gt;</span> </span>
-<span id="cb6-6"><a href=""></a><span class="co"># Calculating the mean_expression of each pathologic state</span></span>
-<span id="cb6-7"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">mean_expression =</span> <span class="fu">mean</span>(expression, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a href=""></a><span class="co"># Widening the pivot table with the new variables of calculated mean named by the pathologic_state</span></span>
-<span id="cb6-9"><a href=""></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb6-10"><a href=""></a>    <span class="at">names_from =</span> pathologic_stage,</span>
-<span id="cb6-11"><a href=""></a>    <span class="at">values_from =</span> mean_expression,</span>
-<span id="cb6-12"><a href=""></a>    <span class="at">names_prefix =</span> <span class="st">"mean_expression_"</span></span>
-<span id="cb6-13"><a href=""></a>  )</span>
-<span id="cb6-14"><a href=""></a></span>
-<span id="cb6-15"><a href=""></a><span class="co"># Join the calculated means back into the original dataset with the join function</span></span>
-<span id="cb6-16"><a href=""></a>expression_meta_data_aug_4 <span class="ot">&lt;-</span> expression_meta_data_aug_3 <span class="sc">|&gt;</span> </span>
-<span id="cb6-17"><a href=""></a>  <span class="fu">right_join</span>(mean_of_expression_pathologic_stages, <span class="at">by =</span> <span class="st">"peptide_target"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ul>
-<li>Write the augmented dataset to a tsv.gz file</li>
-</ul>
+</div>
+</div>
 </section>
 <section id="description" class="slide level2 smaller">
 <h2>Description</h2>
-<p>Check how many patients</p>
+<ul>
+<li>Check columns and rows (98 columns vs 26 columns, 353 patients)</li>
+<li>Check Pathologic Stage (5 stages)</li>
+<li>Check Patients statistics and distribution</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>expression_meta_data_aug <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href=""></a>  <span class="fu">select</span>(patient_id) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href=""></a>  <span class="fu">n_distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 353</code></pre>
-</div>
-</div>
-<p>Compare with the original data before cleaning</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>expression_meta_data_load <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href=""></a>  <span class="fu">select</span>(submitter_id) <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href=""></a>  <span class="fu">n_distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 353</code></pre>
-</div>
-</div>
-<p>Check what different pathologic stages there are</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>expression_meta_data_aug <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href=""></a>  <span class="fu">group_by</span>(pathologic_stage) <span class="sc">|&gt;</span> </span>
-<span id="cb11-3"><a href=""></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 2
-  pathologic_stage count
-  &lt;chr&gt;            &lt;int&gt;
-1 Stage I           7305
-2 Stage II         27272
-3 Stage III        29220
-4 Stage IVA        90095
-5 Stage IVB         3896
-6 &lt;NA&gt;             14123</code></pre>
-</div>
-</div>
-</section>
-<section id="section-1" class="slide level2 smaller">
-<h2></h2>
-<p>Check the lowest and highest age</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>expression_meta_data_aug <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a href=""></a>  <span class="fu">summarize</span>(</span>
-<span id="cb13-3"><a href=""></a>    <span class="at">min_age =</span> <span class="fu">min</span>(age_at_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="co"># Lowest age</span></span>
-<span id="cb13-4"><a href=""></a>    <span class="at">max_age =</span> <span class="fu">max</span>(age_at_index, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># Highest age</span></span>
-<span id="cb13-5"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
-  min_age max_age
-    &lt;dbl&gt;   &lt;dbl&gt;
-1      19      90</code></pre>
+  mean_age middle_age
+     &lt;dbl&gt;      &lt;dbl&gt;
+1     61.1         61</code></pre>
 </div>
 </div>
-<p>Check how many peptides</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>expression_meta_data_aug <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href=""></a>  <span class="fu">select</span>(peptide_target) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href=""></a>  <span class="fu">n_distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 487</code></pre>
-</div>
-</div>
-</section>
-<section id="analysis" class="slide level2 smaller">
-<h2>Analysis</h2>
-<p>Heatmaps</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/heatmap_1.png" style="width:100.0%;height:100.0%"></p>
-<figcaption>Left Image</figcaption>
-</figure>
-</div>
+<p><img data-src="../results/images/04_pathologic_stage_distribution.png" style="width:100.0%;height:100.0%"></p>
 </div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/heatmap_2.png" style="width:100.0%;height:100.0%"></p>
-<figcaption>Right Image</figcaption>
-</figure>
-</div>
+<p><img data-src="../results/images/04_vital_status_age_distribution.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
 </section>
-<section id="discussion" class="slide level2 smaller">
-<h2>Discussion</h2>
+<section id="analysis-heatmap" class="slide level2 smaller">
+<h2>Analysis heatmap</h2>
+<ul>
+<li>Selecting top up- and downregulated peptide targets with ´filter()´, ´group_by()´, ´summarize()´ and ´slice_max()´ and ´slice_min()´</li>
+<li>Extract the peptide_target levels as vector with ´pull()´</li>
+<li>Filter the main dataset for the selected peptides with ´semi_join()´</li>
+</ul>
+<p><img data-src="../results/images/05_analysis_heatmap.png" style="width:100.0%;height:80.0%"></p>
+</section>
+<section id="analysis-linear-model---vital-stage-a-and-e" class="slide level2 smaller">
+<h2>Analysis linear model - Vital stage A and E</h2>
+<p>Linear model for expression of proteins present in tissue from patients with Head and Neck Cancer</p>
+<p>Fitting a linear model to the protein expression data and the vital stage. This model is used to investigate if there is a difference in the protein expression levels in patients who is alive and patients who end up dying.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="../results/images/06_analysis_lm_volcano_vital.png"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="../results/images/06_analysis_lm_forest_plot.png"></p>
+</div>
+</div>
+</section>
+<section id="analysis-linear-model---alcohol-history-a-and-e" class="slide level2 smaller">
+<h2>Analysis Linear model - Alcohol history A and E</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="../results/images/04_pathologic_stage_distribution.png" style="width:100.0%;height:100.0%"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="../results/images/04_vital_status_age_distribution.png" style="width:100.0%;height:100.0%"></p>
+</div>
+</div>
+</section>
+<section id="analysis-visual-astrid" class="slide level2 smaller">
+<h2>Analysis visual Astrid</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="../results/images/barplot_vital_status_genders.png" style="width:100.0%;height:100.0%"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="../results/images/barplot_vital_status_genders_facet_races.png" style="width:100.0%;height:100.0%"></p>
+</div>
+</div>
+</section>
+<section id="analysis-pca-a-and-e" class="slide level2 smaller">
+<h2>Analysis PCA A and E</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="../results/images/08_PCA_analysis_scree.png"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="../results/images/08_PCA_analysis_PCA_stage.png"></p>
+</div>
+</div>
+</section>
+<section id="discussion-a-and-e" class="slide level2 smaller">
+<h2>Discussion A and E</h2>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
