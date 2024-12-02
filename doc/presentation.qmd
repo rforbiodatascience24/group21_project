@@ -58,7 +58,7 @@ css: style.css
 #| echo: true
 #| eval: false
 #| warning: false
-#| code-line-numbers: "|5-16|49-55|58-67||69-71|76-78"
+#| code-line-numbers: "|5-16|49-55|58-67|69-71"
 
 library("tidyverse")
 library("table1")
@@ -378,15 +378,15 @@ expression_meta_data_lm_vital_estimates_clean <- expression_meta_data_lm_vital_e
 :::
 :::
 
-## Analysis visual Astrid {.smaller}
+## Analysis visual  {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/barplot_vital_status_genders.png){width="100%" height="100%"}
+![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="400px"}
 :::
 
 ::: {.column width="50%"}
-![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="100%"}
+![](../results/images/boxplot_years_smoked_vital_status_facet_pathological.png){width="100%" height="400px"}
 :::
 :::
 
