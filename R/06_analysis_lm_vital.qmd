@@ -87,7 +87,7 @@ expression_meta_data_lm_vital_nested_model
 We use the tidy() function to get the output from the linear model into a tidy dataframe. We specify that we want to include the 95% confidence intervals.
 
 ```{r}
-#| label: "computing-CI-using-tidy-06"
+#| label: "computing-CI-95-using-tidy-06"
 
 expression_meta_data_lm_vital_nested_model_tidy <- expression_meta_data_lm_vital_nested_model |> 
   mutate(model_object_tidy = map(.x = model_object,
