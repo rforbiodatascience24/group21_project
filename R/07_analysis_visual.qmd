@@ -46,6 +46,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 #| label: "survival-between-genders-barplot-07" 
 
 
+<<<<<<< HEAD
 barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
        mapping = aes(x = gender,
                      fill = vital_status
@@ -60,25 +61,26 @@ barplot_vital_status_genders<-ggplot(data = expression_meta_data_aug,
       "Dead" = "#beeb4c"    
     )
   ) +
+=======
+barplot_vital_status_genders <- expression_meta_data_aug |> 
+  ggplot(mapping = aes(x = gender,
+                       fill = vital_status)) +
+  geom_bar(position = "fill")+
+>>>>>>> f3c18164257e86ba7f478c2d7c47a3688c9f0bbb
   
+  scale_fill_manual(values = c("Alive" = "#eb4cbe",
+                               "Dead" = "#beeb4c")) +
   labs(x = "Gender", 
        y = "Proportion",
        title = "Distribution of Gender and Vital Status",
        subtitle = "Proportional representation by Gender and Race",
-       fill = "Vital Status"
-       )+
-  
-  theme_classic()+
-  
+       fill = "Vital Status") +
+  theme_classic() +
   theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
         plot.subtitle = element_text(size = 8, hjust = 0.5),
-        legend.position = "right"
-        )
+        legend.position = "right")
  
-
 barplot_vital_status_genders  
-
-
 
 ggsave(filename = "barplot_vital_status_genders.png",
        plot = barplot_vital_status_genders, 
@@ -98,34 +100,21 @@ With a facet on each race, we can visually interpret any deviations in vital sta
 
 #| label: "survival-between-genders-and-races-barplot-07" 
 
-barplot_vital_status_genders_facet_races<-ggplot(data = expression_meta_data_aug,
-       mapping = aes(x = gender,
-                     fill = vital_status
-                     ))+
-  geom_bar(position = "fill"
-           )+
-  
-    scale_fill_manual(
-    values = c(
-      "Alive" = "#eb4cbe",
-      "Dead" = "#beeb4c"    
-    )
-  ) +
-  
-  facet_wrap(~race)+
+barplot_vital_status_genders_facet_races <- expression_meta_data_aug |> 
+  ggplot(mapping = aes(x = gender, fill = vital_status)) +
+  geom_bar(position = "fill")+
+  scale_fill_manual(values = c("Alive" = "#eb4cbe",
+                               "Dead" = "#beeb4c")) +
+  facet_wrap(~race) +
   labs(x = "Gender", 
        y = "Proportion",
        title = "Distribution of Gender and Vital Status Across Races",
-          subtitle = "Proportional representation by gender and race",
+       subtitle = "Proportional representation by gender and race",
        fill = "Vital Status") +
-  
-   theme_classic()+
-  
+  theme_classic() +
   theme(plot.title = element_text(size = 10, hjust = 0.5, face = "bold"),
         plot.subtitle = element_text(size = 8, hjust = 0.5),
         strip.text = element_text(size = 5, face = "bold"))
-  
-
 
 barplot_vital_status_genders_facet_races
 
@@ -144,23 +133,18 @@ Constructing a boxplot to visually and statistically interpret the relationship 
 
 #| label: "years-smoked-vital-status-07" 
 
-boxplot_years_smoked_vital_status_facet_pathological<-expression_meta_data_aug |> 
+boxplot_years_smoked_vital_status_facet_pathological <- expression_meta_data_aug |> 
   drop_na(pathologic_stage) |> 
-ggplot(mapping = aes(x = vital_status,
-                     y = years_smoked))+
-  
-geom_boxplot(fill = "#eb4cbe",
-             color = "#beeb4c")+
-  
-  facet_wrap(~pathologic_stage)+
-  
+  ggplot(mapping = aes(x = vital_status,
+                       y = years_smoked)) +
+  geom_boxplot(fill = "#eb4cbe",
+               color = "#beeb4c") +
+  facet_wrap(~pathologic_stage) +
   labs(x = "Vital Status", 
        y = "Years smoked",
        title = "Distribution of Years smoked and Vital Status Across pathological stages",
        fill = "Vital Status")+
-  
-  theme_classic()+
-  
+  theme_classic() +
   theme(plot.title = element_text(size = 10, 
                                   hjust = 0.5,
                                   face = "bold"))
@@ -194,38 +178,30 @@ As the amount of significant differentially expressed proteins between alive and
 
 #| label: "expression-of-6-significant-peptides-07" 
 
-expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |> 
+expression_of_6_significant_pep_and_vital_status <- expression_meta_data_aug |> 
   filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
   
   ggplot(mapping = aes(x = age_at_index,
                        y = expression,
                        color = vital_status
-                      ))+
+                      )) +
   geom_point( shape = 8,
-              size = 1)+
+              size = 1) +
   
-  facet_wrap(~peptide_target)+
+  facet_wrap(~peptide_target) +
   
-  scale_color_manual(
-    values = c(
-      "Alive" = "#eb4cbe",  
-      "Dead" = "#beeb4c"  
-    )
-  ) +
-  
+  scale_color_manual(values = c("Alive" = "#eb4cbe",
+                                "Dead" = "#beeb4c")) +
   labs(x = "Age", 
        y = "Expression level",
        fill = "Vital Status",
        color = "Vital Status", 
-       title = "Peptides significantly expressed between vital status"
-       )+
-  
-  theme_classic()+
-  
+       title = "Peptides significantly expressed between vital status") +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5),
-        strip.text = element_text(size = 6)
-        )
+        strip.text = element_text(size = 6))
+
 expression_of_6_significant_pep_and_vital_status
 
 ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
@@ -237,42 +213,33 @@ ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
 
 With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in patients who died; the blue points cluster in the lower part of the plot.
 
-Below is a dead end:
+**Below is a dead end:**
 
 Trying to think of another way to display the data in a less messy way:
 
 ```{r}
 
-expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |> 
+expression_of_6_significant_pep_and_vital_status <- expression_meta_data_aug |> 
   filter(peptide_target %in% c("Notch3", "FIBRONECTIN", "MERIT40_pS29","Enolase-2","PKC-a-b-II_pT638_T641","IMP3")) |> 
   
   ggplot(mapping = aes(x = age_interval_10_year,
                        y = expression,
                        fill = vital_status,
-                       color = vital_status
-                      ))+
-  
-  
-  geom_point( shape = 8,
-              size = 1)+
-  
-  
-  
+                       color = vital_status)) +
+  geom_point(shape = 8,
+             size = 1) +
   labs(x = "Age", 
        y = "Expression level",
        fill = "Vital Status",
-       color = "Vital Status"
-       )+
-  
+       color = "Vital Status") +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         legend.title = "Vital status",
-        legend.position = "right"
-        )+
+        legend.position = "right") +
   
-  facet_wrap(~peptide_target)+
+  facet_wrap(~peptide_target) +
   theme_classic()
 
-
 expression_of_6_significant_pep_and_vital_status
+
 ```
