@@ -328,113 +328,13 @@ expression_meta_data_aug |>
 
 ## Analysis heatmap {.smaller}
 
-::: columns
-::: {.column width="70%"}
-<!-- -->
-
-
-![](../results/images/05_analysis_heatmap.png){width="100%" height="100%"}
+::: {.smaller}
+-   Selecting top up- and downregulated peptide targets with ´filter()´, ´group_by()´, ´summarize()´ and ´slice_max()´ and ´slice_min()´
+-   Extract the peptide_target levels as vector with ´pull()´
+-   Filter the main dataset for the selected peptides with ´semi_join()´
 :::
 
-
-::: {.column width="30%"}
-
-```{r}
-#| echo: true
-#| eval: false
-#| warning: false
-#| code-line-numbers: "|1-6|10-15|19-24|28-37|41-47|49-58|60-66|68-77|79-83"
-
-# Select top 20 most upregulated peptide targets
-most_upregulated <- expression_meta_data_analysis |> 
-  filter(!is.na(mean_expression)) |> # Removing rows with NA
-  group_by(peptide_target) |> 
-  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> # Summarizing the mean_expression even though having a variable of this name, as it requires less coding in this way
-  slice_max(order_by = mean_expression, n = 20)
-
-
-
-# Select bottom 20 most downregulated 
-most_downregulated <- expression_meta_data_analysis |> 
-  filter(!is.na(expression)) |>  # Removing rows with NA
-  group_by(peptide_target) |> 
-  summarize(mean_expression = mean(expression, na.rm = TRUE), .groups = "drop") |> 
-  slice_min(order_by = mean_expression, n = 20)
-
-
-
-# Combine the two subsets
-selected_peptides <- bind_rows(most_downregulated, most_upregulated)
-
-# Extract the peptide_target levels for ordering in the heatmap
-peptide_target_levels <- selected_peptides |> 
-  pull(peptide_target)  # Pull the peptide_target column as a vector
-
-
-
-# Filter the main dataset for the selected peptides and arrange by mean_expression in descending order
-heatmap_selected_peptides <- expression_meta_data_analysis |> 
-  filter(!age_interval_5_year %in% c("15-19", "20-24")) |> 
-  semi_join(selected_peptides, by = "peptide_target") |>  # Keep rows with matching peptide_target
-  filter(!is.na(mean_expression)) |>  # Removing all NAs
-  group_by(peptide_target, age_interval_5_year) |> 
-  summarize(
-    mean_expression = mean(expression, na.rm = TRUE),  # Calculate mean expression
-    .groups = "drop") |>   # Drop grouping after summarization
-  arrange(desc(desc(mean_expression)))   # Sort by mean_expression, highest to lowest 
-
-
-
-# Create the heatmap
-heatmap <- heatmap_selected_peptides |> 
-  ggplot(aes(
-    x = factor(peptide_target, levels = peptide_target_levels),  # Use the extracted levels vector
-    y = age_interval_5_year, 
-    fill = mean_expression
-  )) +
-  
-  # Heatmap tiles
-  geom_tile(color = "white") +
-  
-  # Color gradient for expression
-  scale_fill_gradient2(
-    low = "blue", 
-    mid = "white", 
-    high = "red", 
-    na.value = "black"
-  ) +
-  
-  # Labels
-  labs(
-    title = "Heatmap of Expression Across Age Intervals and 20 Most Upregulated and 20 Most Downregulated Peptide Targets",
-    x = "Peptide Target",
-    y = "Age Interval",
-    fill = "Mean Expression"
-  ) +
-  
-  # Themes
-  theme(
-    # Axis text size
-    axis.text.x = element_text(angle = 60, hjust = 1, size = 15),
-    axis.text.y = element_text(size = 15),
-    
-    # Title and axis label sizes
-    plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
-    axis.title.x = element_text(size = 18),
-    axis.title.y = element_text(size = 18),
-    
-    # Legend position and text size
-    legend.position = "bottom",
-    legend.text = element_text(size = 12),
-    legend.title = element_text(size = 14)
-  )
-
-
-```
-
-:::
-
-:::
+![](../results/images/05_analysis_heatmap.png){width="100%" height="80%"}
 
 ## Analysis linear model - Vital stage A and E {.smaller}
 
