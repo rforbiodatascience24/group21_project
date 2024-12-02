@@ -42,7 +42,7 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 
 ## Selecting variables, grouping and nesting the data for the linear modelling
 
-Want to make a linear model of the peptide expression levels and if the patient is a smoker or non-smoker
+Want to make a linear model of the peptide expression levels and if the patient has a alcohol history or not
 
 Selecting the variables that we want to use for the linear modeling. NA's in "expression" are dropped.
 
@@ -72,7 +72,7 @@ expression_meta_data_lm_alcohol_nested
 
 ## Adding the linear model to the dataset
 
-Adding the linear model to the data using mutate().
+Adding the linear model to the data using mutate() and lm()
 
 ```{r}
 #| label: "linear-model-to-the-data-09"
@@ -85,7 +85,7 @@ expression_meta_data_lm_alcohol_nested_model <- expression_meta_data_lm_alcohol_
 expression_meta_data_lm_alcohol_nested_model
 ```
 
-Computing the confidence intervals and p-value using tidy()
+We use the tidy() function to get the output from the linear model into a tidy dataframe. We specify that we want to include the 95% confidence intervals.
 
 ```{r}
 #| label: "computing-CI-using-tidy-09"
@@ -113,7 +113,7 @@ expression_meta_data_lm_alcohol_estimates
 
 ## Clean the data and calculating q.value
 
-Term describes if the patient drinks alcohol. 0 = no and 1 = yes. Therefore the intercept the patient does not drink alcohol and the slope + intercept the patient does drink alcohol.
+Term describes if the patient drinks alcohol. 0 = no and 1 = yes. Therefore the intercept the patient does not drink alcohol and the slope + intercept the patient does drink alcohol. And the slope is the diffrence between the two, therefore we select for the term = "alcohol_history_binomial" as that is the slope of the linear model.
 
 ```{r}
 #| label: "filtering-and-selecting-09"
@@ -192,3 +192,5 @@ ggsave(filename = "09_analysis_lm_volcano_alcohol.png",
 
 
 ```
+
+From the linear model it has been found that 1 protein "ANNEXINVII" is over-expressed in the patients that have a history with drinking alcohol.
