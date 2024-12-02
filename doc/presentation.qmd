@@ -338,9 +338,23 @@ expression_meta_data_aug |>
 
 ## Analysis linear model - Vital stage A and E {.smaller}
 
-Linear model for expression of proteins present in tissue from patients with Head and Neck Cancer
+```{r}
+expression_meta_data_lm_vital_nested_model <- expression_meta_data_lm_vital_nested |> 
+  mutate(model_object = map(.x = data,
+                            .f = ~lm(formula = expression ~ overall_survival,
+                                   data = .x)))
 
-Fitting a linear model to the protein expression data and the vital stage. This model is used to investigate if there is a difference in the protein expression levels in patients who is alive and patients who end up dying.
+expression_meta_data_lm_vital_estimates_clean <- expression_meta_data_lm_vital_estimates |> 
+  filter(term == "overall_survival") |> 
+  select(peptide_target,
+         p.value,
+         estimate,
+         conf.low,
+         conf.high) |> 
+  ungroup(peptide_target)
+
+
+```
 
 ::: columns
 ::: {.column width="50%"}
@@ -377,6 +391,16 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 :::
 
 ## Analysis PCA A and E {.smaller}
+
+```{r}
+protein_data_trans <- protein_data |> 
+  drop_na() |> 
+  pivot_longer(col = -1,
+               names_to = "sample",
+               values_to = "expression") |> 
+  pivot_wider(names_from = peptide_target,
+              values_from = expression)
+```
 
 ::: columns
 ::: {.column width="50%"}
