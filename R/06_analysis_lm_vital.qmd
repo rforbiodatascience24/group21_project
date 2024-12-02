@@ -41,9 +41,9 @@ expression_meta_data_aug <- read_tsv(file = here("data/03_expression_meta_data_a
 
 ## Selecting variables, grouping and nesting the data for the linear modelling
 
-Want to make a linear model of the peptide expression levels and the overall survival.
+We want to make a linear model of the peptide expression levels and the overall survival. From this we can investigate if there are a difference in the expression levels of some proteins between patients who survives and patients who dies.
 
-Selecting the variables that we want to use for the linear modeling. NA's in "expression" are dropped.
+Selecting the variables that we want to use for the linear modeling. NA's in "expression" are dropped, as we cannot make a linear model with missing expression values.
 
 ```{r}
 #| label: "selecting-variables-for-linear-modeling-06"
@@ -57,7 +57,7 @@ expression_meta_data_lm_vital <- expression_meta_data_aug |>
 expression_meta_data_lm_vital
 ```
 
-Grouping the data by peptide_target and nesting the data so that each peptide_target gets a dataframe that contains the overall survival and the protein expression for the patients.
+Grouping the data by peptide_target and nesting the data so that each peptide_target gets a dataframe that contains the overall survival and the protein expression for all the patients.
 
 ```{r}
 #| label: "grouping-and-nesting-data-06"
@@ -71,7 +71,7 @@ expression_meta_data_lm_vital_nested
 
 ## Adding the linear model to the dataset
 
-Adding the linear model to the data using mutate().
+Adding the linear model to the data using mutate() and lm().
 
 ```{r}
 #| label: "linear-model-to-the-data-06"
@@ -84,7 +84,7 @@ expression_meta_data_lm_vital_nested_model <- expression_meta_data_lm_vital_nest
 expression_meta_data_lm_vital_nested_model
 ```
 
-Computing the confidence intervals and p-value using tidy()
+Computing the confidence intervals and p-value based on th elinear model using the tidy()-function
 
 ```{r}
 #| label: "computing-CI-using-tidy-06"
@@ -112,7 +112,11 @@ expression_meta_data_lm_vital_estimates
 
 ## Clean the data and calculating q.value
 
-Term describes if the patient is dead or alive. 0 = alive and 1 = dead. Therefore the intercept is alive and the slope + intercept is dead.
+Term describes if the patient is dead or alive. 0 = alive and 1 = dead. Therefore the intercept is alive and the slope + intercept is dead. The slope is called Overall survival in the Term.
+
+We are filtering for the term = "overall survival", because then we get the difference between alive and dead.
+
+Then we select the peptide_targets, p.value, estimate and confidence interval. To be able to analyse if there are significant differences between expression compared to their vital status.
 
 ```{r}
 #| label: "filtering-and-selecting-06"
