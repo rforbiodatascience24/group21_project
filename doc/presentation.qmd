@@ -21,18 +21,16 @@ format:
     code-block-height: 600px
 editor: visual
 css: style.css
-
-
 ---
 
 ## Introduction {.smaller}
 
 -   Background
     -   Head and neck squamous cell carcinomas (HNSCC) are a group of malignancies affecting the mucosal surfaces of the head and neck.
-    -   A focus on phenotype, survival data, and protein expression quantification from the GDC Hub.
+    -   A focus on phenotype, survival data, and protein expression quantification from the UCSC Xena.
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
-    -   Extract and uncover scientific insights from the HNSCC datasets. ![](../results/images/head_neck.png){width="100%" height="100%"}
+    -   Extract and uncover scientific insights from the HNSCC datasets. 
 
 ## Materials and methods Astrid {.smaller}
 
@@ -260,11 +258,16 @@ expression_meta_data_aug_5 <- expression_meta_data_aug_4 |>
 :::
 :::
 
-## Description Yayi {.smaller}
+## Description {.smaller}
 
 ```{r}
 #| echo: false
-#| eval: false
+#| eval: true
+#| message: false
+
+library("tidyverse")
+library("here")
+
 
 expression_meta_data_load<- read_tsv(file = here("data/03_expression_meta_data_load.tsv.gz"))
 
@@ -303,11 +306,11 @@ expression_meta_data_aug |>
   summarize(count = n(), .groups = "drop")
 ```
 
-Check the lowest and highest age
 
 ```{r}
 #| echo: false  # Show the code
-#| eval: false  # Execute the code
+#| eval: true  # Execute the code
+
 
 expression_meta_data_aug |> 
   summarize(
@@ -342,11 +345,11 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 
 ::: columns
 ::: {.column width="50%"}
-![](images/06_analysis_lm_volcano_vital.png)
+![](../results/images/06_analysis_lm_volcano_vital.png)
 :::
 
 ::: {.column width="50%"}
-![](images/06_analysis_lm_forest_plot.png)
+![](../results/images/06_analysis_lm_forest_plot.png)
 :::
 :::
 
@@ -378,11 +381,11 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 
 ::: columns
 ::: {.column width="50%"}
-![](images/08_PCA_analysis_scree-01.png)
+![](../results/images/08_PCA_analysis_scree.png)
 :::
 
 ::: {.column width="50%"}
-![](images/08_PCA_analysis_PCA_stage.png)
+![](../results/images/08_PCA_analysis_PCA_stage.png)
 :::
 :::
 
