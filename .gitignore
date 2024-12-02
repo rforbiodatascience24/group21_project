@@ -5,3 +5,4 @@
 *.Rproj
 data
 R/*_files/
+R/*_files/libs
