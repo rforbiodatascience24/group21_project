@@ -58,7 +58,7 @@ css: style.css
 #| echo: true
 #| eval: false
 #| warning: false
-#| code-line-numbers: "|5-16|49-55|58-67||69-71|76-78"
+#| code-line-numbers: "|5-16|49-55|58-67|69-71"
 
 library("tidyverse")
 library("table1")
