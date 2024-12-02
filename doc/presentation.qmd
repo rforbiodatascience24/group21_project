@@ -30,7 +30,7 @@ css: style.css
     -   A focus on phenotype, survival data, and protein expression quantification from the UCSC Xena.
 -   Research Objective
     -   Apply Tidyverse techniques learned in class to real-world data.
-    -   Extract and uncover scientific insights from the HNSCC datasets. 
+    -   Extract and uncover scientific insights from the HNSCC datasets.
 
 ## Materials and methods Astrid {.smaller}
 
@@ -306,7 +306,6 @@ expression_meta_data_aug |>
   summarize(count = n(), .groups = "drop")
 ```
 
-
 ```{r}
 #| echo: false  # Show the code
 #| eval: true  # Execute the code
@@ -365,15 +364,15 @@ Fitting a linear model to the protein expression data and the vital stage. This 
 :::
 :::
 
-## Analysis visual Astrid {.smaller}
+## Analysis visual  {.smaller}
 
 ::: columns
 ::: {.column width="50%"}
-![](../results/images/barplot_vital_status_genders.png){width="100%" height="100%"}
+![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="400px"}
 :::
 
 ::: {.column width="50%"}
-![](../results/images/barplot_vital_status_genders_facet_races.png){width="100%" height="100%"}
+![](../results/images/boxplot_years_smoked_vital_status_facet_pathological.png){width="100%" height="400px"}
 :::
 :::
 

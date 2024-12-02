@@ -175,9 +175,22 @@ ggsave(filename = "boxplot_years_smoked_vital_status_facet_pathological.png",
 
 ```
 
-Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond.
+Apparently, no patients are recorded with years smoked = 0. We assume they are registered as NA although NA could also refer to the fact that the patients did not respond. We can quickly determine the number of patients with NA;
 
-The 6 most differentially expressed genes between the two different vital status (dead/alive) sorted on different ages
+```{r}
+meta_data |> 
+  filter(is.na(years_smoked.exposures)) |> 
+  nrow()
+  
+```
+
+And we thus see that there are actually more than half of the patients with instances of NA in the "years smoked". The boxplot shows that for stages II and III, the surviving patients have generally smoked more years, than the dead. For stage I and IV the trend is opposite.
+
+## Visualizing significant proteins related to vital status
+
+As the amount of significant differentially expressed proteins between alive and dead patients were found to be a relatively low number and thus we can visualize their individual expression levels.
+
+The 6 most differentially expressed proteins between the two different vital status sorted on different ages
 
 ```{r}
 
@@ -189,14 +202,10 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
                        #fill = vital_status,
                        color = vital_status
                       ))+
-
-  
-  
   geom_point( shape = 8,
               size = 1)+
   
   facet_wrap(~peptide_target)+
-  
   
   scale_color_manual(
     values = c(
@@ -204,10 +213,6 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
       "Dead" = "#beeb4c"  
     )
   ) +
-  
-
-  
-  
   
   labs(x = "Age", 
        y = "Expression level",
@@ -221,16 +226,7 @@ expression_of_6_significant_pep_and_vital_status<-expression_meta_data_aug |>
   theme(plot.title = element_text(hjust = 0.5, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5),
         strip.text = element_text(size = 6)
-      
         )
-  
-  
-  
- 
-  
-  
-
-
 expression_of_6_significant_pep_and_vital_status
 
 ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
@@ -242,7 +238,7 @@ ggsave(filename = "expression_of_6_significant_pep_and_vital_status.png",
 
 With this plot we want to graphically/visually illustrate that some peptides expression are significantly associated with death. For example, upregulation of fibronectin is statistically significant for patiens who died. This can be a bit difficult to see from the plot. What is more evidently seen from the plot is the fact that MERIT40_pS29 is downregulated in dead people; the blue points cluster in the lower part of the plot.
 
-Trying to think of another way to dislay the data in a less messy way:
+Trying to think of another way to display the data in a less messy way:
 
 ```{r}
 
